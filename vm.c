@@ -1,5 +1,6 @@
-main (){
-    printf("hello"); 
-    printf("no"); 
-    printf("I don't know how to spell!!");
+#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\n");
+    return 0;
 }
