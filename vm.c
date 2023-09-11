@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+// figure out more imports??
 
 ARRAY_SIZE 512;
 
@@ -33,6 +34,18 @@ int main(int argc char *argv[]) {
     */ 
 
     // Each PAS is always initialized to zero
+    // create the PAS to 0's ? somehow 
+    // make lots of loop de loops to read in the text files
+    // then execute the statements with if statements cus he keeps saying not to do the instructions
+    // with functions which is confusing me
+    // so that probably means lots of if statements 
+    // the variables below have to be global
+    // maybe switch statements can help??
+    // we can probably do helper functions for the dumb printing formating
+    // I have no idea if he gave input or output files he probably did I just haven't read those yet
+    // I shall sleep now...
+
+   
 
     /* 
         The values of SP and BP will be set up dynamically 
