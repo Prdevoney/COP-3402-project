@@ -32,60 +32,6 @@ int main(int argc, char *argv[]) {
     while (fscanf(file, "%d %d %d", &array[i], &array[i + 1], &array[i +2]) == 3) {
         i += 3; 
     }
-        
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    FILE *inputFile = fopen(argv[1], "r");
-    // use buffer thingy?? or simple fscanf stuff!!! :)
-    for (int i = 0; i < ____; i++)
-    {
-
-    }
-    fscanf(file, "%d %d", &variable, &variable);
     
     // like ^^ that better probably ^ 
     // links below
