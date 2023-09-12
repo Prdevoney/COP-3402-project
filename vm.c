@@ -43,6 +43,16 @@ int main(int argc, char *argv[]) {
     int L = 0;
     int M = 0;
 
+    /*
+    4 spaces before JMP
+    L is nomral spacing
+    M in &4d spacing
+    
+    \t\tPC BP SP
+    "Initial values: %2d %2d %2d"
+    [4 spaces] + "JMP %d %4d"
+    */
+
     for (int j = 0; j < textLength; j + 3)
     {
 
