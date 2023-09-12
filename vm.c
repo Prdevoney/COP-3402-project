@@ -10,7 +10,7 @@
 #include <stdlib.h>
 // figure out more imports??
 
-#define ARRAY_SIZE 512;
+#define ARRAY_SIZE 512
 
 /*
     You will never be given an input file with more than text length greater 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
         return; 
     }
 
-    int text[ARRAY_SIZE]; 
+    int text [ARRAY_SIZE]; 
     int i = 0; 
     int count = 0; 
 
@@ -39,15 +39,12 @@ int main(int argc, char *argv[]) {
     int SP = BP - 1;
     int PC = 0;
 
-    //int BP = the index immediately following the M value from the last instruction in the program
-
-   
-    // int IR = idk
+    
 
     // printing out form text:
     printf(text[0]);
 
-    fclose(inputFile);
+    fclose(file);
 }
 
 
