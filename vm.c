@@ -25,37 +25,17 @@ int main(int argc, char *argv[]) {
         return; 
     }
 
-    int array[ARRAY_SIZE]; 
+    int text[ARRAY_SIZE]; 
     int i = 0; 
+    int count = 0; 
 
-    // read in the input from the elf file. 
-    while (fscanf(file, "%d %d %d", &array[i], &array[i + 1], &array[i +2]) == 3) {
+    // Read in the input from the elf file. 
+    while (fscanf(file, "%d %d %d", &text[i], &text[i + 1], &text[i +2]) == 3) {
         i += 3; 
+        count += 1; 
     }
-    
-    // like ^^ that better probably ^ 
-    // links below
-    // -->  https://users.cs.utah.edu/~germain/PPS/Topics/C_Language/file_IO.html 
-    // --> https://www.opentechguides.com/how-to/article/c/45/c-read-file.html 
-    
-    // Each PAS is always initialized to zero
-    // create the PAS to 0's ? somehow 
-    // make lots of loop de loops to read in the text files
-    // then execute the statements with if statements cus he keeps saying not to do the instructions
-    // with functions which is confusing me
-    // so that probably means lots of if statements 
-    // the variables below have to be global
-    // maybe switch statements can help??
-    // we can probably do helper functions for the dumb printing formating
-    // I have no idea if he gave input or output files he probably did I just haven't read those yet
-    // I shall sleep now...
 
    
-
-    /* 
-        The values of SP and BP will be set up dynamically 
-        once the program had been uploaded.
-    */
 
     //int BP = the index immediately following the M value from the last instruction in the program
 
@@ -65,7 +45,7 @@ int main(int argc, char *argv[]) {
     int PC = 0;
     // int IR = idk
 
-    // printing out form array:
+    // printing out form text:
     printf(text[0]);
 
     fclose(inputFile);
