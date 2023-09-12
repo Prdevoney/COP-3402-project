@@ -32,53 +32,6 @@ int main(int argc, char *argv[]) {
     while (fscanf(file, "%d %d %d", &array[i], &array[i + 1], &array[i +2]) == 3) {
         i += 3; 
     }
-        
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     // like ^^ that better probably ^ 
     // links below
