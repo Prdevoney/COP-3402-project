@@ -50,7 +50,9 @@ int main(int argc, char *argv[]) {
     // I have no idea if he gave input or output files he probably did I just haven't read those yet
     // I shall sleep now...
 
-   
+    int BP = count * 3;
+    int SP = BP - 1;
+    int PC = 0;
 
     /* 
         The values of SP and BP will be set up dynamically 
@@ -59,10 +61,7 @@ int main(int argc, char *argv[]) {
 
     //int BP = the index immediately following the M value from the last instruction in the program
 
-    int text [ARRAY_SIZE];
-
-    int SP = BP - 1;
-    int PC = 0;
+   
     // int IR = idk
 
     // printing out form array:
