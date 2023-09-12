@@ -10,14 +10,74 @@
 #include <stdlib.h>
 // figure out more imports??
 
-ARRAY_SIZE 512;
+#define ARRAY_SIZE 512;
 
 /*
     You will never be given an input file with more than text length greater 
     than 150 lines of code
 */
 
-int main(int argc char *argv[]) {
+int main(int argc, char *argv[]) {
+
+    FILE *file = fopen(argv[1], "r");
+    if (file == NULL) {
+        printf("no file!\n"); 
+        return; 
+    }
+
+    int array[ARRAY_SIZE]; 
+    int i = 0; 
+
+    // read in the input from the elf file. 
+    while (fscanf(file, "%d %d %d", &array[i], &array[i + 1], &array[i +2]) == 3) {
+        i += 3; 
+    }
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     FILE *inputFile = fopen(argv[1], "r");
     // use buffer thingy?? or simple fscanf stuff!!! :)
@@ -31,12 +91,7 @@ int main(int argc char *argv[]) {
     // links below
     // -->  https://users.cs.utah.edu/~germain/PPS/Topics/C_Language/file_IO.html 
     // --> https://www.opentechguides.com/how-to/article/c/45/c-read-file.html 
-    char buff[buffersize?];
-    fgets(buff, buff size-1, file);
-    /*  First you must load
-        the input program into the PAS. 
-    */ 
-
+    
     // Each PAS is always initialized to zero
     // create the PAS to 0's ? somehow 
     // make lots of loop de loops to read in the text files
