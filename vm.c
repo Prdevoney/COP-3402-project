@@ -39,10 +39,56 @@ int main(int argc, char *argv[]) {
     int SP = BP - 1;
     int PC = 0;
 
-    //int BP = the index immediately following the M value from the last instruction in the program
+    int OP = __; 
 
-   
+    //int BP = the index immediately following the M value from the last instruction in the program
     // int IR = idk
+
+    switch (OP) {
+        case 1:
+        printf("    LIT")
+        SP = SP -1;
+        BP + 1;
+        printf(SP);
+        break;
+
+        case 2:
+        break;
+        
+        case 3:
+        printf("    LIT");
+        break;
+
+        case 4:
+        printf("    LIT");
+        break;
+
+        case 5:
+        printf("    LIT");
+        break;
+
+        case 6:
+        printf("    LIT")
+        break;
+
+        case 7:
+        printf("    LIT")
+        break;
+
+        case 8:
+        printf("    LIT")
+        break;
+
+        case 9:
+        printf("    LIT")
+        break;
+        
+        case 10:
+        printf("    LIT")
+        break;
+
+
+    }
 
     // printing out form text:
     printf(text[0]);
