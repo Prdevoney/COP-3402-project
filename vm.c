@@ -36,64 +36,72 @@ int main(int argc, char *argv[]) {
     }
 
     int BP = count * 3;
+    int textLength = BP;
     int SP = BP - 1;
     int PC = 0;
+    int OP = 0;
+    int L = 0;
+    int M = 0;
 
-<<<<<<< HEAD
-    int OP = __; 
+    for (int j = 0; j < textLength; j + 3)
+    {
 
-    //int BP = the index immediately following the M value from the last instruction in the program
-    // int IR = idk
-=======
-    
->>>>>>> e5a2276696286062f4be9eac7ac1303e438af286
+         
 
-    switch (OP) {
-        case 1:
-        printf("    LIT")
-        SP = SP -1;
-        BP + 1;
-        printf(SP);
-        break;
+        //int BP = the index immediately following the M value from the last instruction in the program
+        // int IR = idk
+        OP = text[j];
 
-        case 2:
-        printf("    OPR");
-        //M value
-        break;
-        
-        case 3:
-        printf("    LIT");
-        break;
+        switch (OP) {
+            case 1:
+            printf("    LIT");
+            L = text[j+1];
+            M = text[j+2];
+            SP -= 1;
+            BP += 1;
+            PC += 3;
+            printf(SP);
+            break;
 
-        case 4:
-        printf("    LIT");
-        break;
+            case 2:
+            printf("    OPR");
+            //M value
+            break;
+            
+            case 3:
+            printf("    LIT");
+            break;
 
-        case 5:
-        printf("    LIT");
-        break;
+            case 4:
+            printf("    LIT");
+            break;
 
-        case 6:
-        printf("    LIT")
-        break;
+            case 5:
+            printf("    LIT");
+            break;
 
-        case 7:
-        printf("    LIT")
-        break;
+            case 6:
+            printf("    LIT")
+            break;
 
-        case 8:
-        printf("    LIT")
-        break;
+            case 7:
+            printf("    LIT")
+            break;
 
-        case 9:
-        printf("    LIT")
-        break;
+            case 8:
+            printf("    LIT")
+            break;
 
-        case 10:
-        printf("    LIT")
-        break;
+            case 9:
+            printf("    LIT")
+            break;
+
+            case 10:
+            printf("    LIT")
+            break;
 
 
+        }
     }
 
     // printing out form text:
