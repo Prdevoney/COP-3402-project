@@ -368,7 +368,7 @@ int main(int argc, char *argv[]) {
                     if (AR1 == k || AR2 == k){
                         printf("| ");
                     }
-                                        printf("%d ", pas[k]);
+                    printf("%d ", pas[k]);
 
                 }
                 printf("\n");
@@ -455,9 +455,16 @@ int main(int argc, char *argv[]) {
                     break;
 
                     case 3:
-                    printf("End of Program");
+                    printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                    for (int k = textLength; k < (SP + 1); k++)
+                    {
+                        if (AR1 == k || AR2 == k){
+                            printf("| ");
+                        }
+                    printf("%d ", pas[k]);
+                    }
+                    printf("\n");
                     return 0;
-                    // break?
 
                 }
                 printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
