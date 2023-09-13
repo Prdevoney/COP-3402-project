@@ -17,6 +17,7 @@
     than 150 lines of code
 */
 
+
 int main(int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
@@ -42,6 +43,8 @@ int main(int argc, char *argv[]) {
     int OP = 0;
     int L = 0;
     int M = 0;
+    int AR1 = 0; //Activation Record between level 1 and level 2
+    int AR2 = 0; //Activation Record between level 2 and level 3
 
     // put 0's into the rest of the empty PAS
     for(int r = textLength; r < ARRAY_SIZE; r++)
@@ -75,7 +78,6 @@ int main(int argc, char *argv[]) {
                 L = pas[PC+1];
                 M = pas[PC+2];
                 SP += 1;
-                BP += 1;
                 PC += 3;
                 pas[SP] = M; // check later to make sure this is after
                 
@@ -90,11 +92,15 @@ int main(int argc, char *argv[]) {
                 // this spacing is still wrong
                 for (int k = textLength; k < SP; k++)
                 {
+                    if (AR1 == k || AR2 == k){
+                    printf("| ");
+                    }
                     printf("%d ", pas[k]);
                 }
                 printf("\n");
                 break;
 
+            // Patrick TO DO: OPR, LOD, and STO
             // ==================== OPR ====================
             case 2:
                 switch(M) {
@@ -229,7 +235,34 @@ int main(int argc, char *argv[]) {
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
-                printf("    CAL\n");
+                int arb = BP;
+                // base function thing
+                while (L > 0) {
+                    arb = pas[arb];
+                    L--;
+                }
+                pas[SP+1] = arb; ///base(BP,L);  // static link (SL)
+
+                pas[SP+2] = BP;          // dynamic link (DL)
+                pas[SP+3] = PC;          // return address (RA)
+                BP = SP + 1;
+                PC = M;
+                //SP stays the same;
+                if (AR1 > 0)
+                {
+                    AR2 = SP + 1;
+                } else {
+                    AR1 = SP + 1;
+                }
+                printf("    CAL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                for (int k = textLength; k < SP + 1; k++)
+                {
+                    printf("%d ", pas[k]);
+                    if (AR1 == k || AR2 == k){
+                        printf("| ");
+                    }
+                }
+                printf("\n");
                 break;
 
             // ==================== INC ====================
@@ -240,8 +273,12 @@ int main(int argc, char *argv[]) {
                 PC += 3;
                 printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
-                for (int k = textLength; k < SP; k++)
+
+                for (int k = textLength; k < SP + 1; k++)
                 {
+                    if (AR1 == k || AR2 == k){
+                        printf("| ");
+                    }
                     printf("%d ", pas[k]);
                 }
                 printf("\n");
@@ -255,22 +292,39 @@ int main(int argc, char *argv[]) {
                 // BP and SP stays the same
                 printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
-                for (int k = textLength; k < SP; k++)
+                for (int k = textLength; k < SP + 1; k++)
                 {
+                    if (AR1 == k || AR2 == k){
+                        printf("| ");
+                    }
                     printf("%d ", pas[k]);
                 }
                 printf("\n");
                 break;
 
-            // ==================== JCP ====================
+            // ==================== JPC ====================
             case 8:
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
-                printf("    JCP\n");
+                // Jump to M if top of stack element is 0
+                if(pas[SP] == 0){
+                    PC = M;
+                    SP -= 1;
+                }
+                printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                for (int k = textLength; k < (SP + 1); k++)
+                {
+                    if (AR1 == k || AR2 == k){
+                        printf("| ");
+                    }
+                    printf("%d ", pas[k]);
+                }
+                printf("\n");
                 break;
-
+                
             // ==================== SYS ====================
+            // ---R TO DO:----> check all cases and make sure they work right later!!!
             case 9:
                 // have to put 3 switch statements in here since there are 3 L levels
                 L = pas[PC+1];
@@ -299,8 +353,11 @@ int main(int argc, char *argv[]) {
 
                 }
                 printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                for (int k = textLength; k < SP; k++)
+                for (int k = textLength; k < (SP + 1); k++)
                 {
+                    if (AR1 == k || AR2 == k){
+                        printf("| ");
+                    }
                     printf("%d ", pas[k]);
                 }
                 printf("\n");
