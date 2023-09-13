@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
         printf("no file!\n"); 
-        return; 
+        return 0; 
     }
 
     int text[ARRAY_SIZE]; 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     int textLength = BP;
     int SP = BP - 1;
     int PC = 0;
-    int OP = 0;
+    int OP = 1;
     int L = 0;
     int M = 0;
 
@@ -53,6 +53,9 @@ int main(int argc, char *argv[]) {
     [4 spaces] + "JMP %d %4d"
     */
 
+   printf("\t\tPC\tBP\tSP\tstack");
+   printf("\nInitial values: %2d %2d %2d\n", PC, BP, SP);
+
     for (int j = 0; j < textLength; j + 3)
     {
 
@@ -61,13 +64,25 @@ int main(int argc, char *argv[]) {
     
         switch (OP) {
             case 1:
-            printf("    LIT");
             L = text[j+1];
             M = text[j+2];
-            SP -= 1;
+            SP += 1;
             BP += 1;
             PC += 3;
-            printf(SP);
+            text[SP] = M; // check later to make sure this is after
+            
+            printf("    LIT %d %4d %2d %2d %2d", L, M, PC, BP, SP);
+            /*  -> printing out the stack below:
+                -- have to figure out how to print the different AR records
+                and keep the | symbol to seperate the different levels
+                -- maybe able to print this all out in a function since we have to do it every time??
+                -- maybe if there is an AR extra variable that points to the beginning of each level 
+                so we know to print | between each level
+            */
+            for (int k = textLength; k < SP; k++)
+            {
+                printf("%2d", text[k]);
+            }
             break;
 
             case 2:
@@ -76,30 +91,47 @@ int main(int argc, char *argv[]) {
             break;
             
             case 3:
-            printf("    LIT");
+            L = text[j+1];
+            M = text[j+2];
+            printf("    LOD");
             break;
 
             case 4:
-            printf("    LIT");
+            L = text[j+1];
+            M = text[j+2];
+            printf("    STO");
             break;
 
             case 6:
-            printf("    LIT");
+            L = text[j+1];
+            M = text[j+2];
+            printf("    INC");
             break;
 
             case 7:
-            printf("    LIT");
+            L = text[j+1];
+            M = text[j+2];
+            PC = M;
+            // BP and SP stays the same
+            printf("    JMP %d %4d %2d %2d %2d", L, M, PC, BP, SP);
             break;
 
             case 8:
-            printf("    LIT");
+            L = text[j+1];
+            M = text[j+2];
+            printf("    JCP");
             break;
 
             case 9:
-            printf("    LIT");
+            // have to put 3 switch statements in here since there are 3 L levels
+            L = text[j+1];
+            M = text[j+2];
+            printf("    SYS");
             break;
 
             case 10:
+            L = text[j+1];
+            M = text[j+2];
             printf("    LIT");
             break;
 
@@ -109,10 +141,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // printing out form text:
-    printf(text[0]);
+    fclose(file);
 
-    fclose(inputFile);
+    return 0;
+
 }
 
 
