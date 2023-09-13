@@ -93,7 +93,6 @@ int main(int argc, char *argv[]) {
                 printf("\n");
                 break;
 
-            // Patrick TO DO: OPR, LOD, and STO
             // ==================== OPR ====================
             case 2:
                 L = pas[PC+1];
@@ -106,6 +105,11 @@ int main(int argc, char *argv[]) {
                         BP = pas[SP+2]; 
                         PC = pas[SP+3]; 
                         printf("    RTN %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        for (int k = textLength; k < SP + 1; k++) {
+                            if (AR1 == k || AR2 == k)
+                                printf("| ");
+                            printf("%d ", pas[k]);
+                        }
                         printf("\n");
                         break; 
                     case 1: 
@@ -437,7 +441,7 @@ int main(int argc, char *argv[]) {
                 switch (M)
                 {
                     case 1:
-                    printf("%d", pas[SP]);
+                    printf("    Output result is: %d \n", pas[SP]);
                     SP -= 1;
                     break;
 
