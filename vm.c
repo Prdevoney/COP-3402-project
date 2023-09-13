@@ -72,64 +72,137 @@ int main(int argc, char *argv[]) {
         switch (OP) {
             // ==================== LIT ====================
             case 1:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            SP += 1;
-            BP += 1;
-            PC += 3;
-            pas[SP] = M; // check later to make sure this is after
-            
-            printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-            /*  -> printing out the stack below:
-                -- have to figure out how to print the different AR records
-                and keep the | symbol to seperate the different levels
-                -- maybe able to print this all out in a function since we have to do it every time??
-                -- maybe if there is an AR extra variable that points to the beginning of each level 
-                so we know to print | between each level
-            */
-            // this spacing is still wrong
-            for (int k = textLength; k < SP; k++)
-            {
-                printf("%d ", pas[k]);
-            }
-            printf("\n");
-            break;
+                L = pas[PC+1];
+                M = pas[PC+2];
+                SP += 1;
+                BP += 1;
+                PC += 3;
+                pas[SP] = M; // check later to make sure this is after
+                
+                printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                /*  -> printing out the stack below:
+                    -- have to figure out how to print the different AR records
+                    and keep the | symbol to seperate the different levels
+                    -- maybe able to print this all out in a function since we have to do it every time??
+                    -- maybe if there is an AR extra variable that points to the beginning of each level 
+                    so we know to print | between each level
+                */
+                // this spacing is still wrong
+                for (int k = textLength; k < SP; k++)
+                {
+                    printf("%d ", pas[k]);
+                }
+                printf("\n");
+                break;
 
             // ==================== OPR ====================
             case 2:
                 switch(M) {
                     case 0:
-                        // ==================== RTN ====================
+                        // ==================== 2 RTN ====================
+                        SP = BP - 1; 
+                        BP = pas[SP+2]; 
+                        PC = pas[SP+3]; 
 
                     case 1: 
-                        // ==================== ADD ====================
-                    
+                        // ==================== 2 ADD ====================
+                        pas[SP-1] = pas[SP-1] + pas[SP]; 
+                        SP = SP - 1; 
+                        break;
+
                     case 2: 
-                        // ==================== SUB ====================
+                        // ==================== 2 SUB ====================
+                        pas[SP-1] = pas[SP-1] - pas[SP]; 
+                        SP = SP - 1; 
+                        break;
 
                     case 3: 
-                        // ==================== MUL ====================
+                        // ==================== 2 MUL ====================
+                        pas[SP-1] = pas[SP-1] * pas[SP]; 
+                        SP = SP - 1; 
+                        break;
 
                     case 4: 
-                        // ==================== DIV ====================
+                        // ==================== 2 DIV ====================
+                        pas[SP-1] = pas[SP-1] / pas[SP]; 
+                        SP = SP - 1; 
+                        break;
 
                     case 5: 
-                        // ==================== EQL ====================
+                        // ==================== 2 EQL ====================
+                        if (pas[SP-1] == pas[SP]) {
+                            pas[SP-1] = 1; 
+                            SP = SP - 1; 
+                        }
+                        else {
+                            pas[SP-1] = 0; 
+                            SP = SP - 1; 
+                        }
+                        break;
 
                     case 6: 
-                        // ==================== NEQ ====================
+                        // ==================== 2 NEQ ====================
+                        if (pas[SP-1] != pas[SP]) {
+                            pas[SP-1] = 1; 
+                            SP = SP - 1; 
+                        }
+                        else {
+                            pas[SP-1] = 0; 
+                            SP = SP - 1; 
+                        }
+                        break;
 
                     case 7: 
-                        // ==================== LSS ====================
+                        // ==================== 2 LSS ====================
+                        if (pas[SP-1] < pas[SP]) {
+                            pas[SP-1] = 1; 
+                            SP = SP - 1; 
+                        }
+                        else {
+                            pas[SP-1] = 0; 
+                            SP = SP - 1; 
+                        }
+                        break;
 
                     case 8: 
-                        // ==================== LEQ ====================
+                        // ==================== 2 LEQ ====================
+                        if (pas[SP-1] <= pas[SP]) {
+                            pas[SP-1] = 1; 
+                            SP = SP - 1; 
+                        }
+                        else {
+                            pas[SP-1] = 0; 
+                            SP = SP - 1; 
+                        }
+                        break;
 
                     case 9: 
-                        // ==================== GTR ====================
+                        // ==================== 2 GTR ====================
+                        if (pas[SP-1] > pas[SP]) {
+                            pas[SP-1] = 1; 
+                            SP = SP - 1; 
+                        }
+                        else {
+                            pas[SP-1] = 0; 
+                            SP = SP - 1; 
+                        }
+                        break;
 
                     case 10: 
-                        // ==================== GEQ ====================
+                        // ==================== 2 GEQ ====================
+                        if (pas[SP-1] >= pas[SP]) {
+                            pas[SP-1] = 1; 
+                            SP = SP - 1; 
+                        }
+                        else {
+                            pas[SP-1] = 0; 
+                            SP = SP - 1; 
+                        }
+                        break;
+
+                    default:
+                        printf("Not valid OP\n");
+                        break;
                 }
             printf("    OPR\n");
             //M value
@@ -137,112 +210,112 @@ int main(int argc, char *argv[]) {
             
             // ==================== LOD ====================
             case 3:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            PC += 3;
-            printf("    LOD\n");
-            break;
+                L = pas[PC+1];
+                M = pas[PC+2];
+                PC += 3;
+                printf("    LOD\n");
+                break;
 
             // ==================== STO ====================
             case 4:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            PC += 3;
-            printf("    STO\n");
-            break;
+                L = pas[PC+1];
+                M = pas[PC+2];
+                PC += 3;
+                printf("    STO\n");
+                break;
 
             // ==================== CAL ====================
             case 5:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            PC += 3;
-            printf("    CAL\n");
-            break;
+                L = pas[PC+1];
+                M = pas[PC+2];
+                PC += 3;
+                printf("    CAL\n");
+                break;
 
             // ==================== INC ====================
             case 6:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            SP += M;
-            PC += 3;
-            printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                L = pas[PC+1];
+                M = pas[PC+2];
+                SP += M;
+                PC += 3;
+                printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
-            for (int k = textLength; k < SP; k++)
-            {
-                printf("%d ", pas[k]);
-            }
-            printf("\n");
-            break;
+                for (int k = textLength; k < SP; k++)
+                {
+                    printf("%d ", pas[k]);
+                }
+                printf("\n");
+                break;
 
             // ==================== JMP ====================
             case 7:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            PC += M;
-            // BP and SP stays the same
-            printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                L = pas[PC+1];
+                M = pas[PC+2];
+                PC += M;
+                // BP and SP stays the same
+                printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
-            for (int k = textLength; k < SP; k++)
-            {
-                printf("%d ", pas[k]);
-            }
-            printf("\n");
-            break;
+                for (int k = textLength; k < SP; k++)
+                {
+                    printf("%d ", pas[k]);
+                }
+                printf("\n");
+                break;
 
             // ==================== JCP ====================
             case 8:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            PC += 3;
-            printf("    JCP\n");
-            break;
+                L = pas[PC+1];
+                M = pas[PC+2];
+                PC += 3;
+                printf("    JCP\n");
+                break;
 
             // ==================== SYS ====================
             case 9:
-            // have to put 3 switch statements in here since there are 3 L levels
-            L = pas[PC+1];
-            M = pas[PC+2];
-            PC += 3;
-            //printf("\n this is L: %d\n", L );
+                // have to put 3 switch statements in here since there are 3 L levels
+                L = pas[PC+1];
+                M = pas[PC+2];
+                PC += 3;
+                //printf("\n this is L: %d\n", L );
 
-            //printf("\n this is M: %d\n", M );
-            switch (M)
-            {
-                case 1:
-                printf("%d", pas[SP]);
-                SP -= 1;
+                //printf("\n this is M: %d\n", M );
+                switch (M)
+                {
+                    case 1:
+                    printf("%d", pas[SP]);
+                    SP -= 1;
+                    break;
+
+                    case 2:
+                    printf("Please Enter an Integer: ");
+                    SP += 1;
+                    scanf("%d", &pas[SP]);
+                    break;
+
+                    case 3:
+                    printf("End of Program");
+                    return 0;
+                    // break?
+
+                }
+                printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                for (int k = textLength; k < SP; k++)
+                {
+                    printf("%d ", pas[k]);
+                }
+                printf("\n");
                 break;
-
-                case 2:
-                printf("Please Enter an Integer: ");
-                SP += 1;
-                scanf("%d", &pas[SP]);
-                break;
-
-                case 3:
-                printf("End of Program");
-                return 0;
-                // break?
-
-            }
-            printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-            for (int k = textLength; k < SP; k++)
-            {
-                printf("%d ", pas[k]);
-            }
-            printf("\n");
-            break;
 
             case 10:
-            L = pas[PC+1];
-            M = pas[PC+2];
-            PC += 3;
-            printf("    LIT\n");
-            break;
+                L = pas[PC+1];
+                M = pas[PC+2];
+                PC += 3;
+                printf("    LIT\n");
+                break;
 
             default:
-            printf("Not valid OP\n");
-            break;
+                printf("Not valid OP\n");
+                break;
         }
     }
 
