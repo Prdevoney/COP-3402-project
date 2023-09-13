@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
-        printf("no file!\n"); 
+        printf("No text file recieved\n"); 
         return 0; 
     }
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     int textLength = BP;
     int SP = BP - 1;
     int PC = 0;
-    int OP = 1;
+    int OP = 0;
     int L = 0;
     int M = 0;
 
@@ -56,12 +56,12 @@ int main(int argc, char *argv[]) {
    printf("\t\tPC\tBP\tSP\tstack");
    printf("\nInitial values: %2d %2d %2d\n", PC, BP, SP);
 
-    for (int j = 0; j < textLength; j + 3)
+    for (int j = 0; j < textLength; j += 3)
     {
-
+        OP = text[j];
     //int BP = the index immediately following the M value from the last instruction in the program
     // int IR = idk
-    
+
         switch (OP) {
             case 1:
             L = text[j+1];
@@ -81,31 +81,31 @@ int main(int argc, char *argv[]) {
             */
             for (int k = textLength; k < SP; k++)
             {
-                printf("%2d", text[k]);
+                printf("%2d\n", text[k]);
             }
             break;
 
             case 2:
-            printf("    OPR");
+            printf("    OPR\n");
             //M value
             break;
             
             case 3:
             L = text[j+1];
             M = text[j+2];
-            printf("    LOD");
+            printf("    LOD\n");
             break;
 
             case 4:
             L = text[j+1];
             M = text[j+2];
-            printf("    STO");
+            printf("    STO\n");
             break;
 
             case 6:
             L = text[j+1];
             M = text[j+2];
-            printf("    INC");
+            printf("    INC\n");
             break;
 
             case 7:
@@ -113,30 +113,30 @@ int main(int argc, char *argv[]) {
             M = text[j+2];
             PC = M;
             // BP and SP stays the same
-            printf("    JMP %d %4d %2d %2d %2d", L, M, PC, BP, SP);
+            printf("    JMP %d %4d %2d %2d %2d\n", L, M, PC, BP, SP);
             break;
 
             case 8:
             L = text[j+1];
             M = text[j+2];
-            printf("    JCP");
+            printf("    JCP\n");
             break;
 
             case 9:
             // have to put 3 switch statements in here since there are 3 L levels
             L = text[j+1];
             M = text[j+2];
-            printf("    SYS");
+            printf("    SYS\n");
             break;
 
             case 10:
             L = text[j+1];
             M = text[j+2];
-            printf("    LIT");
+            printf("    LIT\n");
             break;
 
             default:
-            printf("Not valid OP");
+            printf("Not valid OP\n");
             break;
         }
     }
