@@ -17,6 +17,7 @@
     than 150 lines of code
 */
 
+
 int main(int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
@@ -42,6 +43,8 @@ int main(int argc, char *argv[]) {
     int OP = 0;
     int L = 0;
     int M = 0;
+    int AR1 = 0; //Activation Record between level 1 and level 2
+    int AR2 = 0; //Activation Record between level 2 and level 3
 
     // put 0's into the rest of the empty PAS
     for(int r = textLength; r < ARRAY_SIZE; r++)
@@ -75,7 +78,7 @@ int main(int argc, char *argv[]) {
             L = text[PC+1];
             M = text[PC+2];
             SP += 1;
-            BP += 1;
+            //BP += 1;
             PC += 3;
             text[SP] = M; // check later to make sure this is after
             
@@ -88,8 +91,11 @@ int main(int argc, char *argv[]) {
                 so we know to print | between each level
             */
             // this spacing is still wrong
-            for (int k = textLength; k < SP; k++)
+            for (int k = textLength; k < SP + 1; k++)
             {
+                if (AR1 == k || AR2 == k){
+                    printf("| ");
+                }
                 printf("%d ", text[k]);
             }
             printf("\n");
@@ -122,7 +128,34 @@ int main(int argc, char *argv[]) {
             L = text[PC+1];
             M = text[PC+2];
             PC += 3;
-            printf("    CAL\n");
+            int arb = BP;
+            // base function thing
+            while (L > 0) {
+                arb = text[arb];
+                L--;
+            }
+            text[SP+1] = arb; ///base(BP,L);  // static link (SL)
+
+            text[SP+2] = BP;          // dynamic link (DL)
+            text[SP+3] = PC;          // return address (RA)
+            BP = SP + 1;
+            PC = M;
+            //SP stays the same;
+            if (AR1 > 0)
+            {
+                AR2 = SP + 1;
+            } else {
+                AR1 = SP + 1;
+            }
+            printf("    CAL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+            for (int k = textLength; k < SP + 1; k++)
+            {
+                printf("%d ", text[k]);
+                if (AR1 == k || AR2 == k){
+                    printf("| ");
+                }
+            }
+            printf("\n");
             break;
 
             // ==================== INC ====================
@@ -133,8 +166,11 @@ int main(int argc, char *argv[]) {
             PC += 3;
             printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
-            for (int k = textLength; k < SP; k++)
+            for (int k = textLength; k < SP + 1; k++)
             {
+                if (AR1 == k || AR2 == k){
+                    printf("| ");
+                }
                 printf("%d ", text[k]);
             }
             printf("\n");
@@ -148,8 +184,11 @@ int main(int argc, char *argv[]) {
             // BP and SP stays the same
             printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
-            for (int k = textLength; k < SP; k++)
+            for (int k = textLength; k < SP +1 ; k++)
             {
+                if (AR1 == k || AR2 == k){
+                    printf("| ");
+                }
                 printf("%d ", text[k]);
             }
             printf("\n");
@@ -164,6 +203,7 @@ int main(int argc, char *argv[]) {
             break;
 
             // ==================== SYS ====================
+            // ---R TO DO:----> check all cases and make sure they work right later!!!
             case 9:
             // have to put 3 switch statements in here since there are 3 L levels
             L = text[PC+1];
@@ -192,8 +232,11 @@ int main(int argc, char *argv[]) {
 
             }
             printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-            for (int k = textLength; k < SP; k++)
+            for (int k = textLength; k < (SP + 1); k++)
             {
+                if (AR1 == k || AR2 == k){
+                    printf("| ");
+                }
                 printf("%d ", text[k]);
             }
             printf("\n");
