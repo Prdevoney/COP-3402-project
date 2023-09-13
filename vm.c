@@ -292,16 +292,17 @@ int main(int argc, char *argv[]) {
                     L--;
                 }
 
-                L = pas[PC-3+1]; 
+                L = pas[PC-2]; 
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 for (int k = textLength; k < SP + 1; k++)
                 {
-                    printf("%d ", pas[k]);
                     if (AR1 == k || AR2 == k){
                         printf("| ");
                     }
+                    printf("%d ", pas[k]);
+
                 }
                 printf("\n");
                 break;
@@ -318,16 +319,16 @@ int main(int argc, char *argv[]) {
                     L--;
                 }
 
-                L = pas[PC-3+1]; 
+                L = pas[PC-2]; 
 
                 pas[arb+M] = pas[SP]; 
                 SP -= 1; 
 
                 printf("    STO %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 for (int k = textLength; k < SP + 1; k++) {
-                            if (AR1 == k || AR2 == k)
-                                printf("| ");
-                            printf("%d ", pas[k]);
+                    if (AR1 == k || AR2 == k)
+                        printf("| ");
+                    printf("%d ", pas[k]);
                 }
                 printf("\n"); 
                 break;
@@ -359,10 +360,12 @@ int main(int argc, char *argv[]) {
                 printf("    CAL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 for (int k = textLength; k < SP + 1; k++)
                 {
-                    printf("%d ", pas[k]);
+                    //printf("%d ", pas[k]);
                     if (AR1 == k || AR2 == k){
                         printf("| ");
                     }
+                                        printf("%d ", pas[k]);
+
                 }
                 printf("\n");
                 break;
