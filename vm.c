@@ -43,6 +43,12 @@ int main(int argc, char *argv[]) {
     int L = 0;
     int M = 0;
 
+    // put 0's into the rest of the empty PAS
+    for(int r = textLength; r < ARRAY_SIZE; r++)
+    {
+        text[r] = 0;
+    }
+
     /*
     4 spaces before JMP
     L is nomral spacing
@@ -58,20 +64,22 @@ int main(int argc, char *argv[]) {
 
     for (int j = 0; j < textLength; j += 3)
     {
-        OP = text[j];
-    //int BP = the index immediately following the M value from the last instruction in the program
-    // int IR = idk
+        OP = text[PC];
+        
+        //int BP = the index immediately following the M value from the last instruction in the program
+        // int IR = idk
 
         switch (OP) {
+            // ==================== LIT ====================
             case 1:
-            L = text[j+1];
-            M = text[j+2];
+            L = text[PC+1];
+            M = text[PC+2];
             SP += 1;
             BP += 1;
             PC += 3;
             text[SP] = M; // check later to make sure this is after
             
-            printf("    LIT %d %4d %3d %3d %3d", L, M, PC, BP, SP);
+            printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
             /*  -> printing out the stack below:
                 -- have to figure out how to print the different AR records
                 and keep the | symbol to seperate the different levels
@@ -82,64 +90,119 @@ int main(int argc, char *argv[]) {
             // this spacing is still wrong
             for (int k = textLength; k < SP; k++)
             {
-                printf("%3d ", text[k]);
+                printf("%d ", text[k]);
             }
             printf("\n");
             break;
 
+            // ==================== OPR ====================
             case 2:
             printf("    OPR\n");
             //M value
             break;
             
+            // ==================== LOD ====================
             case 3:
-            L = text[j+1];
-            M = text[j+2];
+            L = text[PC+1];
+            M = text[PC+2];
+            PC += 3;
             printf("    LOD\n");
             break;
 
+            // ==================== STO ====================
             case 4:
-            L = text[j+1];
-            M = text[j+2];
+            L = text[PC+1];
+            M = text[PC+2];
+            PC += 3;
             printf("    STO\n");
             break;
 
-            case 6:
-            L = text[j+1];
-            M = text[j+2];
-            printf("    INC\n");
+            // ==================== CAL ====================
+            case 5:
+            L = text[PC+1];
+            M = text[PC+2];
+            PC += 3;
+            printf("    CAL\n");
             break;
 
-            // ==== JMP ====
-            case 7:
-            L = text[j+1];
-            M = text[j+2];
-            PC = M;
-            // BP and SP stays the same
-            printf("    JMP %d %4d %3d %3d %3d", L, M, PC, BP, SP);
-              for (int k = textLength; k < SP; k++)
+            // ==================== INC ====================
+            case 6:
+            L = text[PC+1];
+            M = text[PC+2];
+            SP += M;
+            PC += 3;
+            printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+
+            for (int k = textLength; k < SP; k++)
             {
-                printf(" %3d", text[k]);
+                printf("%d ", text[k]);
             }
             printf("\n");
             break;
 
+            // ==================== JMP ====================
+            case 7:
+            L = text[PC+1];
+            M = text[PC+2];
+            PC += M;
+            // BP and SP stays the same
+            printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+
+            for (int k = textLength; k < SP; k++)
+            {
+                printf("%d ", text[k]);
+            }
+            printf("\n");
+            break;
+
+            // ==================== JCP ====================
             case 8:
-            L = text[j+1];
-            M = text[j+2];
+            L = text[PC+1];
+            M = text[PC+2];
+            PC += 3;
             printf("    JCP\n");
             break;
 
+            // ==================== SYS ====================
             case 9:
             // have to put 3 switch statements in here since there are 3 L levels
-            L = text[j+1];
-            M = text[j+2];
-            printf("    SYS\n");
+            L = text[PC+1];
+            M = text[PC+2];
+            PC += 3;
+            //printf("\n this is L: %d\n", L );
+
+            //printf("\n this is M: %d\n", M );
+            switch (M)
+            {
+                case 1:
+                printf("%d", text[SP]);
+                SP -= 1;
+                break;
+
+                case 2:
+                printf("Please Enter an Integer: ");
+                SP += 1;
+                scanf("%d", &text[SP]);
+                break;
+
+                case 3:
+                printf("End of Program");
+                return 0;
+                // break?
+
+            }
+            printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+            for (int k = textLength; k < SP; k++)
+            {
+                printf("%d ", text[k]);
+            }
+            printf("\n");
             break;
 
             case 10:
-            L = text[j+1];
-            M = text[j+2];
+            L = text[PC+1];
+            M = text[PC+2];
+            PC += 3;
             printf("    LIT\n");
             break;
 
