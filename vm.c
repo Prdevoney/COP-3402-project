@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
                     so we know to print | between each level
                 */
                 // this spacing is still wrong
-                for (int k = textLength; k < SP; k++)
+                for (int k = textLength; k < SP + 1; k++)
                 {
                     if (AR1 == k || AR2 == k){
                     printf("| ");
@@ -103,6 +103,7 @@ int main(int argc, char *argv[]) {
             // Patrick TO DO: OPR, LOD, and STO
             // ==================== OPR ====================
             case 2:
+            PC += 3;
                 switch(M) {
                     case 0:
                         // ==================== 2 RTN ====================
@@ -129,7 +130,7 @@ int main(int argc, char *argv[]) {
                         pas[SP-1] = pas[SP-1] * pas[SP]; 
                         SP = SP - 1; 
                         printf("    MUL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        for (int k = textLength; k < SP; k++) {
+                        for (int k = textLength; k < SP + 1; k++) {
                             if (AR1 == k || AR2 == k)
                                 printf("| ");
                             printf("%d ", pas[k]);
@@ -142,6 +143,7 @@ int main(int argc, char *argv[]) {
                         pas[SP-1] = pas[SP-1] / pas[SP]; 
                         SP = SP - 1; 
                         printf("    DIV %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        printf("\n");
                         break;
 
                     case 5: 
@@ -306,8 +308,7 @@ int main(int argc, char *argv[]) {
                 // BP and SP stays the same
                 printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
-                for (int k = textLength; k < SP + 1; k++)
-                {
+                for (int k = textLength; k < SP + 1; k++) {
                     if (AR1 == k || AR2 == k){
                         printf("| ");
                     }
