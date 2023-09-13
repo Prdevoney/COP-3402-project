@@ -306,7 +306,7 @@ int main(int argc, char *argv[]) {
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
-                int arb = BP;
+                arb = BP;
                 // base function thing
                 while (L > 0) {
                     arb = pas[arb];
