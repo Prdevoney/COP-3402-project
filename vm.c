@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     4 spaces before JMP
     L is nomral spacing
     M in &4d spacing
-    
+
     \t\tPC BP SP
     "Initial values: %2d %2d %2d"
     [4 spaces] + "JMP %d %4d"
@@ -103,6 +103,9 @@ int main(int argc, char *argv[]) {
             printf("    LIT");
             break;
 
+            default:
+            printf("Not valid OP");
+            break;
         }
     }
 
