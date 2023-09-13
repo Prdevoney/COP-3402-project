@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
-        printf("No text file recieved\n"); 
+        printf("No text file recieved, please put: 'elf.txt' after executable file! \n"); 
         return 0; 
     }
 
@@ -53,8 +53,8 @@ int main(int argc, char *argv[]) {
     [4 spaces] + "JMP %d %4d"
     */
 
-   printf("\t\tPC\tBP\tSP\tstack");
-   printf("\nInitial values: %2d %2d %2d\n", PC, BP, SP);
+   printf("\t\tPC  BP  SP  stack"); //what if the BP and SP are triple digits?
+   printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
     for (int j = 0; j < textLength; j += 3)
     {
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
             PC += 3;
             text[SP] = M; // check later to make sure this is after
             
-            printf("    LIT %d %4d %2d %2d %2d", L, M, PC, BP, SP);
+            printf("    LIT %d %4d %3d %3d %3d", L, M, PC, BP, SP);
             /*  -> printing out the stack below:
                 -- have to figure out how to print the different AR records
                 and keep the | symbol to seperate the different levels
@@ -79,10 +79,12 @@ int main(int argc, char *argv[]) {
                 -- maybe if there is an AR extra variable that points to the beginning of each level 
                 so we know to print | between each level
             */
+            // this spacing is still wrong
             for (int k = textLength; k < SP; k++)
             {
-                printf("%2d\n", text[k]);
+                printf("%3d ", text[k]);
             }
+            printf("\n");
             break;
 
             case 2:
@@ -108,12 +110,18 @@ int main(int argc, char *argv[]) {
             printf("    INC\n");
             break;
 
+            // ==== JMP ====
             case 7:
             L = text[j+1];
             M = text[j+2];
             PC = M;
             // BP and SP stays the same
-            printf("    JMP %d %4d %2d %2d %2d\n", L, M, PC, BP, SP);
+            printf("    JMP %d %4d %3d %3d %3d", L, M, PC, BP, SP);
+              for (int k = textLength; k < SP; k++)
+            {
+                printf(" %3d", text[k]);
+            }
+            printf("\n");
             break;
 
             case 8:
