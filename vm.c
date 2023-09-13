@@ -82,13 +82,6 @@ int main(int argc, char *argv[]) {
                 pas[SP] = M; // check later to make sure this is after
                 
                 printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                /*  -> printing out the stack below:
-                    -- have to figure out how to print the different AR records
-                    and keep the | symbol to seperate the different levels
-                    -- maybe able to print this all out in a function since we have to do it every time??
-                    -- maybe if there is an AR extra variable that points to the beginning of each level 
-                    so we know to print | between each level
-                */
                 // this spacing is still wrong
                 for (int k = textLength; k < SP + 1; k++)
                 {
@@ -289,7 +282,23 @@ int main(int argc, char *argv[]) {
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
-                printf("    LOD\n");
+                SP += 1;
+                int arb = BP;
+                // base function thing
+                while (L > 0) {
+                    arb = pas[arb];
+                    L--;
+                }
+                pas[SP] = pas[arb + M];
+                printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                for (int k = textLength; k < SP + 1; k++)
+                {
+                    printf("%d ", pas[k]);
+                    if (AR1 == k || AR2 == k){
+                        printf("| ");
+                    }
+                }
+                printf("\n");
                 break;
 
             // ==================== STO ====================
