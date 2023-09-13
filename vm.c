@@ -96,6 +96,8 @@ int main(int argc, char *argv[]) {
             // Patrick TO DO: OPR, LOD, and STO
             // ==================== OPR ====================
             case 2:
+                L = pas[PC+1];
+                M = pas[PC+2];
                 PC += 3;
                 switch(M) {
                     case 0:
@@ -289,6 +291,9 @@ int main(int argc, char *argv[]) {
                     arb = pas[arb];
                     L--;
                 }
+
+                L = pas[PC-3+1]; 
+
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 for (int k = textLength; k < SP + 1; k++)
@@ -312,6 +317,8 @@ int main(int argc, char *argv[]) {
                     arb = pas[arb];
                     L--;
                 }
+
+                L = pas[PC-3+1]; 
 
                 pas[arb+M] = pas[SP]; 
                 SP -= 1; 
