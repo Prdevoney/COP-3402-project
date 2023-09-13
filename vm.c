@@ -13,7 +13,7 @@
 #define ARRAY_SIZE 512
 
 /*
-    You will never be given an input file with more than text length greater 
+    You will never be given an input file with more than pas length greater 
     than 150 lines of code
 */
 
@@ -21,16 +21,16 @@ int main(int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
-        printf("No text file recieved, please put: 'elf.txt' after executable file! \n"); 
+        printf("No pas file recieved, please put: 'elf.txt' after executable file! \n"); 
         return 0; 
     }
 
-    int text[ARRAY_SIZE]; 
+    int pas[ARRAY_SIZE]; 
     int i = 0; 
     int count = 0; 
 
     // Read in the input from the elf file. 
-    while (fscanf(file, "%d %d %d", &text[i], &text[i + 1], &text[i +2]) == 3) {
+    while (fscanf(file, "%d %d %d", &pas[i], &pas[i + 1], &pas[i +2]) == 3) {
         i += 3; 
         count += 1; 
     }
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     // put 0's into the rest of the empty PAS
     for(int r = textLength; r < ARRAY_SIZE; r++)
     {
-        text[r] = 0;
+        pas[r] = 0;
     }
 
     /*
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
     for (int j = 0; j < textLength; j += 3)
     {
-        OP = text[PC];
+        OP = pas[PC];
         
         //int BP = the index immediately following the M value from the last instruction in the program
         // int IR = idk
@@ -72,12 +72,12 @@ int main(int argc, char *argv[]) {
         switch (OP) {
             // ==================== LIT ====================
             case 1:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             SP += 1;
             BP += 1;
             PC += 3;
-            text[SP] = M; // check later to make sure this is after
+            pas[SP] = M; // check later to make sure this is after
             
             printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
             /*  -> printing out the stack below:
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
             // this spacing is still wrong
             for (int k = textLength; k < SP; k++)
             {
-                printf("%d ", text[k]);
+                printf("%d ", pas[k]);
             }
             printf("\n");
             break;
@@ -103,62 +103,62 @@ int main(int argc, char *argv[]) {
             
             // ==================== LOD ====================
             case 3:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             PC += 3;
             printf("    LOD\n");
             break;
 
             // ==================== STO ====================
             case 4:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             PC += 3;
             printf("    STO\n");
             break;
 
             // ==================== CAL ====================
             case 5:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             PC += 3;
             printf("    CAL\n");
             break;
 
             // ==================== INC ====================
             case 6:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             SP += M;
             PC += 3;
             printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
             for (int k = textLength; k < SP; k++)
             {
-                printf("%d ", text[k]);
+                printf("%d ", pas[k]);
             }
             printf("\n");
             break;
 
             // ==================== JMP ====================
             case 7:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             PC += M;
             // BP and SP stays the same
             printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
             for (int k = textLength; k < SP; k++)
             {
-                printf("%d ", text[k]);
+                printf("%d ", pas[k]);
             }
             printf("\n");
             break;
 
             // ==================== JCP ====================
             case 8:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             PC += 3;
             printf("    JCP\n");
             break;
@@ -166,8 +166,8 @@ int main(int argc, char *argv[]) {
             // ==================== SYS ====================
             case 9:
             // have to put 3 switch statements in here since there are 3 L levels
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             PC += 3;
             //printf("\n this is L: %d\n", L );
 
@@ -175,14 +175,14 @@ int main(int argc, char *argv[]) {
             switch (M)
             {
                 case 1:
-                printf("%d", text[SP]);
+                printf("%d", pas[SP]);
                 SP -= 1;
                 break;
 
                 case 2:
                 printf("Please Enter an Integer: ");
                 SP += 1;
-                scanf("%d", &text[SP]);
+                scanf("%d", &pas[SP]);
                 break;
 
                 case 3:
@@ -194,14 +194,14 @@ int main(int argc, char *argv[]) {
             printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
             for (int k = textLength; k < SP; k++)
             {
-                printf("%d ", text[k]);
+                printf("%d ", pas[k]);
             }
             printf("\n");
             break;
 
             case 10:
-            L = text[PC+1];
-            M = text[PC+2];
+            L = pas[PC+1];
+            M = pas[PC+2];
             PC += 3;
             printf("    LIT\n");
             break;
