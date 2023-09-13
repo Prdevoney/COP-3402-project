@@ -10,7 +10,7 @@
 #include <stdlib.h>
 // figure out more imports??
 
-#define ARRAY_SIZE 512;
+#define ARRAY_SIZE 512
 
 /*
     You will never be given an input file with more than text length greater 
@@ -43,19 +43,22 @@ int main(int argc, char *argv[]) {
     int L = 0;
     int M = 0;
 
-    int OP = __; 
+    /*
+    4 spaces before JMP
+    L is nomral spacing
+    M in &4d spacing
+    
+    \t\tPC BP SP
+    "Initial values: %2d %2d %2d"
+    [4 spaces] + "JMP %d %4d"
+    */
+
+    for (int j = 0; j < textLength; j + 3)
+    {
 
     //int BP = the index immediately following the M value from the last instruction in the program
     // int IR = idk
-
-    switch (OP) {
-        case 1:
-        printf("    LIT");
-        SP = SP -1;
-        BP + 1;
-        printf(SP);
-        break;
-
+    
         switch (OP) {
             case 1:
             printf("    LIT");
@@ -80,26 +83,25 @@ int main(int argc, char *argv[]) {
             printf("    LIT");
             break;
 
-        case 6:
-        printf("    LIT");
-        break;
+            case 6:
+            printf("    LIT");
+            break;
 
-        case 7:
-        printf("    LIT");
-        break;
+            case 7:
+            printf("    LIT");
+            break;
 
-        case 8:
-        printf("    LIT");
-        break;
+            case 8:
+            printf("    LIT");
+            break;
 
-        case 9:
-        printf("    LIT");
-        break;
+            case 9:
+            printf("    LIT");
+            break;
 
-        case 10:
-        printf("    LIT");
-        break;
-
+            case 10:
+            printf("    LIT");
+            break;
 
         }
     }
