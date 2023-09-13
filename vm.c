@@ -109,29 +109,39 @@ int main(int argc, char *argv[]) {
                         SP = BP - 1; 
                         BP = pas[SP+2]; 
                         PC = pas[SP+3]; 
-
+                        printf("    RTN %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        break; 
                     case 1: 
                         // ==================== 2 ADD ====================
                         pas[SP-1] = pas[SP-1] + pas[SP]; 
                         SP = SP - 1; 
+                        printf("    ADD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
-
                     case 2: 
                         // ==================== 2 SUB ====================
                         pas[SP-1] = pas[SP-1] - pas[SP]; 
                         SP = SP - 1; 
+                        printf("    SUB %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     case 3: 
                         // ==================== 2 MUL ====================
                         pas[SP-1] = pas[SP-1] * pas[SP]; 
                         SP = SP - 1; 
+                        printf("    MUL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        for (int k = textLength; k < SP; k++) {
+                            if (AR1 == k || AR2 == k)
+                                printf("| ");
+                            printf("%d ", pas[k]);
+                        }
+                        printf("\n");
                         break;
 
                     case 4: 
                         // ==================== 2 DIV ====================
                         pas[SP-1] = pas[SP-1] / pas[SP]; 
                         SP = SP - 1; 
+                        printf("    DIV %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     case 5: 
@@ -144,6 +154,7 @@ int main(int argc, char *argv[]) {
                             pas[SP-1] = 0; 
                             SP = SP - 1; 
                         }
+                        printf("    EQL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     case 6: 
@@ -156,6 +167,7 @@ int main(int argc, char *argv[]) {
                             pas[SP-1] = 0; 
                             SP = SP - 1; 
                         }
+                        printf("    NEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     case 7: 
@@ -168,6 +180,7 @@ int main(int argc, char *argv[]) {
                             pas[SP-1] = 0; 
                             SP = SP - 1; 
                         }
+                        printf("    LSS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     case 8: 
@@ -180,6 +193,7 @@ int main(int argc, char *argv[]) {
                             pas[SP-1] = 0; 
                             SP = SP - 1; 
                         }
+                        printf("    LEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     case 9: 
@@ -192,6 +206,7 @@ int main(int argc, char *argv[]) {
                             pas[SP-1] = 0; 
                             SP = SP - 1; 
                         }
+                        printf("    GTR %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     case 10: 
@@ -204,15 +219,14 @@ int main(int argc, char *argv[]) {
                             pas[SP-1] = 0; 
                             SP = SP - 1; 
                         }
+                        printf("    GEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         break;
 
                     default:
                         printf("Not valid OP\n");
                         break;
                 }
-            printf("    OPR\n");
-            //M value
-            break;
+                break;
             
             // ==================== LOD ====================
             case 3:
