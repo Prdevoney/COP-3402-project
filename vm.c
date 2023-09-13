@@ -78,7 +78,6 @@ int main(int argc, char *argv[]) {
             L = text[PC+1];
             M = text[PC+2];
             SP += 1;
-            //BP += 1;
             PC += 3;
             text[SP] = M; // check later to make sure this is after
             
@@ -101,6 +100,7 @@ int main(int argc, char *argv[]) {
             printf("\n");
             break;
 
+            // Patrick TO DO: OPR, LOD, and STO
             // ==================== OPR ====================
             case 2:
             printf("    OPR\n");
@@ -194,12 +194,25 @@ int main(int argc, char *argv[]) {
             printf("\n");
             break;
 
-            // ==================== JCP ====================
+            // ==================== JPC ====================
             case 8:
             L = text[PC+1];
             M = text[PC+2];
             PC += 3;
-            printf("    JCP\n");
+            // Jump to M if top of stack element is 0
+            if(text[SP] == 0){
+                PC = M;
+                SP -= 1;
+            }
+            printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+            for (int k = textLength; k < (SP + 1); k++)
+            {
+                if (AR1 == k || AR2 == k){
+                    printf("| ");
+                }
+                printf("%d ", text[k]);
+            }
+            printf("\n");
             break;
 
             // ==================== SYS ====================
