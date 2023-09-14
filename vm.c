@@ -348,8 +348,7 @@ int main(int argc, char *argv[]) {
                     arb = pas[arb];
                     L--;
                 }
-                pas[SP+1] = arb; ///base(BP,L);  // static link (SL)
-
+                pas[SP+1] = arb;         // static link (SL)
                 pas[SP+2] = BP;          // dynamic link (DL)
                 pas[SP+3] = PC;          // return address (RA)
                 BP = SP + 1;
