@@ -300,7 +300,7 @@ int main (int argc, char *argv[]) {
                             sec--; 
                             outerLoop++; 
                         }
-                    }
+                    
                         printf("\n");
                         break;
 
@@ -569,7 +569,7 @@ int main (int argc, char *argv[]) {
                         printf("Not valid OP\n");
                         break;
                 
-                break;
+                }
             
             // ==================== LOD ====================
             case 3:
@@ -667,8 +667,6 @@ int main (int argc, char *argv[]) {
                     sec--; 
                     outerLoop++; 
                 }
-                
-                
                 printf("\n"); 
                 break;
 
