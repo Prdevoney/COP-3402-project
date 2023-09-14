@@ -17,8 +17,12 @@
     than 150 lines of code
 */
 
+void print ( ){
 
-int main(int argc, char *argv[]) {
+}
+
+
+int main (int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
@@ -554,22 +558,16 @@ int main(int argc, char *argv[]) {
                     L--;
                 }
                 pas[SP+1] = arb; ///base(BP,L);  // static link (SL)
-
                 pas[SP+2] = BP;          // dynamic link (DL)
                 pas[SP+3] = PC;          // return address (RA)
                 BP = SP + 1;
                 PC = M;
-                //SP stays the same;
-                // if (AR1 > 0)
-                // {
-                //     AR2 = SP + 1;
-                // } else {
-                //     AR1 = SP + 1;
-                // }
+               
                 printf("    CAL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 outerLoop = 0;
                 sec = arCount - 1; 
-                while (outerLoop <= arCount) {
+                int tempArCount = arCount - 1; 
+                while (outerLoop <= tempArCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
@@ -579,18 +577,23 @@ int main(int argc, char *argv[]) {
                         kCount++; 
                     }
                     if (kCount != 0){
+                        if (outerLoop != 0)
+                            printf("| "); 
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
-                        printf("| ");
+                        // printf("| ");
                     }
                     else {
+                        if (outerLoop != 0)
+                            printf("| "); 
                         if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
                                 printf("%d ", pas[y]); 
                         if (sec == 0 && kCount == 0) {
                             for (int y = prevBPIndex; y < currBPIndex; y++) 
                                 printf("%d ", pas[y]); 
-                            printf("| ");
+                            // if (arCount != outerLoop)
+                                // printf("| ");
                         }
                     }
                     sec--; 
