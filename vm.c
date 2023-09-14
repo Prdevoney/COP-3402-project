@@ -302,13 +302,34 @@ int main(int argc, char *argv[]) {
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                for (int k = textLength; k < SP + 1; k++)
-                {
-                    if (AR1 == k || AR2 == k){
+                int outerLoop = 0;
+                int sec = arCount - 1; 
+                while (outerLoop <= arCount) {
+                    int currBPIndex = BP; 
+                    int prevBPIndex = pas[BP+1];
+                    int kCount = 0; 
+                    for (int k = 0; k < sec; k++) {
+                        prevBPIndex = pas[prevBPIndex+1]; 
+                        currBPIndex = pas[currBPIndex+1]; 
+                        kCount++; 
+                    }
+                    if (kCount != 0){
+                        for (int y = prevBPIndex; y < currBPIndex; y++) 
+                            printf("%d ", pas[y]); 
                         printf("| ");
                     }
-                    printf("%d ", pas[k]);
-
+                    else {
+                        if (outerLoop == arCount)
+                            for (int y = currBPIndex; y < SP + 1; y++)
+                                printf("%d ", pas[y]); 
+                        if (sec == 0 && kCount == 0) {
+                            for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                printf("%d ", pas[y]); 
+                            printf("| ");
+                        }
+                    }
+                    sec--; 
+                    outerLoop++; 
                 }
                 printf("\n");
                 break;
@@ -385,8 +406,8 @@ int main(int argc, char *argv[]) {
                 PC += 3;
                 printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 
-                int outerLoop = 0;
-                int sec = arCount - 1; 
+                outerLoop = 0;
+                sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
