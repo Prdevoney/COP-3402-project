@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
     }
 
     int ARcounter = 0;
+    int BParrayCounter = 0;
     int BPindex = 0;
     int BParray[150];
     int BP = count * 3;
@@ -46,6 +47,8 @@ int main(int argc, char *argv[]) {
     int OP = 0;
     int L = 0;
     int M = 0;
+    int calCount = 0;
+    int newBP = textLength;
     // int AR1 = 0; //Activation Record between level 1 and level 2
     // int AR2 = 0; //Activation Record between level 2 and level 3
 
@@ -84,18 +87,29 @@ int main(int argc, char *argv[]) {
                 //     }
                 //     printf("%d ", pas[k]);
                 // }
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
-
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
+                    }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+
+                        for (int k = newBP; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                                newBP = k + 1;
+                            } else {
+                                printf("%d ", pas[k]);
+                            }
+                             
+                        }
                     }
                 }
                 printf("\n");
@@ -118,9 +132,17 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
+                        ARcounter -= 1;
+                        if (ARcounter == 0){
+                    for (int k = textLength; k < SP + 1; k++) 
+                    {
+                        printf("%d ", pas[k]); 
+                    }
+                    } else {
                         for (int r = 0; r < ARcounter; r++)
                         {
                             BPindex = BParray[r];
+                            //printf("\nBPindex: %d\n", BPindex);
 
                             for (int k = textLength; k < SP + 1; k++) 
                             {
@@ -128,10 +150,13 @@ int main(int argc, char *argv[]) {
                                 {
                                     printf("%d ", pas[k]);
                                     printf("| ");
-                                } 
-                                printf("%d ", pas[k]); 
+                                } else {
+                                    printf("%d ", pas[k]);
+                                }
+                                
                             }
                         }
+                    }
                         printf("\n");
                         break; 
                     case 1: 
@@ -144,9 +169,16 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
+                    if (ARcounter == 0){
+                        for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            printf("%d ", pas[k]); 
+                        }
+                    } else {
                         for (int r = 0; r < ARcounter; r++)
                         {
                             BPindex = BParray[r];
+                            //printf("\nBPindex: %d\n", BPindex);
 
                             for (int k = textLength; k < SP + 1; k++) 
                             {
@@ -154,10 +186,13 @@ int main(int argc, char *argv[]) {
                                 {
                                     printf("%d ", pas[k]);
                                     printf("| ");
-                                } 
-                                printf("%d ", pas[k]); 
+                                } else {
+                                    printf("%d ", pas[k]);
+                                }
+                                
                             }
                         }
+                    }
                         printf("\n");
                         break;
                     case 2: 
@@ -170,18 +205,28 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
-                        for (int r = 0; r < ARcounter; r++)
-                        {
-                            BPindex = BParray[r];
-
-                            for (int k = textLength; k < SP + 1; k++) 
+                        if (ARcounter == 0){
+                        for (int k = textLength; k < SP + 1; k++) 
                             {
-                                if (BPindex == k+1)
-                                {
-                                    printf("%d ", pas[k]);
-                                    printf("| ");
-                                } 
                                 printf("%d ", pas[k]); 
+                            }
+                        } else {
+                            for (int r = 0; r < ARcounter; r++)
+                            {
+                                BPindex = BParray[r];
+                                //printf("\nBPindex: %d\n", BPindex);
+
+                                for (int k = textLength; k < SP + 1; k++) 
+                                {
+                                    if (BPindex == k+1)
+                                    {
+                                        printf("%d ", pas[k]);
+                                        printf("| ");
+                                    } else {
+                                        printf("%d ", pas[k]);
+                                    }
+                                    
+                                }
                             }
                         }
                         printf("\n");
@@ -197,18 +242,28 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
-                        for (int r = 0; r < ARcounter; r++)
+                        if (ARcounter == 0){
+                        for (int k = textLength; k < SP + 1; k++) 
                         {
-                            BPindex = BParray[r];
-
-                            for (int k = textLength; k < SP + 1; k++) 
+                            printf("%d ", pas[k]); 
+                        }
+                        } else {
+                            for (int r = 0; r < ARcounter; r++)
                             {
-                                if (BPindex == k+1)
+                                BPindex = BParray[r];
+                                //printf("\nBPindex: %d\n", BPindex);
+
+                                for (int k = textLength; k < SP + 1; k++) 
                                 {
-                                    printf("%d ", pas[k]);
-                                    printf("| ");
-                                } 
-                                printf("%d ", pas[k]); 
+                                    if (BPindex == k+1)
+                                    {
+                                        printf("%d ", pas[k]);
+                                        printf("| ");
+                                    } else {
+                                        printf("%d ", pas[k]);
+                                    }
+                                    
+                                }
                             }
                         }
                         printf("\n");
@@ -224,9 +279,16 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
+                        if (ARcounter == 0){
+                    for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            printf("%d ", pas[k]); 
+                        }
+                    } else {
                         for (int r = 0; r < ARcounter; r++)
                         {
                             BPindex = BParray[r];
+                            //printf("\nBPindex: %d\n", BPindex);
 
                             for (int k = textLength; k < SP + 1; k++) 
                             {
@@ -234,10 +296,13 @@ int main(int argc, char *argv[]) {
                                 {
                                     printf("%d ", pas[k]);
                                     printf("| ");
-                                } 
-                                printf("%d ", pas[k]); 
+                                } else {
+                                    printf("%d ", pas[k]);
+                                }
+                                
                             }
                         }
+                    }
                         printf("\n");
                         break;
 
@@ -257,9 +322,16 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
+                        if (ARcounter == 0){
+                    for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            printf("%d ", pas[k]); 
+                        }
+                    } else {
                         for (int r = 0; r < ARcounter; r++)
                         {
                             BPindex = BParray[r];
+                            //printf("\nBPindex: %d\n", BPindex);
 
                             for (int k = textLength; k < SP + 1; k++) 
                             {
@@ -267,10 +339,13 @@ int main(int argc, char *argv[]) {
                                 {
                                     printf("%d ", pas[k]);
                                     printf("| ");
-                                } 
-                                printf("%d ", pas[k]); 
+                                } else {
+                                    printf("%d ", pas[k]);
+                                }
+                                
                             }
                         }
+                    }
                         printf("\n");
                         break;
 
@@ -290,9 +365,16 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
+                        if (ARcounter == 0){
+                    for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            printf("%d ", pas[k]); 
+                        }
+                    } else {
                         for (int r = 0; r < ARcounter; r++)
                         {
                             BPindex = BParray[r];
+                            //printf("\nBPindex: %d\n", BPindex);
 
                             for (int k = textLength; k < SP + 1; k++) 
                             {
@@ -300,10 +382,13 @@ int main(int argc, char *argv[]) {
                                 {
                                     printf("%d ", pas[k]);
                                     printf("| ");
-                                } 
-                                printf("%d ", pas[k]); 
+                                } else {
+                                    printf("%d ", pas[k]);
+                                }
+                                
                             }
                         }
+                    }
                         printf("\n");
                         break;
 
@@ -323,18 +408,28 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
-                        for (int r = 0; r < ARcounter; r++)
-                        {
-                            BPindex = BParray[r];
-
-                            for (int k = textLength; k < SP + 1; k++) 
+                        if (ARcounter == 0){
+                        for (int k = textLength; k < SP + 1; k++) 
                             {
-                                if (BPindex == k+1)
-                                {
-                                    printf("%d ", pas[k]);
-                                    printf("| ");
-                                } 
                                 printf("%d ", pas[k]); 
+                            }
+                        } else {
+                            for (int r = 0; r < ARcounter; r++)
+                            {
+                                BPindex = BParray[r];
+                                //printf("\nBPindex: %d\n", BPindex);
+
+                                for (int k = textLength; k < SP + 1; k++) 
+                                {
+                                    if (BPindex == k+1)
+                                    {
+                                        printf("%d ", pas[k]);
+                                        printf("| ");
+                                    } else {
+                                        printf("%d ", pas[k]);
+                                    }
+                                    
+                                }
                             }
                         }
                         printf("\n");
@@ -356,18 +451,28 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
-                        for (int r = 0; r < ARcounter; r++)
-                        {
-                            BPindex = BParray[r];
-
-                            for (int k = textLength; k < SP + 1; k++) 
+                        if (ARcounter == 0){
+                        for (int k = textLength; k < SP + 1; k++) 
                             {
-                                if (BPindex == k+1)
-                                {
-                                    printf("%d ", pas[k]);
-                                    printf("| ");
-                                } 
                                 printf("%d ", pas[k]); 
+                            }
+                        } else {
+                            for (int r = 0; r < ARcounter; r++)
+                            {
+                                BPindex = BParray[r];
+                                //printf("\nBPindex: %d\n", BPindex);
+
+                                for (int k = textLength; k < SP + 1; k++) 
+                                {
+                                    if (BPindex == k+1)
+                                    {
+                                        printf("%d ", pas[k]);
+                                        printf("| ");
+                                    } else {
+                                        printf("%d ", pas[k]);
+                                    }
+                                    
+                                }
                             }
                         }
                         printf("\n");
@@ -389,9 +494,16 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
+                        if (ARcounter == 0){
+                    for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            printf("%d ", pas[k]); 
+                        }
+                    } else {
                         for (int r = 0; r < ARcounter; r++)
                         {
                             BPindex = BParray[r];
+                            //printf("\nBPindex: %d\n", BPindex);
 
                             for (int k = textLength; k < SP + 1; k++) 
                             {
@@ -399,10 +511,13 @@ int main(int argc, char *argv[]) {
                                 {
                                     printf("%d ", pas[k]);
                                     printf("| ");
-                                } 
-                                printf("%d ", pas[k]); 
+                                } else {
+                                    printf("%d ", pas[k]);
+                                }
+                                
                             }
                         }
+                    }
                         printf("\n");
                         break;
 
@@ -422,18 +537,28 @@ int main(int argc, char *argv[]) {
                         //         printf("| ");
                         //     printf("%d ", pas[k]);
                         // }
-                        for (int r = 0; r < ARcounter; r++)
-                        {
-                            BPindex = BParray[r];
-
-                            for (int k = textLength; k < SP + 1; k++) 
+                        if (ARcounter == 0){
+                        for (int k = textLength; k < SP + 1; k++) 
                             {
-                                if (BPindex == k+1)
-                                {
-                                    printf("%d ", pas[k]);
-                                    printf("| ");
-                                } 
                                 printf("%d ", pas[k]); 
+                            }
+                        } else {
+                            for (int r = 0; r < ARcounter; r++)
+                            {
+                                BPindex = BParray[r];
+                                //printf("\nBPindex: %d\n", BPindex);
+
+                                for (int k = textLength; k < SP + 1; k++) 
+                                {
+                                    if (BPindex == k+1)
+                                    {
+                                        printf("%d ", pas[k]);
+                                        printf("| ");
+                                    } else {
+                                        printf("%d ", pas[k]);
+                                    }
+                                    
+                                }
                             }
                         }
                         printf("\n");
@@ -470,18 +595,29 @@ int main(int argc, char *argv[]) {
                 //     printf("%d ", pas[k]);
 
                 // }
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
-
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
+                    }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+
+                        for (int k = newBP; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                                newBP = k + 1;
+                            } else {
+                                printf("%d ", pas[k]);
+                            }
+                             
+                        }
                     }
                 }
                 printf("\n");
@@ -507,20 +643,33 @@ int main(int argc, char *argv[]) {
                 printf("    STO %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
 
                 // *********** WHAT I changed ****************
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
-
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
                     }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+                        //printf("one");
+
+                        for (int k = newBP; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                                newBP = k + 1;
+                            } else {
+                                printf("%d ", pas[k]);
+                            }
+                             
+                        }
+                    }
                 }
+                
                 
                 printf("\n"); 
                 break;
@@ -546,9 +695,23 @@ int main(int argc, char *argv[]) {
                 BP = SP + 1;
                 PC = M;
 
+                // printf("\n ______________\n");
+                // printf("\n pas[SP+9] %d\n", pas[SP+9]);
+                // printf("\n arb: %d\n", arb);
                 // ****ALSO added here ****
+                // if (calCount >= 1) {
+                //     ARcounter += 1;
+                //     BParray[ARcounter] = BP;
+                // } else {
+                //     BParray[ARcounter] = BP;
+                // }
+                //ARcounter += 1;
+                //printf("arcount before: %d", ARcounter);
                 BParray[ARcounter] = BP;
-                ARcounter += 1;
+                //BParrayCounter += 1;
+
+                // calCount += 1;
+                
                 /// ********************
 
                 //SP stays the same;
@@ -559,20 +722,35 @@ int main(int argc, char *argv[]) {
                 //     AR1 = SP + 1;
                 // }
                 printf("    CAL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
-
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
                     }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+
+                        for (int k = newBP; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                                newBP = k + 1;
+                            } else {
+                                printf("%d ", pas[k]);
+                            }
+                             
+                        }
+                    }
                 }
+                //BParrayCounter += 1;
+                ARcounter +=1;
+                //printf("arcount: %d", ARcounter);
+
                 // for (int k = textLength; k < SP + 1; k++)
                 // {
                 //     //printf("%d ", pas[k]);
@@ -601,18 +779,33 @@ int main(int argc, char *argv[]) {
                 //     }
                 //     printf("%d ", pas[k]);
                 // }
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
 
+                //printf("This is SP valuce: %d \n", SP);
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
+                    }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+
+                        for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                                //k++;
+                                //printf("here");
+                            } else {
+                                printf("%d ", pas[k]);
+                               // printf("over here");
+                            }
+                             
+                        }
                     }
                 }
                 printf("\n");
@@ -632,18 +825,28 @@ int main(int argc, char *argv[]) {
                 //     }
                 //     printf("%d ", pas[k]);
                 // }
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
-
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
+                    }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+
+                        for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                            } else {
+                                printf("%d ", pas[k]);
+                            }
+                             
+                        }
                     }
                 }
                 printf("\n");
@@ -667,18 +870,28 @@ int main(int argc, char *argv[]) {
                 //     }
                 //     printf("%d ", pas[k]);
                 // }
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
-
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
+                    }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+
+                        for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                            } else {
+                                printf("%d ", pas[k]);
+                            }
+                             
+                        }
                     }
                 }
                 printf("\n");
@@ -716,18 +929,28 @@ int main(int argc, char *argv[]) {
                     //     }
                     // printf("%d ", pas[k]);
                     // }
-                    for (int r = 0; r < ARcounter; r++)
-                    {
-                        BPindex = BParray[r];
-
-                        for (int k = textLength; k < SP + 1; k++) 
+                    if (ARcounter == 0){
+                    for (int k = textLength; k < SP + 1; k++) 
                         {
-                            if (BPindex == k+1)
-                            {
-                                printf("%d ", pas[k]);
-                                printf("| ");
-                            } 
                             printf("%d ", pas[k]); 
+                        }
+                    } else {
+                        for (int r = 0; r < ARcounter; r++)
+                        {
+                            BPindex = BParray[r];
+                            //printf("\nBPindex: %d\n", BPindex);
+
+                            for (int k = textLength; k < SP + 1; k++) 
+                            {
+                                if (BPindex == k+1)
+                                {
+                                    printf("%d ", pas[k]);
+                                    printf("| ");
+                                } else {
+                                    printf("%d ", pas[k]);
+                                }
+                                
+                            }
                         }
                     }
                     printf("\n");
@@ -742,23 +965,33 @@ int main(int argc, char *argv[]) {
                 //     }
                 //     printf("%d ", pas[k]);
                 // }
-                for (int r = 0; r < ARcounter; r++)
-                {
-                    BPindex = BParray[r];
-
+                if (ARcounter == 0){
                     for (int k = textLength; k < SP + 1; k++) 
                     {
-                        if (BPindex == k+1)
-                        {
-                            printf("%d ", pas[k]);
-                            printf("| ");
-                        } 
                         printf("%d ", pas[k]); 
+                    }
+                } else {
+                    for (int r = 0; r < ARcounter; r++)
+                    {
+                        BPindex = BParray[r];
+                        //printf("\nBPindex: %d\n", BPindex);
+
+                        for (int k = textLength; k < SP + 1; k++) 
+                        {
+                            if (BPindex == k+1)
+                            {
+                                printf("%d ", pas[k]);
+                                printf("| ");
+                            } else {
+                                printf("%d ", pas[k]);
+                            }
+                             
+                        }
                     }
                 }
                 printf("\n");
                 break;
-
+            
             // case 10:
             //     L = pas[PC+1];
             //     M = pas[PC+2];
