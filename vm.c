@@ -36,6 +36,9 @@ int main(int argc, char *argv[]) {
         count += 1; 
     }
 
+    int ARcounter = 0;
+    int BPindex = 0;
+    int BParray[150];
     int BP = count * 3;
     int textLength = BP;
     int SP = BP - 1;
@@ -329,11 +332,23 @@ int main(int argc, char *argv[]) {
                 SP -= 1; 
 
                 printf("    STO %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                for (int k = textLength; k < SP + 1; k++) {
-                    if (AR1 == k || AR2 == k)
-                        printf("| ");
-                    printf("%d ", pas[k]);
+
+                // *********** WHAT I changed ****************
+                for (int r = 0; r < ARcounter; r++)
+                {
+                    BPindex = BParray[r];
+
+                    for (int k = textLength; k < SP + 1; k++) 
+                    {
+                        if (BPindex == k+1)
+                        {
+                            printf("%d ", pas[k]);
+                            printf("| ");
+                        } 
+                        printf("%d ", pas[k]); 
+                    }
                 }
+                
                 printf("\n"); 
                 break;
 
@@ -343,6 +358,10 @@ int main(int argc, char *argv[]) {
                 M = pas[PC+2];
                 PC += 3;
                 arb = BP;
+
+                printf("this is the BPindex: %d",BParray[ARcounter-1] = BP );
+                
+
                 // base function thing
                 while (L > 0) {
                     arb = pas[arb];
@@ -353,6 +372,12 @@ int main(int argc, char *argv[]) {
                 pas[SP+3] = PC;          // return address (RA)
                 BP = SP + 1;
                 PC = M;
+
+                // ****ALSO added here ****
+                BParray[ARcounter] = BP;
+                ARcounter += 1;
+                /// ********************
+
                 //SP stays the same;
                 if (AR1 > 0)
                 {
