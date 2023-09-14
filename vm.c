@@ -655,7 +655,7 @@ int main (int argc, char *argv[]) {
                         printf("| ");
                     }
                     else {
-                        if (outerLoop == arCount)
+                        if (outerLoop == arCount) 
                             for (int y = currBPIndex; y < SP + 1; y++)
                                 printf("%d ", pas[y]); 
                         if (sec == 0 && kCount == 0) {
