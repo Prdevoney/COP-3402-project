@@ -877,9 +877,7 @@ int main (int argc, char *argv[]) {
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
-                //printf("\n this is L: %d\n", L );
-
-                //printf("\n this is M: %d\n", M );
+               
                 switch (M)
                 {
                     case 1:
@@ -960,13 +958,6 @@ int main (int argc, char *argv[]) {
                 }
                 printf("\n");
                 break;
-            
-            // case 10:
-            //     L = pas[PC+1];
-            //     M = pas[PC+2];
-            //     PC += 3;
-            //     printf("    LIT\n");
-            //     break;
 
             default:
                 printf("Not valid OP\n");
