@@ -8,7 +8,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-// figure out more imports??
 
 #define ARRAY_SIZE 512
 
@@ -16,7 +15,7 @@ int main (int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
-        printf("No pas file recieved, please put: 'elf.txt' after executable file! \n"); 
+        printf("No input file recieved, please put: 'elf.txt' after executable file! \n"); 
         return 0; 
     }
 
@@ -48,15 +47,12 @@ int main (int argc, char *argv[]) {
         pas[r] = 0;
     }
 
-   printf("\t\tPC  BP  SP  stack"); //what if the BP and SP are triple digits?
+   printf("\t\tPC  BP  SP  stack"); 
    printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
     for (int j = 0; j < textLength; j += 3)
     {
         OP = pas[PC];
-        
-        //int BP = the index immediately following the M value from the last instruction in the program
-        // int IR = idk
 
         switch (OP) {
             // ==================== LIT ====================
@@ -668,15 +664,12 @@ int main (int argc, char *argv[]) {
                 PC += 3;
                 arb = BP;
 
-                //printf("this is the BPindex: %d",BParray[ARcounter-1] = BP );
-                
-
                 // base function thing
                 while (L > 0) {
                     arb = pas[arb];
                     L--;
                 }
-                pas[SP+1] = arb; ///base(BP,L);  // static link (SL)
+                pas[SP+1] = arb;         // static link (SL)
                 pas[SP+2] = BP;          // dynamic link (DL)
                 pas[SP+3] = PC;          // return address (RA)
                 BP = SP + 1;
@@ -700,7 +693,6 @@ int main (int argc, char *argv[]) {
                             printf("| "); 
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
-                        // printf("| ");
                     }
                     else {
                         if (outerLoop != 0)
@@ -710,23 +702,12 @@ int main (int argc, char *argv[]) {
                                 printf("%d ", pas[y]); 
                         if (sec == 0 && kCount == 0) {
                             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                                printf("%d ", pas[y]); 
-                            // if (arCount != outerLoop)
-                                // printf("| ");
+                                printf("%d ", pas[y]);
                         }
                     }
                     sec--; 
                     outerLoop++; 
                 }
-                // for (int k = textLength; k < SP + 1; k++)
-                // {
-                //     //printf("%d ", pas[k]);
-                //     if (AR1 == k || AR2 == k){
-                //         printf("| ");
-                //     }
-                //     printf("%d ", pas[k]);
-
-                // }
                 printf("\n");
                 break;
 
@@ -855,13 +836,11 @@ int main (int argc, char *argv[]) {
                 break;
                 
             // ==================== SYS ====================
-            // ---R TO DO:----> check all cases and make sure they work right later!!!
             case 9:
-                // have to put 3 switch statements in here since there are 3 L levels
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
-               
+                // 3 switch statements in here since there are 3 L levels for SYS
                 switch (M)
                 {
                     case 1:
@@ -950,8 +929,5 @@ int main (int argc, char *argv[]) {
     }
 
     fclose(file);
-
     return 0;
 }
-
-
