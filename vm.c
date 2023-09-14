@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
                 PC += 3;
                 switch(M) {
                     case 0:
-                        // ==================== 2 RTN ====================
+                        // ========== 2 RTN ==========
                         SP = BP - 1; 
                         BP = pas[SP+2]; 
                         PC = pas[SP+3]; 
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
                         printf("\n");
                         break; 
                     case 1: 
-                        // ==================== 2 ADD ====================
+                        // ========== 2 ADD ==========
                         pas[SP-1] = pas[SP-1] + pas[SP]; 
                         SP = SP - 1; 
                         printf("    ADD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
                         printf("\n");
                         break;
                     case 2: 
-                        // ==================== 2 SUB ====================
+                        // ========== 2 SUB ==========
                         pas[SP-1] = pas[SP-1] - pas[SP]; 
                         SP = SP - 1; 
                         printf("    SUB %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 3: 
-                        // ==================== 2 MUL ====================
+                        // ========== 2 MUL ==========
                         pas[SP-1] = pas[SP-1] * pas[SP]; 
                         SP = SP - 1; 
                         printf("    MUL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 4: 
-                        // ==================== 2 DIV ====================
+                        // ========== 2 DIV ==========
                         pas[SP-1] = pas[SP-1] / pas[SP]; 
                         SP = SP - 1; 
                         printf("    DIV %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 5: 
-                        // ==================== 2 EQL ====================
+                        // ========== 2 EQL ==========
                         if (pas[SP-1] == pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 6: 
-                        // ==================== 2 NEQ ====================
+                        // ========== 2 NEQ ==========
                         if (pas[SP-1] != pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 7: 
-                        // ==================== 2 LSS ====================
+                        // ========== 2 LSS ==========
                         if (pas[SP-1] < pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -221,7 +221,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 8: 
-                        // ==================== 2 LEQ ====================
+                        // ========== 2 LEQ ==========
                         if (pas[SP-1] <= pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -240,7 +240,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 9: 
-                        // ==================== 2 GTR ====================
+                        // ========== 2 GTR ==========
                         if (pas[SP-1] > pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -259,7 +259,7 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case 10: 
-                        // ==================== 2 GEQ ====================
+                        // ========== 2 GEQ ==========
                         if (pas[SP-1] >= pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
