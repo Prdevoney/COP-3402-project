@@ -152,7 +152,7 @@ int main (int argc, char *argv[]) {
                             sec--; 
                             outerLoop++; 
                         }
-                    }
+                    
                         printf("\n");
                         break; 
                     case 1: 
@@ -189,7 +189,7 @@ int main (int argc, char *argv[]) {
                             sec--; 
                             outerLoop++; 
                         }
-                    }
+                    
                         printf("\n");
                         break;
                     case 2: 
@@ -344,7 +344,7 @@ int main (int argc, char *argv[]) {
                             sec--; 
                             outerLoop++; 
                         }
-                    }
+                    
                         printf("\n");
                         break;
 
@@ -388,7 +388,7 @@ int main (int argc, char *argv[]) {
                             sec--; 
                             outerLoop++; 
                         }
-                    }
+                    
                         printf("\n");
                         break;
 
@@ -518,7 +518,7 @@ int main (int argc, char *argv[]) {
                             sec--; 
                             outerLoop++; 
                         }
-                    }
+                    
                         printf("\n");
                         break;
 
@@ -568,7 +568,7 @@ int main (int argc, char *argv[]) {
                     default:
                         printf("Not valid OP\n");
                         break;
-                }
+                
                 break;
             
             // ==================== LOD ====================
@@ -730,19 +730,6 @@ int main (int argc, char *argv[]) {
                     sec--; 
                     outerLoop++; 
                 }
-                //BParrayCounter += 1;
-                ARcounter +=1;
-                //printf("arcount: %d", ARcounter);
-
-                // for (int k = textLength; k < SP + 1; k++)
-                // {
-                //     //printf("%d ", pas[k]);
-                //     if (AR1 == k || AR2 == k){
-                //         printf("| ");
-                //     }
-                //     printf("%d ", pas[k]);
-
-                // }
                 printf("\n");
                 break;
 
