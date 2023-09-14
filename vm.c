@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
         count += 1; 
     }
 
+    // Variable Party 
     int BP = count * 3;
     int textLength = BP;
     int SP = BP - 1;
@@ -43,6 +44,7 @@ int main(int argc, char *argv[]) {
     int OP = 0;
     int L = 0;
     int M = 0;
+    int arCount = 0; 
     int AR1 = 0; //Activation Record between level 1 and level 2
     int AR2 = 0; //Activation Record between level 2 and level 3
 
@@ -339,6 +341,7 @@ int main(int argc, char *argv[]) {
 
             // ==================== CAL ====================
             case 5:
+                arCount++; 
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
@@ -381,15 +384,8 @@ int main(int argc, char *argv[]) {
                 SP += M;
                 PC += 3;
                 printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                
 
-
-                for (int k = textLength; k < SP + 1; k++)
-                {
-                    if (AR1 == k || AR2 == k){
-                        printf("| ");
-                    }
-                    printf("%d ", pas[k]);
-                }
                 printf("\n");
                 break;
 
