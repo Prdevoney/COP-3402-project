@@ -253,10 +253,24 @@ int main(int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GTR %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        for (int k = textLength; k < SP + 1; k++) {
-                            if (AR1 == k || AR2 == k)
-                                printf("| ");
-                            printf("%d ", pas[k]);
+                        // for (int k = textLength; k < SP + 1; k++) {
+                        //     if (AR1 == k || AR2 == k)
+                        //         printf("| ");
+                        //     printf("%d ", pas[k]);
+                        // }
+                        for (int r = 0; r < ARcounter; r++)
+                        {
+                            BPindex = BParray[r];
+
+                            for (int k = textLength; k < SP + 1; k++) 
+                            {
+                                if (BPindex == k+1)
+                                {
+                                    printf("%d ", pas[k]);
+                                    printf("| ");
+                                } 
+                                printf("%d ", pas[k]); 
+                            }
                         }
                         printf("\n");
                         break;
@@ -272,10 +286,24 @@ int main(int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        for (int k = textLength; k < SP + 1; k++) {
-                            if (AR1 == k || AR2 == k)
-                                printf("| ");
-                            printf("%d ", pas[k]);
+                        // for (int k = textLength; k < SP + 1; k++) {
+                        //     if (AR1 == k || AR2 == k)
+                        //         printf("| ");
+                        //     printf("%d ", pas[k]);
+                        // }
+                        for (int r = 0; r < ARcounter; r++)
+                        {
+                            BPindex = BParray[r];
+
+                            for (int k = textLength; k < SP + 1; k++) 
+                            {
+                                if (BPindex == k+1)
+                                {
+                                    printf("%d ", pas[k]);
+                                    printf("| ");
+                                } 
+                                printf("%d ", pas[k]); 
+                            }
                         }
                         printf("\n");
                         break;
@@ -303,13 +331,27 @@ int main(int argc, char *argv[]) {
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                for (int k = textLength; k < SP + 1; k++)
-                {
-                    if (AR1 == k || AR2 == k){
-                        printf("| ");
-                    }
-                    printf("%d ", pas[k]);
+                // for (int k = textLength; k < SP + 1; k++)
+                // {
+                //     if (AR1 == k || AR2 == k){
+                //         printf("| ");
+                //     }
+                //     printf("%d ", pas[k]);
 
+                // }
+                for (int r = 0; r < ARcounter; r++)
+                {
+                    BPindex = BParray[r];
+
+                    for (int k = textLength; k < SP + 1; k++) 
+                    {
+                        if (BPindex == k+1)
+                        {
+                            printf("%d ", pas[k]);
+                            printf("| ");
+                        } 
+                        printf("%d ", pas[k]); 
+                    }
                 }
                 printf("\n");
                 break;
@@ -359,7 +401,7 @@ int main(int argc, char *argv[]) {
                 PC += 3;
                 arb = BP;
 
-                printf("this is the BPindex: %d",BParray[ARcounter-1] = BP );
+                //printf("this is the BPindex: %d",BParray[ARcounter-1] = BP );
                 
 
                 // base function thing
