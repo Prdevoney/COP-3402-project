@@ -12,11 +12,6 @@
 
 #define ARRAY_SIZE 512
 
-/*
-    You will never be given an input file with more than pas length greater 
-    than 150 lines of code
-*/
-
 int main (int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
