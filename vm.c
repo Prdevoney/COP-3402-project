@@ -17,11 +17,6 @@
     than 150 lines of code
 */
 
-void print ( ){
-
-}
-
-
 int main (int argc, char *argv[]) {
 
     FILE *file = fopen(argv[1], "r");
@@ -78,23 +73,27 @@ int main (int argc, char *argv[]) {
                 pas[SP] = M; // check later to make sure this is after
                 
                 printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                // this spacing is still wrong
+                // loop to print out activation records. 
+                // copy and pasted this loop into every case. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
+                    // determines bounds of the activation record to print. 
                     for (int k = 0; k < sec; k++) {
                         prevBPIndex = pas[prevBPIndex+1]; 
                         currBPIndex = pas[currBPIndex+1]; 
                         kCount++; 
                     }
+                    // print the activation record.  
                     if (kCount != 0){
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
                         printf("| ");
                     }
+                    // print the activation record if we are on the last record to print. 
                     else {
                         if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
@@ -125,7 +124,7 @@ int main (int argc, char *argv[]) {
                         printf("    RTN %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         outerLoop = 0;
                         sec = arCount - 2; 
-                        arCount = 0; 
+                        arCount -= 1; 
                         while (outerLoop <= arCount) {
                             int currBPIndex = BP; 
                             int prevBPIndex = pas[BP+1];
@@ -313,11 +312,35 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    EQL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // for (int k = textLength; k < SP + 1; k++) {
-                        //     if (AR1 == k || AR2 == k)
-                        //         printf("| ");
-                        //     printf("%d ", pas[k]);
-                        // }
+                        outerLoop = 0;
+                        sec = arCount - 1; 
+                        while (outerLoop <= arCount) {
+                            int currBPIndex = BP; 
+                            int prevBPIndex = pas[BP+1];
+                            int kCount = 0; 
+                            for (int k = 0; k < sec; k++) {
+                                prevBPIndex = pas[prevBPIndex+1]; 
+                                currBPIndex = pas[currBPIndex+1]; 
+                                kCount++; 
+                            }
+                            if (kCount != 0){
+                                for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                    printf("%d ", pas[y]); 
+                                printf("| ");
+                            }
+                            else {
+                                if (outerLoop == arCount)
+                                    for (int y = currBPIndex; y < SP + 1; y++)
+                                        printf("%d ", pas[y]); 
+                                if (sec == 0 && kCount == 0) {
+                                    for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                        printf("%d ", pas[y]); 
+                                    printf("| ");
+                                }
+                            }
+                            sec--; 
+                            outerLoop++; 
+                        }
                         printf("\n");
                         break;
 
@@ -332,11 +355,35 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    NEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // for (int k = textLength; k < SP + 1; k++) {
-                        //     if (AR1 == k || AR2 == k)
-                        //         printf("| ");
-                        //     printf("%d ", pas[k]);
-                        // }
+                        outerLoop = 0;
+                        sec = arCount - 1; 
+                        while (outerLoop <= arCount) {
+                            int currBPIndex = BP; 
+                            int prevBPIndex = pas[BP+1];
+                            int kCount = 0; 
+                            for (int k = 0; k < sec; k++) {
+                                prevBPIndex = pas[prevBPIndex+1]; 
+                                currBPIndex = pas[currBPIndex+1]; 
+                                kCount++; 
+                            }
+                            if (kCount != 0){
+                                for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                    printf("%d ", pas[y]); 
+                                printf("| ");
+                            }
+                            else {
+                                if (outerLoop == arCount)
+                                    for (int y = currBPIndex; y < SP + 1; y++)
+                                        printf("%d ", pas[y]); 
+                                if (sec == 0 && kCount == 0) {
+                                    for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                        printf("%d ", pas[y]); 
+                                    printf("| ");
+                                }
+                            }
+                            sec--; 
+                            outerLoop++; 
+                        }
                         printf("\n");
                         break;
 
@@ -394,11 +441,35 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    LEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // for (int k = textLength; k < SP + 1; k++) {
-                        //     if (AR1 == k || AR2 == k)
-                        //         printf("| ");
-                        //     printf("%d ", pas[k]);
-                        // }
+                        outerLoop = 0;
+                        sec = arCount - 1; 
+                        while (outerLoop <= arCount) {
+                            int currBPIndex = BP; 
+                            int prevBPIndex = pas[BP+1];
+                            int kCount = 0; 
+                            for (int k = 0; k < sec; k++) {
+                                prevBPIndex = pas[prevBPIndex+1]; 
+                                currBPIndex = pas[currBPIndex+1]; 
+                                kCount++; 
+                            }
+                            if (kCount != 0){
+                                for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                    printf("%d ", pas[y]); 
+                                printf("| ");
+                            }
+                            else {
+                                if (outerLoop == arCount)
+                                    for (int y = currBPIndex; y < SP + 1; y++)
+                                        printf("%d ", pas[y]); 
+                                if (sec == 0 && kCount == 0) {
+                                    for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                        printf("%d ", pas[y]); 
+                                    printf("| ");
+                                }
+                            }
+                            sec--; 
+                            outerLoop++; 
+                        }
                         printf("\n");
                         break;
 
@@ -413,11 +484,35 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GTR %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // for (int k = textLength; k < SP + 1; k++) {
-                        //     if (AR1 == k || AR2 == k)
-                        //         printf("| ");
-                        //     printf("%d ", pas[k]);
-                        // }
+                        outerLoop = 0;
+                        sec = arCount - 1; 
+                        while (outerLoop <= arCount) {
+                            int currBPIndex = BP; 
+                            int prevBPIndex = pas[BP+1];
+                            int kCount = 0; 
+                            for (int k = 0; k < sec; k++) {
+                                prevBPIndex = pas[prevBPIndex+1]; 
+                                currBPIndex = pas[currBPIndex+1]; 
+                                kCount++; 
+                            }
+                            if (kCount != 0){
+                                for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                    printf("%d ", pas[y]); 
+                                printf("| ");
+                            }
+                            else {
+                                if (outerLoop == arCount)
+                                    for (int y = currBPIndex; y < SP + 1; y++)
+                                        printf("%d ", pas[y]); 
+                                if (sec == 0 && kCount == 0) {
+                                    for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                        printf("%d ", pas[y]); 
+                                    printf("| ");
+                                }
+                            }
+                            sec--; 
+                            outerLoop++; 
+                        }
                         printf("\n");
                         break;
 
@@ -432,11 +527,35 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // for (int k = textLength; k < SP + 1; k++) {
-                        //     if (AR1 == k || AR2 == k)
-                        //         printf("| ");
-                        //     printf("%d ", pas[k]);
-                        // }
+                        outerLoop = 0;
+                        sec = arCount - 1; 
+                        while (outerLoop <= arCount) {
+                            int currBPIndex = BP; 
+                            int prevBPIndex = pas[BP+1];
+                            int kCount = 0; 
+                            for (int k = 0; k < sec; k++) {
+                                prevBPIndex = pas[prevBPIndex+1]; 
+                                currBPIndex = pas[currBPIndex+1]; 
+                                kCount++; 
+                            }
+                            if (kCount != 0){
+                                for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                    printf("%d ", pas[y]); 
+                                printf("| ");
+                            }
+                            else {
+                                if (outerLoop == arCount)
+                                    for (int y = currBPIndex; y < SP + 1; y++)
+                                        printf("%d ", pas[y]); 
+                                if (sec == 0 && kCount == 0) {
+                                    for (int y = prevBPIndex; y < currBPIndex; y++) 
+                                        printf("%d ", pas[y]); 
+                                    printf("| ");
+                                }
+                            }
+                            sec--; 
+                            outerLoop++; 
+                        }
                         printf("\n");
                         break;
 
