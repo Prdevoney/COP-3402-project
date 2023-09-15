@@ -41,6 +41,7 @@ int main (int argc, char *argv[]) {
     int outerLoop = 0;      // OuterLoop counter
     int sec = arCount - 1;  // Registers Left
     int arb = 0;
+    int halt = 1;
 
     // put 0's into the rest of the empty PAS
     for(int r = textLength; r < ARRAY_SIZE; r++)
@@ -51,7 +52,7 @@ int main (int argc, char *argv[]) {
    printf("\t\tPC  BP  SP  stack"); 
    printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
-    for (int j = 0; j < textLength; j++)
+    while (halt != 0)
     {
         OP = pas[PC];
         //printf("\n PC before: %d\n", PC);
@@ -848,15 +849,22 @@ int main (int argc, char *argv[]) {
                 // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
+                PC += 3;
                 
                 // Jump to M if top of stack element is 0
                 if(pas[SP] == 0){
                     PC = M;
+<<<<<<< HEAD
                     
                 } else {
                     PC += 3;
                 }
                 SP -= 1;
+=======
+                }
+                SP -= 1;
+
+>>>>>>> b9fc7ad20a0e5445ccd406e822b0abf296012b25
                 printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 //print loop for multiple AR
                 outerLoop = 0;
@@ -912,39 +920,41 @@ int main (int argc, char *argv[]) {
                     break;
 
                     case 3:
-                    printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                    //printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                     // Prints out the stack for case 3 in SYS
-                    outerLoop = 0;
-                    sec = arCount - 1; 
-                    while (outerLoop <= arCount) {
-                        int currBPIndex = BP; 
-                        int prevBPIndex = pas[BP+1];
-                        int kCount = 0; 
-                        for (int k = 0; k < sec; k++) {
-                            prevBPIndex = pas[prevBPIndex+1]; 
-                            currBPIndex = pas[currBPIndex+1]; 
-                            kCount++; 
-                        }
-                        if (kCount != 0){
-                            for (int y = prevBPIndex; y < currBPIndex; y++) 
-                                printf("%d ", pas[y]); 
-                            printf("| ");
-                        }
-                        else {
-                            if (outerLoop == arCount)
-                                for (int y = currBPIndex; y < SP + 1; y++)
-                                    printf("%d ", pas[y]); 
-                            if (sec == 0 && kCount == 0) {
-                                for (int y = prevBPIndex; y < currBPIndex; y++) 
-                                    printf("%d ", pas[y]); 
-                                printf("| ");
-                            }
-                        }
-                        sec--; 
-                        outerLoop++; 
-                    }
-                    printf("\n");
-                    return 0;
+                    // outerLoop = 0;
+                    // sec = arCount - 1; 
+                    // while (outerLoop <= arCount) {
+                    //     int currBPIndex = BP; 
+                    //     int prevBPIndex = pas[BP+1];
+                    //     int kCount = 0; 
+                    //     for (int k = 0; k < sec; k++) {
+                    //         prevBPIndex = pas[prevBPIndex+1]; 
+                    //         currBPIndex = pas[currBPIndex+1]; 
+                    //         kCount++; 
+                    //     }
+                    //     if (kCount != 0){
+                    //         for (int y = prevBPIndex; y < currBPIndex; y++) 
+                    //             printf("%d ", pas[y]); 
+                    //         printf("| ");
+                    //     }
+                    //     else {
+                    //         if (outerLoop == arCount)
+                    //             for (int y = currBPIndex; y < SP + 1; y++)
+                    //                 printf("%d ", pas[y]); 
+                    //         if (sec == 0 && kCount == 0) {
+                    //             for (int y = prevBPIndex; y < currBPIndex; y++) 
+                    //                 printf("%d ", pas[y]); 
+                    //             printf("| ");
+                    //         }
+                    //     }
+                    //     sec--; 
+                    //     outerLoop++; 
+                    // }
+                    // printf("\n");
+                    halt = 0;
+                    break;
+                    //return 0;
 
                 }
                 printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
