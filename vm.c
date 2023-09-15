@@ -51,7 +51,7 @@ int main (int argc, char *argv[]) {
    printf("\t\tPC  BP  SP  stack"); 
    printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
-    for (int j = 0; j < textLength; j += 3)
+    for (int j = 0; j < textLength; j++)
     {
         OP = pas[PC];
 
@@ -586,6 +586,8 @@ int main (int argc, char *argv[]) {
             
             // ==================== LOD ====================
             case 3:
+                // printf("---%d---\n", pas[SP]); 
+
                 // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
@@ -593,20 +595,22 @@ int main (int argc, char *argv[]) {
                 SP += 1;
                 arb = BP;
 
-                printf("\n L: %d  arb: %d", L,arb);
+                // printf("\nBefore L: %d  arb: %d", L,arb);
                 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb];
+                    arb = pas[arb+1];
                     L--;
                 }
 
                 L = pas[PC-2]; 
 
-                printf("\nAfter L: %d  arb: %d\n",L,arb);
+                // printf("\nAfter L: %d  arb: %d\n",L,arb);
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                // printf(" \n %d \n", pas[SP]); 
+
                 //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
@@ -650,7 +654,7 @@ int main (int argc, char *argv[]) {
 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb];
+                    arb = pas[arb+1];
                     L--;
                 }
 
@@ -705,7 +709,7 @@ int main (int argc, char *argv[]) {
 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb];
+                    arb = pas[arb+1];
                     L--;
                 }
 
