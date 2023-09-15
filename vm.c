@@ -694,6 +694,7 @@ int main (int argc, char *argv[]) {
                     sec--; 
                     outerLoop++; 
                 }
+                // printf("\n%d\n", PC); 
                 
                 printf("\n"); 
                 break;
