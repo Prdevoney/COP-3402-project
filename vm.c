@@ -30,18 +30,18 @@ int main (int argc, char *argv[]) {
     }
 
     // Variable Party 
-    int BP = count * 3;     // base pointer
-    int textLength = BP;    // end of the textfile length
-    int SP = BP - 1;        // stack pointer
-    int PC = 0;             // program counter
-    int OP = 0;             // operation code
+    int BP = count * 3;     // Base pointer
+    int textLength = BP;    // End of the textfile length
+    int SP = BP - 1;        // Stack pointer
+    int PC = 0;             // Program counter
+    int OP = 0;             // Operation code
     int L = 0;              // Lexographical level
-    int M = 0;              // different things M
+    int M = 0;              // Different things M
     int arCount = 0;        // Activation Record Counter
     int outerLoop = 0;      // OuterLoop counter
     int sec = arCount - 1;  // Registers Left
-    int arb = 0;
-    int halt = 1;
+    int arb = 0;            // Temp base pointer
+    int halt = 1;           // Condition for while loop 
 
     // put 0's into the rest of the empty PAS
     for(int r = textLength; r < ARRAY_SIZE; r++)
@@ -55,7 +55,6 @@ int main (int argc, char *argv[]) {
     while (halt != 0)
     {
         OP = pas[PC];
-        //printf("\n PC before: %d\n", PC);
         switch (OP) {
             // ==================== LIT ====================
             case 1:
@@ -621,16 +620,12 @@ int main (int argc, char *argv[]) {
             
             // ==================== LOD ====================
             case 3:
-                // printf("---%d---\n", pas[SP]); 
-
                 // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
                 SP += 1;
                 arb = BP;
-
-                // printf("\nBefore L: %d  arb: %d", L,arb);
                 
                 // find AR base L levels down
                 while (L > 0) {
@@ -640,12 +635,9 @@ int main (int argc, char *argv[]) {
 
                 L = pas[PC-2]; 
 
-                // printf("\nAfter L: %d  arb: %d\n",L,arb);
-
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                // printf(" \n %d \n", pas[SP]); 
-
+                
                 //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
@@ -729,6 +721,7 @@ int main (int argc, char *argv[]) {
                     sec--; 
                     outerLoop++; 
                 }
+                
                 
                 printf("\n"); 
                 break;
@@ -944,10 +937,9 @@ int main (int argc, char *argv[]) {
                     scanf("%d", &pas[SP]);
                     break;
 
-                    case 3:
+                    case 3: 
                     halt = 0;
                     break;
-                    //return 0;
 
                 }
                 printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -989,7 +981,6 @@ int main (int argc, char *argv[]) {
                 printf("Not valid OP\n");
                 break;
         }
-        //printf("\n PC after: %d\n j = %d\n", PC, j);
     }
 
     fclose(file);
