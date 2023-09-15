@@ -7,3 +7,5 @@
 */
 # COP-3402-project
 Semester long project for System Software (COP 3402)
+
+read me file indicating how to compile and run the VM.
