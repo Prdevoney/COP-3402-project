@@ -30,16 +30,16 @@ int main (int argc, char *argv[]) {
     }
 
     // Variable Party 
-    int BP = count * 3;
-    int textLength = BP;
-    int SP = BP - 1;
-    int PC = 0;
-    int OP = 0;
-    int L = 0;
-    int M = 0;
-    int arCount = 0; 
-    int outerLoop = 0;
-    int sec = arCount - 1; 
+    int BP = count * 3;     // base pointer
+    int textLength = BP;    // end of the textfile length
+    int SP = BP - 1;        // stack pointer
+    int PC = 0;             // program counter
+    int OP = 0;             // operation code
+    int L = 0;              // Lexographical level
+    int M = 0;              // different things M
+    int arCount = 0;        // Activation Record Counter
+    int outerLoop = 0;      // OuterLoop counter
+    int sec = arCount - 1;  
 
     // put 0's into the rest of the empty PAS
     for(int r = textLength; r < ARRAY_SIZE; r++)
@@ -57,11 +57,12 @@ int main (int argc, char *argv[]) {
         switch (OP) {
             // ==================== LIT ====================
             case 1:
+                // Update specifically for each instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 SP += 1;
                 PC += 3;
-                pas[SP] = M; // check later to make sure this is after
+                pas[SP] = M; 
                 
                 printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 // loop to print out activation records. 
@@ -103,16 +104,20 @@ int main (int argc, char *argv[]) {
 
             // ==================== OPR ====================
             case 2:
+                // Updates specifically for OPR instructions
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
                 switch(M) {
+                    // ========== 2 RTN ==========
                     case 0:
-                        // ========== 2 RTN ==========
+                        // Updates specifically for instruction
                         SP = BP - 1; 
                         BP = pas[SP+2]; 
                         PC = pas[SP+3]; 
                         printf("    RTN %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 2; 
                         arCount -= 1; 
@@ -145,11 +150,14 @@ int main (int argc, char *argv[]) {
                         }
                         printf("\n");
                         break; 
+
+                    // ========== 2 ADD ==========
                     case 1: 
-                        // ========== 2 ADD ==========
+                        // Updates specifically for instruction
                         pas[SP-1] = pas[SP-1] + pas[SP]; 
                         SP = SP - 1; 
                         printf("    ADD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -181,11 +189,14 @@ int main (int argc, char *argv[]) {
                         }
                         printf("\n");
                         break;
+
+                    // ========== 2 SUB ==========
                     case 2: 
-                        // ========== 2 SUB ==========
+                        // Updates specifically for instruction
                         pas[SP-1] = pas[SP-1] - pas[SP]; 
                         SP = SP - 1; 
                         printf("    SUB %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -218,11 +229,13 @@ int main (int argc, char *argv[]) {
                         printf("\n");
                         break;
 
+                    // ========== 2 MUL ==========
                     case 3: 
-                        // ========== 2 MUL ==========
+                        // Updates specifically for instruction
                         pas[SP-1] = pas[SP-1] * pas[SP]; 
                         SP = SP - 1; 
                         printf("    MUL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -255,11 +268,13 @@ int main (int argc, char *argv[]) {
                         printf("\n");
                         break;
 
+                    // ========== 2 DIV ==========
                     case 4: 
-                        // ========== 2 DIV ==========
+                        // Updates specifically for instruction
                         pas[SP-1] = pas[SP-1] / pas[SP]; 
                         SP = SP - 1; 
                         printf("    DIV %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -292,8 +307,9 @@ int main (int argc, char *argv[]) {
                         printf("\n");
                         break;
 
+                    // ========== 2 EQL ==========
                     case 5: 
-                        // ========== 2 EQL ==========
+                        // Updates specifically for instruction
                         if (pas[SP-1] == pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -303,6 +319,7 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    EQL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -335,8 +352,9 @@ int main (int argc, char *argv[]) {
                         printf("\n");
                         break;
 
+                    // ========== 2 NEQ ==========
                     case 6: 
-                        // ========== 2 NEQ ==========
+                        // Updates specifically for instruction
                         if (pas[SP-1] != pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -346,6 +364,7 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    NEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -377,9 +396,10 @@ int main (int argc, char *argv[]) {
                         }
                         printf("\n");
                         break;
-
+                        
+                    // ========== 2 LSS ==========
                     case 7: 
-                        // ========== 2 LSS ==========
+                        // Updates specifically for instruction
                         if (pas[SP-1] < pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -389,6 +409,7 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    LSS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -421,8 +442,9 @@ int main (int argc, char *argv[]) {
                         printf("\n");
                         break;
 
+                    // ========== 2 LEQ ==========
                     case 8: 
-                        // ========== 2 LEQ ==========
+                        // Updates specifically for instruction
                         if (pas[SP-1] <= pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -432,6 +454,7 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    LEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -464,8 +487,9 @@ int main (int argc, char *argv[]) {
                         printf("\n");
                         break;
 
+                    // ========== 2 GTR ==========
                     case 9: 
-                        // ========== 2 GTR ==========
+                        // Updates specifically for instruction
                         if (pas[SP-1] > pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -475,6 +499,7 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GTR %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -507,8 +532,9 @@ int main (int argc, char *argv[]) {
                         printf("\n");
                         break;
 
-                    case 10: 
-                        // ========== 2 GEQ ==========
+                    // ========== 2 GEQ ==========
+                    case 10:
+                        // Updates specifically for instruction
                         if (pas[SP-1] >= pas[SP]) {
                             pas[SP-1] = 1; 
                             SP = SP - 1; 
@@ -518,6 +544,7 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                        //print loop for multiple AR
                         outerLoop = 0;
                         sec = arCount - 1; 
                         while (outerLoop <= arCount) {
@@ -551,19 +578,21 @@ int main (int argc, char *argv[]) {
                         break;
 
                     default:
-                        printf("Not valid OP\n");
+                        printf("Not valid M for OP\n");
                         break;
                 }
                 break;
             
             // ==================== LOD ====================
             case 3:
+                // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
                 SP += 1;
                 int arb = BP;
-                // base function thing
+                
+                // find AR base L levels down
                 while (L > 0) {
                     arb = pas[arb];
                     L--;
@@ -573,6 +602,7 @@ int main (int argc, char *argv[]) {
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
@@ -607,11 +637,13 @@ int main (int argc, char *argv[]) {
 
             // ==================== STO ====================
             case 4:
+                // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
                 arb = BP;
-                // base function thing
+
+                // find AR base L levels down
                 while (L > 0) {
                     arb = pas[arb];
                     L--;
@@ -623,6 +655,7 @@ int main (int argc, char *argv[]) {
                 SP -= 1; 
 
                 printf("    STO %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
@@ -658,17 +691,20 @@ int main (int argc, char *argv[]) {
 
             // ==================== CAL ====================
             case 5:
+                // Updates specifically for instruction
                 arCount++; 
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
                 arb = BP;
 
-                // base function thing
+                // find AR base L levels down
                 while (L > 0) {
                     arb = pas[arb];
                     L--;
                 }
+                
+                // creating new AR
                 pas[SP+1] = arb;         // static link (SL)
                 pas[SP+2] = BP;          // dynamic link (DL)
                 pas[SP+3] = PC;          // return address (RA)
@@ -676,6 +712,7 @@ int main (int argc, char *argv[]) {
                 PC = M;
                
                 printf("    CAL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
                 int tempArCount = arCount - 1; 
@@ -713,12 +750,13 @@ int main (int argc, char *argv[]) {
 
             // ==================== INC ====================
             case 6:
+                // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 SP += M;
                 PC += 3;
                 printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                
+                //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
@@ -754,12 +792,13 @@ int main (int argc, char *argv[]) {
 
             // ==================== JMP ====================
             case 7:
+                // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += M;
                 // BP and SP stays the same
                 printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-
+                //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
@@ -794,6 +833,7 @@ int main (int argc, char *argv[]) {
 
             // ==================== JPC ====================
             case 8:
+                // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
@@ -803,6 +843,7 @@ int main (int argc, char *argv[]) {
                     SP -= 1;
                 }
                 printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
@@ -837,6 +878,7 @@ int main (int argc, char *argv[]) {
                 
             // ==================== SYS ====================
             case 9:
+                // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
                 PC += 3;
@@ -856,6 +898,7 @@ int main (int argc, char *argv[]) {
 
                     case 3:
                     printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                    // Prints out the stack for case 3 in SYS
                     outerLoop = 0;
                     sec = arCount - 1; 
                     while (outerLoop <= arCount) {
@@ -890,6 +933,7 @@ int main (int argc, char *argv[]) {
 
                 }
                 printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
+                //print loop for multiple AR
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
@@ -921,7 +965,7 @@ int main (int argc, char *argv[]) {
                 }
                 printf("\n");
                 break;
-
+            // 
             default:
                 printf("Not valid OP\n");
                 break;
