@@ -39,7 +39,8 @@ int main (int argc, char *argv[]) {
     int M = 0;              // different things M
     int arCount = 0;        // Activation Record Counter
     int outerLoop = 0;      // OuterLoop counter
-    int sec = arCount - 1;  
+    int sec = arCount - 1;  // Registers Left
+    int arb = 0;
 
     // put 0's into the rest of the empty PAS
     for(int r = textLength; r < ARRAY_SIZE; r++)
@@ -590,7 +591,9 @@ int main (int argc, char *argv[]) {
                 M = pas[PC+2];
                 PC += 3;
                 SP += 1;
-                int arb = BP;
+                arb = BP;
+
+                printf("\n L: %d  arb: %d");
                 
                 // find AR base L levels down
                 while (L > 0) {
@@ -599,6 +602,8 @@ int main (int argc, char *argv[]) {
                 }
 
                 L = pas[PC-2]; 
+
+                printf("\nAfter L: %d  arb: %d\n");
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -703,6 +708,8 @@ int main (int argc, char *argv[]) {
                     arb = pas[arb];
                     L--;
                 }
+
+                L = pas[PC-2];
                 
                 // creating new AR
                 pas[SP+1] = arb;         // static link (SL)
