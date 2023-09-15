@@ -118,8 +118,9 @@ int main (int argc, char *argv[]) {
                         PC = pas[SP+3]; 
                         printf("    RTN %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                         
-                        //print loop for multiple AR
+                        // print loop for multiple AR
                         outerLoop = 0;
+                        // since RTN deletes an AR arCount is decreased by 2
                         sec = arCount - 2; 
                         arCount -= 1; 
                         while (outerLoop <= arCount) {
@@ -158,37 +159,6 @@ int main (int argc, char *argv[]) {
                         pas[SP-1] = pas[SP-1] + pas[SP]; 
                         SP = SP - 1; 
                         printf("    ADD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 SUB ==========
@@ -197,37 +167,6 @@ int main (int argc, char *argv[]) {
                         pas[SP-1] = pas[SP-1] - pas[SP]; 
                         SP = SP - 1; 
                         printf("    SUB %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 MUL ==========
@@ -236,37 +175,6 @@ int main (int argc, char *argv[]) {
                         pas[SP-1] = pas[SP-1] * pas[SP]; 
                         SP = SP - 1; 
                         printf("    MUL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 DIV ==========
@@ -275,37 +183,6 @@ int main (int argc, char *argv[]) {
                         pas[SP-1] = pas[SP-1] / pas[SP]; 
                         SP = SP - 1; 
                         printf("    DIV %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 EQL ==========
@@ -320,37 +197,6 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    EQL %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 NEQ ==========
@@ -365,37 +211,6 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    NEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
                         
                     // ========== 2 LSS ==========
@@ -410,37 +225,6 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    LSS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 LEQ ==========
@@ -455,37 +239,6 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    LEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 GTR ==========
@@ -500,37 +253,6 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GTR %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        // //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     // ========== 2 GEQ ==========
@@ -545,37 +267,6 @@ int main (int argc, char *argv[]) {
                             SP = SP - 1; 
                         }
                         printf("    GEQ %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                        //print loop for multiple AR
-                        // outerLoop = 0;
-                        // sec = arCount - 1; 
-                        // while (outerLoop <= arCount) {
-                        //     int currBPIndex = BP; 
-                        //     int prevBPIndex = pas[BP+1];
-                        //     int kCount = 0; 
-                        //     for (int k = 0; k < sec; k++) {
-                        //         prevBPIndex = pas[prevBPIndex+1]; 
-                        //         currBPIndex = pas[currBPIndex+1]; 
-                        //         kCount++; 
-                        //     }
-                        //     if (kCount != 0){
-                        //         for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //             printf("%d ", pas[y]); 
-                        //         printf("| ");
-                        //     }
-                        //     else {
-                        //         if (outerLoop == arCount)
-                        //             for (int y = currBPIndex; y < SP + 1; y++)
-                        //                 printf("%d ", pas[y]); 
-                        //         if (sec == 0 && kCount == 0) {
-                        //             for (int y = prevBPIndex; y < currBPIndex; y++) 
-                        //                 printf("%d ", pas[y]); 
-                        //             printf("| ");
-                        //         }
-                        //     }
-                        //     sec--; 
-                        //     outerLoop++; 
-                        // }
-                        // printf("\n");
                         break;
 
                     default:
@@ -975,8 +666,7 @@ int main (int argc, char *argv[]) {
                 }
                 printf("\n");
                 break;
-                
-            // 
+ 
             default:
                 printf("Not valid OP\n");
                 break;
