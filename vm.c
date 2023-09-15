@@ -54,7 +54,7 @@ int main (int argc, char *argv[]) {
     for (int j = 0; j < textLength; j++)
     {
         OP = pas[PC];
-
+        //printf("\n PC before: %d\n", PC);
         switch (OP) {
             // ==================== LIT ====================
             case 1:
@@ -848,11 +848,13 @@ int main (int argc, char *argv[]) {
                 // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
-                PC += 3;
+                
                 // Jump to M if top of stack element is 0
                 if(pas[SP] == 0){
                     PC = M;
                     SP -= 1;
+                } else {
+                    PC += 3;
                 }
                 printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 //print loop for multiple AR
@@ -977,11 +979,13 @@ int main (int argc, char *argv[]) {
                 }
                 printf("\n");
                 break;
+                
             // 
             default:
                 printf("Not valid OP\n");
                 break;
         }
+        //printf("\n PC after: %d\n j = %d\n", PC, j);
     }
 
     fclose(file);
