@@ -593,7 +593,7 @@ int main (int argc, char *argv[]) {
                 SP += 1;
                 arb = BP;
 
-                printf("\n L: %d  arb: %d");
+                printf("\n L: %d  arb: %d", L,arb);
                 
                 // find AR base L levels down
                 while (L > 0) {
@@ -603,7 +603,7 @@ int main (int argc, char *argv[]) {
 
                 L = pas[PC-2]; 
 
-                printf("\nAfter L: %d  arb: %d\n");
+                printf("\nAfter L: %d  arb: %d\n",L,arb);
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
