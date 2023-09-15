@@ -49,9 +49,10 @@ int main (int argc, char *argv[]) {
         pas[r] = 0;
     }
 
-   printf("\t\tPC  BP  SP  stack"); 
-   printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
+    printf("\t\tPC  BP  SP  stack"); 
+    printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
+    // Execute cycle while the program halt has not been called
     while (halt != 0)
     {
         OP = pas[PC];
@@ -671,6 +672,7 @@ int main (int argc, char *argv[]) {
                 printf("Not valid OP\n");
                 break;
         }
+
     }
 
     fclose(file);
