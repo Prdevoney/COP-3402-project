@@ -599,7 +599,7 @@ int main (int argc, char *argv[]) {
                 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb+1];
+                    arb = pas[arb];
                     L--;
                 }
 
@@ -654,7 +654,7 @@ int main (int argc, char *argv[]) {
 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb+1];
+                    arb = pas[arb];
                     L--;
                 }
 
@@ -710,7 +710,7 @@ int main (int argc, char *argv[]) {
 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb+1];
+                    arb = pas[arb];
                     L--;
                 }
 
@@ -852,10 +852,11 @@ int main (int argc, char *argv[]) {
                 // Jump to M if top of stack element is 0
                 if(pas[SP] == 0){
                     PC = M;
-                    SP -= 1;
+                    
                 } else {
                     PC += 3;
                 }
+                SP -= 1;
                 printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 //print loop for multiple AR
                 outerLoop = 0;
