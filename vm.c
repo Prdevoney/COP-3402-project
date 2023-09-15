@@ -67,7 +67,6 @@ int main (int argc, char *argv[]) {
                 
                 printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 // loop to print out activation records. 
-                // copy and pasted this loop into every case. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
@@ -275,36 +274,40 @@ int main (int argc, char *argv[]) {
                 }
                 // **** print for all opr ****
                 if (M != 0){
-                    outerLoop = 0;
-                    sec = arCount - 1; 
-                    while (outerLoop <= arCount) {
-                        int currBPIndex = BP; 
-                        int prevBPIndex = pas[BP+1];
-                        int kCount = 0; 
-                        for (int k = 0; k < sec; k++) {
-                            prevBPIndex = pas[prevBPIndex+1]; 
-                            currBPIndex = pas[currBPIndex+1]; 
-                            kCount++; 
-                        }
-                        if (kCount != 0){
+                   // loop to print out activation records. 
+                outerLoop = 0;
+                sec = arCount - 1; 
+                while (outerLoop <= arCount) {
+                    int currBPIndex = BP; 
+                    int prevBPIndex = pas[BP+1];
+                    int kCount = 0; 
+                    // determines bounds of the activation record to print. 
+                    for (int k = 0; k < sec; k++) {
+                        prevBPIndex = pas[prevBPIndex+1]; 
+                        currBPIndex = pas[currBPIndex+1]; 
+                        kCount++; 
+                    }
+                    // print the activation record.  
+                    if (kCount != 0){
+                        for (int y = prevBPIndex; y < currBPIndex; y++) 
+                            printf("%d ", pas[y]); 
+                        printf("| ");
+                    }
+                    // print the activation record if we are on the last record to print. 
+                    else {
+                        if (outerLoop == arCount)
+                            for (int y = currBPIndex; y < SP + 1; y++)
+                                printf("%d ", pas[y]); 
+                        if (sec == 0 && kCount == 0) {
                             for (int y = prevBPIndex; y < currBPIndex; y++) 
                                 printf("%d ", pas[y]); 
                             printf("| ");
                         }
-                        else {
-                            if (outerLoop == arCount)
-                                for (int y = currBPIndex; y < SP + 1; y++)
-                                    printf("%d ", pas[y]); 
-                            if (sec == 0 && kCount == 0) {
-                                for (int y = prevBPIndex; y < currBPIndex; y++) 
-                                    printf("%d ", pas[y]); 
-                                printf("| ");
-                            }
-                        }
-                        sec--; 
-                        outerLoop++; 
                     }
-                    printf("\n");
+                    sec--; 
+                    outerLoop++; 
+                }
+                printf("\n");
                 }
                 
                 break;
@@ -329,23 +332,26 @@ int main (int argc, char *argv[]) {
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 
-                //print loop for multiple AR
+                // loop to print out activation records. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
+                    // determines bounds of the activation record to print. 
                     for (int k = 0; k < sec; k++) {
                         prevBPIndex = pas[prevBPIndex+1]; 
                         currBPIndex = pas[currBPIndex+1]; 
                         kCount++; 
                     }
+                    // print the activation record.  
                     if (kCount != 0){
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
                         printf("| ");
                     }
+                    // print the activation record if we are on the last record to print. 
                     else {
                         if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
@@ -382,25 +388,28 @@ int main (int argc, char *argv[]) {
                 SP -= 1; 
 
                 printf("    STO %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                //print loop for multiple AR
+                // loop to print out activation records. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
+                    // determines bounds of the activation record to print. 
                     for (int k = 0; k < sec; k++) {
                         prevBPIndex = pas[prevBPIndex+1]; 
                         currBPIndex = pas[currBPIndex+1]; 
                         kCount++; 
                     }
+                    // print the activation record.  
                     if (kCount != 0){
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
                         printf("| ");
                     }
+                    // print the activation record if we are on the last record to print. 
                     else {
-                        if (outerLoop == arCount) 
+                        if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
                                 printf("%d ", pas[y]); 
                         if (sec == 0 && kCount == 0) {
@@ -412,9 +421,7 @@ int main (int argc, char *argv[]) {
                     sec--; 
                     outerLoop++; 
                 }
-                
-                
-                printf("\n"); 
+                printf("\n");
                 break;
 
             // ==================== CAL ====================
@@ -486,23 +493,26 @@ int main (int argc, char *argv[]) {
                 SP += M;
                 PC += 3;
                 printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                //print loop for multiple AR
+                // loop to print out activation records. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
+                    // determines bounds of the activation record to print. 
                     for (int k = 0; k < sec; k++) {
                         prevBPIndex = pas[prevBPIndex+1]; 
                         currBPIndex = pas[currBPIndex+1]; 
                         kCount++; 
                     }
+                    // print the activation record.  
                     if (kCount != 0){
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
                         printf("| ");
                     }
+                    // print the activation record if we are on the last record to print. 
                     else {
                         if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
@@ -516,7 +526,6 @@ int main (int argc, char *argv[]) {
                     sec--; 
                     outerLoop++; 
                 }
-
                 printf("\n");
                 break;
 
@@ -528,23 +537,26 @@ int main (int argc, char *argv[]) {
                 PC += M;
                 // BP and SP stays the same
                 printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                //print loop for multiple AR
+                // loop to print out activation records. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
+                    // determines bounds of the activation record to print. 
                     for (int k = 0; k < sec; k++) {
                         prevBPIndex = pas[prevBPIndex+1]; 
                         currBPIndex = pas[currBPIndex+1]; 
                         kCount++; 
                     }
+                    // print the activation record.  
                     if (kCount != 0){
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
                         printf("| ");
                     }
+                    // print the activation record if we are on the last record to print. 
                     else {
                         if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
@@ -575,23 +587,26 @@ int main (int argc, char *argv[]) {
                 SP -= 1;
 
                 printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                //print loop for multiple AR
+                // loop to print out activation records. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
+                    // determines bounds of the activation record to print. 
                     for (int k = 0; k < sec; k++) {
                         prevBPIndex = pas[prevBPIndex+1]; 
                         currBPIndex = pas[currBPIndex+1]; 
                         kCount++; 
                     }
+                    // print the activation record.  
                     if (kCount != 0){
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
                         printf("| ");
                     }
+                    // print the activation record if we are on the last record to print. 
                     else {
                         if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
@@ -634,23 +649,26 @@ int main (int argc, char *argv[]) {
 
                 }
                 printf("    SYS %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
-                //print loop for multiple AR
+                // loop to print out activation records. 
                 outerLoop = 0;
                 sec = arCount - 1; 
                 while (outerLoop <= arCount) {
                     int currBPIndex = BP; 
                     int prevBPIndex = pas[BP+1];
                     int kCount = 0; 
+                    // determines bounds of the activation record to print. 
                     for (int k = 0; k < sec; k++) {
                         prevBPIndex = pas[prevBPIndex+1]; 
                         currBPIndex = pas[currBPIndex+1]; 
                         kCount++; 
                     }
+                    // print the activation record.  
                     if (kCount != 0){
                         for (int y = prevBPIndex; y < currBPIndex; y++) 
                             printf("%d ", pas[y]); 
                         printf("| ");
                     }
+                    // print the activation record if we are on the last record to print. 
                     else {
                         if (outerLoop == arCount)
                             for (int y = currBPIndex; y < SP + 1; y++)
