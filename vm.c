@@ -51,10 +51,10 @@ int main (int argc, char *argv[]) {
    printf("\t\tPC  BP  SP  stack"); 
    printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
-    for (int j = 0; j < textLength; j += 3)
+    for (int j = 0; j < textLength; j++)
     {
         OP = pas[PC];
-
+        //printf("\n PC before: %d\n", PC);
         switch (OP) {
             // ==================== LIT ====================
             case 1:
@@ -593,17 +593,19 @@ int main (int argc, char *argv[]) {
                 SP += 1;
                 arb = BP;
 
-                printf("\n L: %d  arb: %d", L,arb);
+                //printf("\n L: %d  arb: %d", L,arb);
                 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb];
+                    
+                    arb = pas[arb +1];
+                    ///printf("\n in loop pas[arb]: ", arb);
                     L--;
                 }
 
                 L = pas[PC-2]; 
 
-                printf("\nAfter L: %d  arb: %d\n",L,arb);
+                //printf("\nAfter L: %d  arb: %d\n",L,arb);
 
                 pas[SP] = pas[arb + M];
                 printf("    LOD %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -650,7 +652,7 @@ int main (int argc, char *argv[]) {
 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb];
+                    arb = pas[arb+1];
                     L--;
                 }
 
@@ -705,7 +707,7 @@ int main (int argc, char *argv[]) {
 
                 // find AR base L levels down
                 while (L > 0) {
-                    arb = pas[arb];
+                    arb = pas[arb+1];
                     L--;
                 }
 
@@ -843,11 +845,13 @@ int main (int argc, char *argv[]) {
                 // Updates specifically for instruction
                 L = pas[PC+1];
                 M = pas[PC+2];
-                PC += 3;
+                
                 // Jump to M if top of stack element is 0
                 if(pas[SP] == 0){
                     PC = M;
                     SP -= 1;
+                } else {
+                    PC += 3;
                 }
                 printf("    JPC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 //print loop for multiple AR
@@ -972,11 +976,13 @@ int main (int argc, char *argv[]) {
                 }
                 printf("\n");
                 break;
+                
             // 
             default:
                 printf("Not valid OP\n");
                 break;
         }
+        //printf("\n PC after: %d\n j = %d\n", PC, j);
     }
 
     fclose(file);
