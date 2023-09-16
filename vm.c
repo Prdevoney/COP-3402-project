@@ -52,10 +52,14 @@ int main (int argc, char *argv[]) {
     printf("\t\tPC  BP  SP  stack"); 
     printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
-    // Execute cycle while the program halt has not been called
+    // Instruction cycle while the program halt has not been called
     while (halt != 0)
     {
         OP = pas[PC];
+        L = pas[PC+1];
+        M = pas[PC+2];
+        PC += 3;
+        
         switch (OP) {
             // ==================== LIT ====================
             case 1:
