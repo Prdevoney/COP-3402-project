@@ -55,6 +55,7 @@ int main (int argc, char *argv[]) {
     // Execute cycle while the program halt has not been called
     while (halt != 0)
     {
+        // ======= Fetch Cycle =======
         OP = pas[PC];
         L = pas[PC+1];
         M = pas[PC+2];
@@ -106,10 +107,7 @@ int main (int argc, char *argv[]) {
 
             // ==================== OPR ====================
             case 2:
-                // Updates specifically for OPR instructions
-                // L = pas[PC+1];
-                // M = pas[PC+2];
-                // PC += 3;
+                // Switch case for all the possible operations. 
                 switch(M) {
                     // ========== 2 RTN ==========
                     case 0:
@@ -316,10 +314,6 @@ int main (int argc, char *argv[]) {
             
             // ==================== LOD ====================
             case 3:
-                // Updates specifically for instruction
-                // L = pas[PC+1];
-                // M = pas[PC+2];
-                // PC += 3;
                 SP += 1;
                 arb = BP;
                 
@@ -372,10 +366,6 @@ int main (int argc, char *argv[]) {
 
             // ==================== STO ====================
             case 4:
-                // Updates specifically for instruction
-                // L = pas[PC+1];
-                // M = pas[PC+2];
-                // PC += 3;
                 arb = BP;
 
                 // find AR base L levels down
@@ -428,11 +418,7 @@ int main (int argc, char *argv[]) {
 
             // ==================== CAL ====================
             case 5:
-                // Updates specifically for instruction
                 arCount++; 
-                // L = pas[PC+1];
-                // M = pas[PC+2];
-                // PC += 3;
                 arb = BP;
 
                 // find AR base L levels down
@@ -489,11 +475,7 @@ int main (int argc, char *argv[]) {
 
             // ==================== INC ====================
             case 6:
-                // Updates specifically for instruction
-                // L = pas[PC+1];
-                // M = pas[PC+2];
                 SP += M;
-                // PC += 3;
                 printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 // loop to print out activation records. 
                 outerLoop = 0;
@@ -533,9 +515,6 @@ int main (int argc, char *argv[]) {
 
             // ==================== JMP ====================
             case 7:
-                // Updates specifically for instruction
-                // L = pas[PC+1];
-                // M = pas[PC+2];
                 PC = M;
                 // BP and SP stays the same
                 printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -577,10 +556,6 @@ int main (int argc, char *argv[]) {
 
             // ==================== JPC ====================
             case 8:
-                // Updates specifically for instruction
-                // L = pas[PC+1];
-                // M = pas[PC+2];
-                // PC += 3;
                 
                 // Jump to M if top of stack element is 0
                 if(pas[SP] == 0){
@@ -627,11 +602,7 @@ int main (int argc, char *argv[]) {
                 
             // ==================== SYS ====================
             case 9:
-                // Updates specifically for instruction
-                // L = pas[PC+1];
-                // M = pas[PC+2];
-                // PC += 3;
-                // 3 switch statements in here since there are 3 L levels for SYS
+                // Switch cases for all the potential commands for SYS. 
                 switch (M)
                 {
                     case 1:
