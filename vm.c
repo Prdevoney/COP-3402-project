@@ -56,15 +56,15 @@ int main (int argc, char *argv[]) {
     while (halt != 0)
     {
         OP = pas[PC];
+        L = pas[PC+1];
+        M = pas[PC+2];
+        PC += 3;
         
         switch (OP) {
             // ==================== LIT ====================
             case 1:
                 // Update specifically for each instruction
-                L = pas[PC+1];
-                M = pas[PC+2];
                 SP += 1;
-                PC += 3;
                 pas[SP] = M; 
                 
                 printf("    LIT %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
@@ -107,9 +107,9 @@ int main (int argc, char *argv[]) {
             // ==================== OPR ====================
             case 2:
                 // Updates specifically for OPR instructions
-                L = pas[PC+1];
-                M = pas[PC+2];
-                PC += 3;
+                // L = pas[PC+1];
+                // M = pas[PC+2];
+                // PC += 3;
                 switch(M) {
                     // ========== 2 RTN ==========
                     case 0:
@@ -317,9 +317,9 @@ int main (int argc, char *argv[]) {
             // ==================== LOD ====================
             case 3:
                 // Updates specifically for instruction
-                L = pas[PC+1];
-                M = pas[PC+2];
-                PC += 3;
+                // L = pas[PC+1];
+                // M = pas[PC+2];
+                // PC += 3;
                 SP += 1;
                 arb = BP;
                 
@@ -373,9 +373,9 @@ int main (int argc, char *argv[]) {
             // ==================== STO ====================
             case 4:
                 // Updates specifically for instruction
-                L = pas[PC+1];
-                M = pas[PC+2];
-                PC += 3;
+                // L = pas[PC+1];
+                // M = pas[PC+2];
+                // PC += 3;
                 arb = BP;
 
                 // find AR base L levels down
@@ -430,9 +430,9 @@ int main (int argc, char *argv[]) {
             case 5:
                 // Updates specifically for instruction
                 arCount++; 
-                L = pas[PC+1];
-                M = pas[PC+2];
-                PC += 3;
+                // L = pas[PC+1];
+                // M = pas[PC+2];
+                // PC += 3;
                 arb = BP;
 
                 // find AR base L levels down
@@ -490,10 +490,10 @@ int main (int argc, char *argv[]) {
             // ==================== INC ====================
             case 6:
                 // Updates specifically for instruction
-                L = pas[PC+1];
-                M = pas[PC+2];
+                // L = pas[PC+1];
+                // M = pas[PC+2];
                 SP += M;
-                PC += 3;
+                // PC += 3;
                 printf("    INC %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 // loop to print out activation records. 
                 outerLoop = 0;
@@ -534,9 +534,9 @@ int main (int argc, char *argv[]) {
             // ==================== JMP ====================
             case 7:
                 // Updates specifically for instruction
-                L = pas[PC+1];
-                M = pas[PC+2];
-                PC += M;
+                // L = pas[PC+1];
+                // M = pas[PC+2];
+                PC = M;
                 // BP and SP stays the same
                 printf("    JMP %-3d %-3d %-3d %-3d %-3d ", L, M, PC, BP, SP);
                 // loop to print out activation records. 
@@ -578,9 +578,9 @@ int main (int argc, char *argv[]) {
             // ==================== JPC ====================
             case 8:
                 // Updates specifically for instruction
-                L = pas[PC+1];
-                M = pas[PC+2];
-                PC += 3;
+                // L = pas[PC+1];
+                // M = pas[PC+2];
+                // PC += 3;
                 
                 // Jump to M if top of stack element is 0
                 if(pas[SP] == 0){
@@ -628,9 +628,9 @@ int main (int argc, char *argv[]) {
             // ==================== SYS ====================
             case 9:
                 // Updates specifically for instruction
-                L = pas[PC+1];
-                M = pas[PC+2];
-                PC += 3;
+                // L = pas[PC+1];
+                // M = pas[PC+2];
+                // PC += 3;
                 // 3 switch statements in here since there are 3 L levels for SYS
                 switch (M)
                 {
