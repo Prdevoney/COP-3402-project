@@ -52,15 +52,16 @@ int main (int argc, char *argv[]) {
     printf("\t\tPC  BP  SP  stack"); 
     printf("\nInitial values:%2d  %3d  %2d\n", PC, BP, SP);
 
-    // Instruction cycle while the program halt has not been called
     while (halt != 0)
     {
-        // ======= Fetch Cycle =======
+        // ---------------------- Fetch Cycle ----------------------
         OP = pas[PC];
         L = pas[PC+1];
         M = pas[PC+2];
         PC += 3;
-        
+        // --------------------------------------------------------- 
+
+        // --------------------- Execution Cycle -------------------
         switch (OP) {
             // ==================== LIT ====================
             case 1:
@@ -664,6 +665,7 @@ int main (int argc, char *argv[]) {
         }
 
     }
+    // ----------------------------------------------------------
 
     fclose(file);
     return 0;
