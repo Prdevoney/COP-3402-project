@@ -56,6 +56,7 @@ int main (int argc, char *argv[]) {
     while (halt != 0)
     {
         OP = pas[PC];
+        
         switch (OP) {
             // ==================== LIT ====================
             case 1:
