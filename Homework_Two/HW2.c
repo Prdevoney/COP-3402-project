@@ -6,8 +6,14 @@
 */
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 
+#define norw 14     // Number of reserved words. 
+#define imax 32767  // Max integer val. 
+#define cmax 11     // Max number of chars for indents. 
+#define strmax 256  // Max n
+
+// Internal representation of PL/0 symbols.
 typedef enum { 
     skipsym = 1, identsym, numbersym, plussym, minussym,
     multsym,  slashsym, ifelsym, eqsym, neqsym, lessym, leqsym,
@@ -17,22 +23,21 @@ typedef enum {
     readsym , elsesym
 } token_type;
 
-
 int main(){
-    // reserved words (keywords). 
+    // Reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
                         "call", "begin", "end", "if", 
                         "then", "ifel", "else", "while", 
                         "do", "read", "write"};
-    // what the keywords correspond to. 
+    // What the keywords correspond to. 
     int wsym [] = {constsym, varsym, procsym, callsym, 
                     beginsym, endsym, ifsym, thensym, 
                     ifelsym, elsesym, whilesym, dosym, 
                     readsym, writesym};
-    // array for special characters. 
+    // Array for special characters. 
     int ssym [256];
     ssym
-    // loops over all input. 
+    // Loops over all input. 
     while(){
 
     }
