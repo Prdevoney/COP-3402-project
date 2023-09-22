@@ -31,9 +31,23 @@ int main(){
                     readsym, writesym};
 
     int ssym [256];
-    ssym
+    
     // loops over all input. 
-    while(){
-
+    FILE *file = fopen("input.txt", "r");
+    char ch;
+ 
+    if (NULL == file) {
+        printf("file can't be opened \n");
+        return 0;
     }
+ 
+    printf("Source Code:\n");
+ 
+    while (!feof(file)) {
+        ch = fgetc(file);
+        printf("%c", ch);
+    }
+    fclose(file);
+    return 0;
+    
 }
