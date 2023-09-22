@@ -1,0 +1,13 @@
+var x, y;
+begin
+	y := 3;
+	x := y + 56;
+end.
+
+The output will be:
+Source Program:
+var x, y;
+begin
+	y := 3;
+	x := y + 56;
+end.
