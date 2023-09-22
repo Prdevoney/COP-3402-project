@@ -1,7 +1,7 @@
 /*
     Patrick DeVoney & Rossella Diorio.
     Homework Assignment Two: Lexical Analyzer.
-    Prof: Euripides Montage 
+    Prof: Euripides Montage.
     COP 3402, Fall 2023.
 */
 
@@ -19,17 +19,17 @@ typedef enum {
 
 
 int main(){
-
+    // reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
                         "call", "begin", "end", "if", 
                         "then", "ifel", "else", "while", 
                         "do", "read", "write"};
-
+    // what the keywords correspond to. 
     int wsym [] = {constsym, varsym, procsym, callsym, 
                     beginsym, endsym, ifsym, thensym, 
                     ifelsym, elsesym, whilesym, dosym, 
                     readsym, writesym};
-
+    // array for special characters. 
     int ssym [256];
     
     // loops over all input. 
