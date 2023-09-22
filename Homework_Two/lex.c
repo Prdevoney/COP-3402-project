@@ -13,6 +13,8 @@
 #define cmax 11     // Max number of chars for indents. 
 #define strmax 256  // Max n
 
+
+
 // Internal representation of PL/0 symbols.
 typedef enum { 
     skipsym = 1, identsym, numbersym, plussym, minussym,
