@@ -36,9 +36,23 @@ int main(){
                     readsym, writesym};
     // Array for special characters. 
     int ssym [256];
-    ssym
-    // Loops over all input. 
-    while(){
-
+    
+    // loops over all input. 
+    FILE *file = fopen("input.txt", "r");
+    char ch;
+ 
+    if (NULL == file) {
+        printf("file can't be opened \n");
+        return 0;
     }
+ 
+    printf("Source Code:\n");
+ 
+    while (!feof(file)) {
+        ch = fgetc(file);
+        printf("%c", ch);
+    }
+    fclose(file);
+    return 0;
+    
 }
