@@ -41,22 +41,87 @@ int main(){
     // Array for special characters. 
     int ssym [256];
 
-    // loops over all input. 
+    int chcount = 0;
+
+    // Open once section
+    // **************************************|
     FILE *file = fopen("input.txt", "r");
     char ch;
-
     if (NULL == file) {
-        printf("file can't be opened \n");
+        printf("The file cannot be opened\n");
         return 0;
     }
-
     printf("Source Code:\n");
- 
     while (!feof(file)) {
+        chcount++;
         ch = fgetc(file);
         printf("%c", ch);
     }
-
     fclose(file);
+    // ****************************************|
+
+    char inputArr[chcount];
+
+    FILE *inputFile = fopen("input.txt", "r");
+    if (NULL == inputFile) {
+        printf("The file cannot be opened\n");
+        return 0; // or do you put exit 1; ??
+    }
+    
+    int i = 0; //index of inputArr
+
+    while(!feof(inputFile)) {
+        fscanf("%c", &inputArr[i]);  // or was this temp array?
+
+        if (inputArr[i] != 'c'/*white space or special character*/ )
+        {
+            i++;
+            continue;
+        } else {
+            /* 
+                convert from starting index to one before white space/special character index
+                into a string Compare to each resWord
+
+                these variables have to be made
+
+            */  
+            int len = curIndex - startIndex;
+            char tempCharArr[len];
+            tempCharArr[len] = '/0';
+            
+            String tempStr[len]
+            tempStr = strcpy(tempStr, tempCharArr);
+
+            // shouldn't this be in a loop to cmpare to all reswords
+            int save = 0;
+            for (int j = 0; j < sizeof(resWords); j++) {
+                // compare each word to the temp str
+                if(strcmp(tempStr, resWords[j]) == 0) {
+                    save = j;
+                }
+            }
+
+            switch(save) {
+                case 0:
+                // const
+                break;
+
+            }
+
+
+
+
+            // example kinda
+            if(strcmp(tempStr, "write") == 0) {
+                // do the write stuff
+            }
+           
+
+           
+        }
+    }
+
+
+
     return 0;
 }
