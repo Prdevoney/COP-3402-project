@@ -119,7 +119,9 @@ int main(){
         char *tempArr = malloc(sizeof(int) * tempArrSize);
         int tempArrCount = 0; 
 
-        int specialCharCheck = 0; 
+        // 1 for keyword, identifier, or num .
+        // 2 for special character. 
+        int caseCheck = 0; 
 
         int halt = 0;
         // ================ all cases for looping trough inputArr ================
@@ -129,10 +131,12 @@ int main(){
             
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
+                caseCheck = 1; 
                 halt = 1; 
             }
             // if scanned in keyword, ident, or num follwed by specialChar. 
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
+                caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
                 break; 
             }
@@ -143,6 +147,7 @@ int main(){
             }
             // first scan, specialChar
             else if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
+                caseCheck = 2; 
                 i++; 
                 break; 
             }
@@ -160,7 +165,49 @@ int main(){
 
 
         // =============== Find out what is in tempArr ===============
-        
+
+        if (caseCheck == 1) {
+            // compare tempArr to reserved words
+            for (int k = 0; k < norw; k++) {
+                if (strcmp(tempArr, resWords[k]) == 0) {
+                    // print out lexem and token 
+                    for (int l = 0; tempArr[l] != '\0'; l++) {
+                        printf("%c", tempArr[l]);
+                    }
+                    printf("\t%d\n", wsym[k]);
+
+                    // dynamically resize tokenType array if necessary. 
+                    if (tokenCount == tokenTypeSize-1) {
+                        tokenTypeSize *= 2; 
+                        tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                    }
+                    tokenType[i] = wsym[k];
+                    tokenCount++;
+                }
+            }
+
+            // compare tempArr to identifiers
+            for (int k = 0; k < identCount; k++) {
+                if (strcmp(tempArr, identArr[k]) == 0) {
+                    // print out lexem and token 
+                    for (int l = 0; tempArr[l] != '\0'; l++) {
+                        printf("%c", tempArr[l]);
+                    }
+                    printf("\t%d\n", identsym);
+
+                    // dynamically resize tokenType array if necessary. 
+                    if (tokenCount == tokenTypeSize-1) {
+                        tokenTypeSize *= 2; 
+                        tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                    }
+                    tokenType[i] = identsym;
+                    tokenCount++;
+                }
+            }
+        }
+        else {
+            
+        }
 
         i++; 
         free(tempArr); 
