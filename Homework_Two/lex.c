@@ -69,15 +69,20 @@ int main(){
     }
     
     int i = 0; //index of inputArr
+    
 
     while(!feof(inputFile)) {
         fscanf("%c", &inputArr[i]);  // or was this temp array?
+    }
 
-        if (inputArr[i] != 'c'/*white space or special character*/ )
+    i = 0; 
+    while (i < sizeof(inputArr)){
+        if (inputArr[i] == 'c'/*white space or special character*/ )
         {
             i++;
             continue;
-        } else {
+        } 
+        else {
             /* 
                 convert from starting index to one before white space/special character index
                 into a string Compare to each resWord
@@ -107,9 +112,6 @@ int main(){
                 break;
 
             }
-
-
-
 
             // example kinda
             if(strcmp(tempStr, "write") == 0) {
