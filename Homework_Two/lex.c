@@ -16,7 +16,6 @@
 #define strmax 256  // Max n
 
 
-
 // Internal representation of PL/0 symbols.
 typedef enum { 
     skipsym = 1, identsym, numbersym, plussym, minussym,
