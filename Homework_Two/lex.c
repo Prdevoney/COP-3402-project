@@ -122,8 +122,61 @@ int main(){
            
         }
     }
+    
+    // Arrays needed:
+    /*
+        - token list array
+        - identifier array
+        - token type array
+    */
 
-
+    switch(tokenNum) {
+        // ========== identifier ==========
+        case 2:
+            break;
+        // ========== ifel ==========
+        case 8:
+            break;
+        // ========== begin ==========
+        case 21:
+            break;
+        // ========== end ==========
+        case 22:
+            break;
+        // ========== if ==========
+        case 23:
+            break;
+        // ========== then ==========
+        case 24:
+            break;
+        // ========== while ==========
+        case 25:
+            break;
+        // ========== do ==========
+        case 26:
+            break;
+        // ========== call ==========
+        case 27:
+            break;
+        // ========== const ==========
+        case 28:
+            break;
+        // ========== var ==========
+        case 29:
+            break;
+        // ========== procedure ==========
+        case 30:
+            break;
+        // ========== write ==========
+        case 31:
+            break;
+        // ========== read ==========
+        case 32:
+            break;
+        // ========== else ==========
+        case 33:
+            break;
+    }
 
     return 0;
 }
