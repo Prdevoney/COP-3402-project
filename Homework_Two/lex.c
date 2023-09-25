@@ -25,6 +25,15 @@ typedef enum {
     readsym , elsesym
 } token_type;
 
+
+char *initialize (int size) {
+    char *temp = (char*)malloc(size*(sizeof(char)));
+    for (int i = 0; i < size; i++) {
+        temp[i] = '\0';
+    }
+    return temp;
+}
+
 int main(){
     // Reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
@@ -122,12 +131,13 @@ int main(){
            
         }
     }
-    
+
     // Arrays needed:
     /*
         - token list array
         - identifier array
         - token type array
+        - identifier len array [11]
     */
 
     switch(tokenNum) {
@@ -163,6 +173,47 @@ int main(){
             break;
         // ========== var ==========
         case 29:
+            i++;
+            //char tempInden[];
+            char tempInden[] = initialize(11);
+            int start = i;
+            int k = 0;
+            while (inputArr[i] != ';'){
+                if (k == 11){
+                    printf("2\tError: Identifier too long"); //or however he wants the errors
+                    break;
+                } else {
+                    while(inputArr[i] != ',' && inputArr[i] != ';' ) {
+                        tempInden[k] = inputArr[i];
+                        k++;
+                        i++;
+                    }
+                    int index = 0;
+                    char identName[11];
+                    while (tempInden[index] != '\0' && index < 11) {
+                        printf("%c",tempInden[index]);
+                        identName[index] = tempInden[index];
+                        
+                    }
+                        tokenType[/* where it is + 1*/] = 2;
+                        tokenList[/* where it is + 1*/] = '2';
+                        tokenList[/* where it is + 2*/] = identName;
+                        printf("\t2\n");
+                        
+                    if (inputArr[i] == ',') {
+                        printf(",\t17\n");
+                        tokenType[/* where it is + 1*/] = 17;
+                        tokenList[/* where it is + 1*/] = '17';
+                        i++;
+                        k = 0;
+                    }
+                }  
+            }
+            if (inputArr[i] == ';') {
+                        printf(";\t18\n");
+                        tokenType[/* where it is + 1*/] = 18;
+                        tokenList[/* where it is + 1*/] = '18';
+                    }
             break;
         // ========== procedure ==========
         case 30:
