@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 #define norw 14     // Number of reserved words. 
@@ -51,11 +52,11 @@ int main(){
     ssym[','] = commasym; 
     ssym['.'] = periodsym; 
     ssym['<'] = lessym; 
-    ssym['<='] = leqsym; 
+    // ssym['<='] = leqsym; 
     ssym['>'] = gtrsym; 
-    ssym['>='] = geqsym; 
+    // ssym['>='] = geqsym; 
     ssym[';'] = semicolonsym; 
-    ssym[':='] = becomessym; 
+    ssym[':'] = becomessym; 
 
 
     int chcount = 0;
@@ -74,6 +75,7 @@ int main(){
         ch = fgetc(file);
         printf("%c", ch);
     }
+    printf("\n\n"); 
     fclose(file);
     // ****************************************|
 
@@ -99,7 +101,7 @@ int main(){
     // ****************************************|
 
     // Print out lexeme table titles. 
-    printf("Lexeme Table: \n lexeme \t token type\n \n");
+    printf("Lexeme Table: \n\n lexeme \t token type\n");
     
     // dynamically allocate memory for tokenType array
     int tokenTypeSize = 50; 
@@ -167,6 +169,30 @@ int main(){
         // =============== Find out what is in tempArr ===============
 
         if (caseCheck == 1) {
+            int digitCount = 0; 
+            // determine if it is digit. 
+            int u = 0; 
+            while (isdigit(tempArr[u])) {
+                digitCount++; 
+                u++; 
+            }
+            // print error, if digit too long. 
+            if (digitCount == tempArrCount && digitCount > 5) {
+                    for (int k = 0; k < digitCount; k++){
+                        printf("%d", tempArr[k] - 48); 
+                    }
+                    printf("\tError number too long!\n"); 
+            }
+            // print digit if meets requirements. 
+            if (digitCount == tempArrCount && digitCount <= 5) {
+                for (int k = 0; k < digitCount; k++){
+                        printf("%d", tempArr[k] - 48); 
+                }
+                tokenType[tokenCount] = numbersym; 
+                printf("\t%d\n", tokenType[tokenCount]);
+                tokenCount++; 
+            }
+
             // compare tempArr to reserved words
             for (int k = 0; k < norw; k++) {
                 if (strcmp(tempArr, resWords[k]) == 0) {
@@ -181,6 +207,7 @@ int main(){
                         tokenTypeSize *= 2; 
                         tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
                     }
+                    // put the token in the array. 
                     tokenType[i] = wsym[k];
                     tokenCount++;
                 }
@@ -188,11 +215,18 @@ int main(){
 
             // compare tempArr to identifiers
             for (int k = 0; k < identCount; k++) {
-                if (strcmp(tempArr, identArr[k]) == 0) {
+                if (tempArrCount > 11){
+                    for (int l = 0; tempArr[l] != '\0'; l++) {
+                        printf("%c", tempArr[l]);
+                    }
+                    printf("\tError idenfitier is too long!\n"); 
+                }
+                else if (strcmp(tempArr, &identArr[k]) == 0) {
                     // print out lexem and token 
                     for (int l = 0; tempArr[l] != '\0'; l++) {
                         printf("%c", tempArr[l]);
                     }
+
                     printf("\t%d\n", identsym);
 
                     // dynamically resize tokenType array if necessary. 
@@ -206,7 +240,7 @@ int main(){
             }
         }
         else {
-            
+
         }
 
         i++; 
