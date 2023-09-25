@@ -97,13 +97,7 @@ int main(){
     inputArr[i] = '\0'; 
     fclose(inputFile);
     // ****************************************|
-    for (int w = 0; w < chcount; w++){
-        if (inputArr[w] == '\0')
-            printf(" "); 
-        else
-            printf("%c", inputArr[w]); 
-    }
-    printf("\n"); 
+    
     // Print out lexeme table titles. 
     printf("Lexeme Table: \n\n lexeme \t token type\n");
     
@@ -119,7 +113,7 @@ int main(){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    while (i < sizeof(inputArr)){
+    while (i < sizeof(inputArr) - 1){
 
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(int) * tempArrSize);
@@ -145,6 +139,7 @@ int main(){
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
+                i--;
                 break; 
             }
             // first scan, whitespace, skip 
@@ -260,8 +255,22 @@ int main(){
             }
         } else {
             // ======================= Special Character Check =======================
-            printf("%c\t", tempArr[0]); 
-            printf("%d\n", ssym[tempArr[0]]); 
+            if (tempArr[0] == ':' && inputArr[i] == '=') {
+                printf(":=\t");
+                printf("%d\n", becomessym); 
+            }
+            else if (tempArr[0] == '<' && inputArr[i] == '=') {
+                printf("<=\t");
+                printf("%d\n", leqsym);
+            }
+            else if (tempArr[0] == '>' && inputArr[i] == '=') {
+                printf(">=\t");
+                printf("%d\n", geqsym);
+            }
+            else {
+                printf("%c\t", tempArr[0]); 
+                printf("%d\n", ssym[tempArr[0]]); 
+            }
         }
         
         i++; 
