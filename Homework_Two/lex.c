@@ -52,9 +52,7 @@ int main(){
     ssym[','] = commasym; 
     ssym['.'] = periodsym; 
     ssym['<'] = lessym; 
-    // ssym['<='] = leqsym; 
     ssym['>'] = gtrsym; 
-    // ssym['>='] = geqsym; 
     ssym[';'] = semicolonsym; 
     ssym[':'] = becomessym; 
 
@@ -262,7 +260,8 @@ int main(){
             }
         } else {
             // ======================= Special Character Check =======================
-            
+            printf("%c\t", tempArr[0]); 
+            printf("%d\n", ssym[tempArr[0]]); 
         }
         
         i++; 
