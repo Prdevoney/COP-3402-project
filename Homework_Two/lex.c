@@ -173,47 +173,57 @@ int main(){
             break;
         // ========== var ==========
         case 29:
-            i++;
             //char tempInden[];
             char tempInden[] = initialize(11);
-            int start = i;
+            int start = i; //don't need this since I'm increamenting the i for everything
             int k = 0;
             while (inputArr[i] != ';'){
-                if (k == 11){
-                    printf("2\tError: Identifier too long"); //or however he wants the errors
-                    break;
-                } else {
-                    while(inputArr[i] != ',' && inputArr[i] != ';' ) {
-                        tempInden[k] = inputArr[i];
-                        k++;
-                        i++;
-                    }
-                    int index = 0;
-                    char identName[11];
-                    while (tempInden[index] != '\0' && index < 11) {
+                int index = 0;
+                char identName[11];
+
+                while (inputArr[i] != ',' && inputArr[i] != ';') {
+                    if (k == 11) {
+                        while (tempInden[index] != '\0' && index < 11) {
                         printf("%c",tempInden[index]);
-                        identName[index] = tempInden[index];
-                        
-                    }
-                        tokenType[/* where it is + 1*/] = 2;
-                        tokenList[/* where it is + 1*/] = '2';
-                        tokenList[/* where it is + 2*/] = identName;
-                        printf("\t2\n");
-                        
-                    if (inputArr[i] == ',') {
-                        printf(",\t17\n");
-                        tokenType[/* where it is + 1*/] = 17;
-                        tokenList[/* where it is + 1*/] = '17';
+                        }
+                        while (inputArr[i] != ',' && inputArr[i] != ';') {
+                            printf("%c", inputArr[i]);
+                            i++;
+                        }
+                        printf("\tError: Identifier too long"); //or however he wants the errors
                         i++;
-                        k = 0;
+                        break;
                     }
-                }  
-            }
+                    tempInden[k] = inputArr[i];
+                    k++;
+                    i++;
+                }
+        
+                while (tempInden[index] != '\0' && index < 11) {
+                    printf("%c",tempInden[index]);
+                    identName[index] = tempInden[index];
+                    index++;
+                }
+                    tokenType[/* where it is + 1*/] = 2;
+                    tokenList[/* where it is + 1*/] = '2';
+                    tokenList[/* where it is + 2*/] = identName;
+                    printf("\t2\n");
+
+                if (inputArr[i] == ',') {
+                    printf(",\t17\n");
+                    tokenType[/* where it is + 1*/] = 17;
+                    tokenList[/* where it is + 1*/] = '17';
+                    i++;
+                    k = 0;
+                }
+            }  
+            
             if (inputArr[i] == ';') {
-                        printf(";\t18\n");
-                        tokenType[/* where it is + 1*/] = 18;
-                        tokenList[/* where it is + 1*/] = '18';
-                    }
+                printf(";\t18\n");
+                tokenType[/* where it is + 1*/] = 18;
+                tokenList[/* where it is + 1*/] = '18';
+            }
+
             break;
         // ========== procedure ==========
         case 30:
