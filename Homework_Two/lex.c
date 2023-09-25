@@ -99,7 +99,13 @@ int main(){
     inputArr[i] = '\0'; 
     fclose(inputFile);
     // ****************************************|
-
+    for (int w = 0; w < chcount; w++){
+        if (inputArr[w] == '\0')
+            printf(" "); 
+        else
+            printf("%c", inputArr[w]); 
+    }
+    printf("\n"); 
     // Print out lexeme table titles. 
     printf("Lexeme Table: \n\n lexeme \t token type\n");
     
@@ -113,7 +119,7 @@ int main(){
     char *identArr = malloc(sizeof(char) * identSize);
     int identCount = 0;
 
-    // ******* loops though inputArr ***********|
+    // *********** loops though inputArr ***********|
     i = 0; 
     while (i < sizeof(inputArr)){
 
@@ -126,7 +132,7 @@ int main(){
         int caseCheck = 0; 
 
         int halt = 0;
-        // ================ all cases for looping trough inputArr ================
+        // ================ All cases for looping trough inputArr ================
         do {
             // scan in to tempArr. 
             tempArr[tempArrCount] = inputArr[i]; 
@@ -135,6 +141,7 @@ int main(){
             if (tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
                 halt = 1; 
+                break; 
             }
             // if scanned in keyword, ident, or num follwed by specialChar. 
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
@@ -165,15 +172,10 @@ int main(){
         } while (halt == 0); 
         tempArr[tempArrCount+1] = '\0'; 
 
-        // int j = 0; 
-        // while (tempArr[j] != '\0'){
-        //     printf("%c", tempArr[j]); 
-        //     j++;
-        // }
-
         // =============== Find out what is in tempArr ===============
 
         if (caseCheck == 1) {
+            //=================== Digit Check ===================
             int digitCount = 0; 
             // determine if it is digit. 
             int u = 0; 
@@ -204,8 +206,8 @@ int main(){
                 continue; 
             }
 
+            //=================== resWords Check ===================
             int keyWordCheck = 0; 
-            // compare tempArr to reserved words
             for (int k = 0; k < norw; k++) {
                 if (strcmp(tempArr, resWords[k]) == 0) {
                     // print out lexem and token 
@@ -222,14 +224,13 @@ int main(){
                     // put the token in the array. 
                     tokenType[i] = wsym[k];
                     tokenCount++;
-                    i++; 
                     keyWordCheck = 1; 
                     free(tempArr);
                     continue; 
                 }
             }
 
-            // compare tempArr to identifiers
+            //=================== Identifier Check ===================
             if (keyWordCheck == 0) {
                 strcpy(&identArr[identCount], tempArr); 
                 identCount++;
@@ -259,6 +260,9 @@ int main(){
                     }
                 }
             }
+        } else {
+            // ======================= Special Character Check =======================
+            
         }
         
         i++; 
