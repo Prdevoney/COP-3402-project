@@ -165,6 +165,11 @@ int main(){
         } while (halt == 0); 
         tempArr[tempArrCount+1] = '\0'; 
 
+        // int j = 0; 
+        // while (tempArr[j] != '\0'){
+        //     printf("%c", tempArr[j]); 
+        //     j++;
+        // }
 
         // =============== Find out what is in tempArr ===============
 
@@ -178,10 +183,13 @@ int main(){
             }
             // print error, if digit too long. 
             if (digitCount == tempArrCount && digitCount > 5) {
-                    for (int k = 0; k < digitCount; k++){
-                        printf("%d", tempArr[k] - 48); 
-                    }
-                    printf("\tError number too long!\n"); 
+                for (int k = 0; k < digitCount; k++){
+                    printf("%d", tempArr[k] - 48); 
+                }
+                printf("\tError number too long!\n"); 
+                i++; 
+                free(tempArr);
+                continue; 
             }
             // print digit if meets requirements. 
             if (digitCount == tempArrCount && digitCount <= 5) {
@@ -191,8 +199,12 @@ int main(){
                 tokenType[tokenCount] = numbersym; 
                 printf("\t%d\n", tokenType[tokenCount]);
                 tokenCount++; 
+                i++; 
+                free(tempArr);
+                continue; 
             }
 
+            int keyWordCheck = 0; 
             // compare tempArr to reserved words
             for (int k = 0; k < norw; k++) {
                 if (strcmp(tempArr, resWords[k]) == 0) {
@@ -210,39 +222,45 @@ int main(){
                     // put the token in the array. 
                     tokenType[i] = wsym[k];
                     tokenCount++;
+                    i++; 
+                    keyWordCheck = 1; 
+                    free(tempArr);
+                    continue; 
                 }
             }
 
             // compare tempArr to identifiers
-            for (int k = 0; k < identCount; k++) {
-                if (tempArrCount > 11){
-                    for (int l = 0; tempArr[l] != '\0'; l++) {
-                        printf("%c", tempArr[l]);
-                    }
-                    printf("\tError idenfitier is too long!\n"); 
-                }
-                else if (strcmp(tempArr, &identArr[k]) == 0) {
-                    // print out lexem and token 
-                    for (int l = 0; tempArr[l] != '\0'; l++) {
-                        printf("%c", tempArr[l]);
-                    }
+            if (keyWordCheck == 0) {
+                strcpy(&identArr[identCount], tempArr); 
+                identCount++;
 
-                    printf("\t%d\n", identsym);
-
-                    // dynamically resize tokenType array if necessary. 
-                    if (tokenCount == tokenTypeSize-1) {
-                        tokenTypeSize *= 2; 
-                        tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                for (int k = 0; k < identCount; k++) {
+                    if (tempArrCount > 11){
+                        for (int l = 0; tempArr[l] != '\0'; l++) {
+                            printf("%c", tempArr[l]);
+                        }
+                        printf("\tError idenfitier is too long!\n"); 
                     }
-                    tokenType[i] = identsym;
-                    tokenCount++;
+                    else if (strcmp(tempArr, &identArr[k]) == 0) {
+                        // print out lexem and token 
+                        for (int l = 0; tempArr[l] != '\0'; l++) {
+                            printf("%c", tempArr[l]);
+                        }
+
+                        printf("\t%d\n", identsym);
+
+                        // dynamically resize tokenType array if necessary. 
+                        if (tokenCount == tokenTypeSize-1) {
+                            tokenTypeSize *= 2; 
+                            tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                        }
+                        tokenType[i] = identsym;
+                        tokenCount++;
+                    }
                 }
             }
         }
-        else {
-
-        }
-
+        
         i++; 
         free(tempArr); 
     }
