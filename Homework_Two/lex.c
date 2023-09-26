@@ -60,7 +60,7 @@ int main(){
 
     // Print out input file. 
     // **************************************|
-    FILE *file = fopen("input2.txt", "r");
+    FILE *file = fopen("input.txt", "r");
     char ch;
     if (NULL == file) {
         printf("The file cannot be opened\n");
@@ -78,7 +78,7 @@ int main(){
 
     // *******Put input file into array.*******|
     char inputArr[chcount+1];
-    FILE *inputFile = fopen("input2.txt", "r");
+    FILE *inputFile = fopen("input.txt", "r");
     if (NULL == inputFile) {
         printf("The file cannot be opened\n");
         return 0; // or do you put exit 1; ??
@@ -97,7 +97,6 @@ int main(){
     fclose(inputFile);
     // ****************************************|
     
-    printf("\n"); 
     // Print out lexeme table titles. 
     printf("Lexeme Table: \n\nlexeme\ttoken type\n");
     
