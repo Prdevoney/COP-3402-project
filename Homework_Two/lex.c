@@ -60,7 +60,7 @@ int main(){
 
     // Print out input file. 
     // **************************************|
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen("input2.txt", "r");
     char ch;
     if (NULL == file) {
         printf("The file cannot be opened\n");
@@ -78,7 +78,7 @@ int main(){
 
     // *******Put input file into array.*******|
     char inputArr[chcount+1];
-    FILE *inputFile = fopen("input.txt", "r");
+    FILE *inputFile = fopen("input2.txt", "r");
     if (NULL == inputFile) {
         printf("The file cannot be opened\n");
         return 0; // or do you put exit 1; ??
@@ -97,8 +97,9 @@ int main(){
     fclose(inputFile);
     // ****************************************|
     
+    printf("\n"); 
     // Print out lexeme table titles. 
-    printf("Lexeme Table: \n\n lexeme \t token type\n");
+    printf("Lexeme Table: \n\nlexeme\ttoken type\n");
     
     // dynamically allocate memory for tokenType array
     int tokenTypeSize = 50; 
@@ -112,8 +113,7 @@ int main(){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    while (i < sizeof(inputArr) - 1){
-
+    while (i < sizeof(inputArr) - 2){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(int) * tempArrSize);
         int tempArrCount = 0; 
@@ -149,7 +149,7 @@ int main(){
             // first scan, specialChar
             else if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
                 caseCheck = 2; 
-                i++; 
+                // i++; 
                 break; 
             }
 
@@ -247,16 +247,17 @@ int main(){
                             tokenTypeSize *= 2; 
                             tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
                         }
-                        tokenType[i] = identsym;
+                        tokenType[tokenCount] = identsym;
                         tokenCount++;
                     }
                 }
             }
         } else {
             // ======================= Special Character Check =======================
-            if (tempArr[0] == ':' && inputArr[i] == '=') {
+            if (tempArr[0] == ':' && inputArr[i+1] == '=') {
                 printf(":=\t");
-                printf("%d\n", becomessym); 
+                printf("%d\n", becomessym);
+                i++;  
             }
             else if (tempArr[0] == '<' && inputArr[i] == '=') {
                 printf("<=\t");
