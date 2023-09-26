@@ -251,8 +251,10 @@ int main(){
                         tokenCount++;
                     }
                 }
+                free(tempArr); 
             }
-        } else {
+        } 
+        else {
             // ======================= Special Character Check =======================
             if (tempArr[0] == ':' && inputArr[i+1] == '=') {
                 printf(":=\t");
@@ -271,10 +273,11 @@ int main(){
                 printf("%c\t", tempArr[0]); 
                 printf("%d\n", ssym[tempArr[0]]); 
             }
+            free(tempArr); 
         }
         
         i++; 
-        free(tempArr); 
+        // free(tempArr); 
     }
     return 0;
 }
