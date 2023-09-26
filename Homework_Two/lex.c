@@ -60,7 +60,7 @@ int main(){
 
     // Print out input file. 
     // **************************************|
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen("input2.txt", "r");
     char ch;
     if (NULL == file) {
         printf("The file cannot be opened\n");
@@ -78,7 +78,7 @@ int main(){
 
     // *******Put input file into array.*******|
     char inputArr[chcount+1];
-    FILE *inputFile = fopen("input.txt", "r");
+    FILE *inputFile = fopen("input2.txt", "r");
     if (NULL == inputFile) {
         printf("The file cannot be opened\n");
         return 0; // or do you put exit 1; ??
