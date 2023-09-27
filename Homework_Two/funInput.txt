@@ -1,0 +1,14 @@
+Source Program:
+/*lets try a comment*/
++ - * = / ( ) , . < > ; : &
+<> <= >= :=
+skip if else become begin end then while do call const var procedure write read ifel
+/*
+    Lets
+    try
+    another
+    comment
+*//*Sike here's another*/
+goodLength badLength123
+12345 123456
+/* One last comment */
