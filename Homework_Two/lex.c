@@ -274,9 +274,7 @@ int main(){
             }
             free(tempArr); 
         }
-        
         i++; 
-        // free(tempArr); 
     }
     return 0;
 }
