@@ -60,7 +60,7 @@ int main(){
 
     // Print out input file. 
     // **************************************|
-    FILE *file = fopen("input2.txt", "r");
+    FILE *file = fopen("input3.txt", "r");
     char ch;
     if (NULL == file) {
         printf("The file cannot be opened\n");
@@ -78,7 +78,7 @@ int main(){
 
     // *******Put input file into array.*******|
     char inputArr[chcount+1];
-    FILE *inputFile = fopen("input2.txt", "r");
+    FILE *inputFile = fopen("input3.txt", "r");
     if (NULL == inputFile) {
         printf("The file cannot be opened\n");
         return 0; // or do you put exit 1; ??
@@ -87,6 +87,9 @@ int main(){
     while(!feof(inputFile)) {
         char c = fgetc(inputFile); 
         if (isspace(c)) {
+            // if (inputArr[i-1] == '\0') {
+            //     continue; 
+            // }
             inputArr[i] = '\0'; 
         } else {
             inputArr[i] = c; 
@@ -128,7 +131,7 @@ int main(){
             tempArr[tempArrCount] = inputArr[i]; 
             
             // if scaned in keyword, ident, or num follwed by '\0'. 
-            if (tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
+            if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
                 halt = 1; 
                 break; 
@@ -138,17 +141,21 @@ int main(){
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
                 i--;
+
                 break; 
             }
             // first scan, whitespace, skip 
-            else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) {
-                tempArr[tempArrCount] = inputArr[i+1]; 
-                i++; 
+            else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
+                // create a for loop that goes until you run out of '\0'
+                while (inputArr[i] == '\0') {
+                    i++; 
+                }
+                tempArr[tempArrCount] = inputArr[i];
             }
             // first scan, specialChar
             else if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
                 caseCheck = 2; 
-                // i++; 
+
                 break; 
             }
 
@@ -161,6 +168,7 @@ int main(){
             i++;
             tempArrCount++; 
         } while (halt == 0); 
+        
         tempArr[tempArrCount+1] = '\0'; 
 
         // =============== Find out what is in tempArr ===============
@@ -213,7 +221,7 @@ int main(){
                         tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
                     }
                     // put the token in the array. 
-                    tokenType[i] = wsym[k];
+                    tokenType[tokenCount] = wsym[k];
                     tokenCount++;
                     keyWordCheck = 1; 
                     free(tempArr);
@@ -232,6 +240,7 @@ int main(){
                             printf("%c", tempArr[l]);
                         }
                         printf("\tError idenfitier is too long!\n"); 
+                        break;
                     }
                     else if (strcmp(tempArr, &identArr[k]) == 0) {
                         // print out lexem and token 
@@ -255,22 +264,42 @@ int main(){
         } 
         else {
             // ======================= Special Character Check =======================
-            if (tempArr[0] == ':' && inputArr[i+1] == '=') {
+            if (tempArr[0] == '/' && inputArr[i+1] == '*') {
+                i += 2; 
+                while (inputArr[i] != '*' && inputArr[i+1] != '/') {
+                    i++; 
+                }
+                i += 2; 
+            }
+            else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
                 printf(":=\t");
                 printf("%d\n", becomessym);
                 i++;  
             }
-            else if (tempArr[0] == '<' && inputArr[i] == '=') {
+            else if (tempArr[0] == '<' && inputArr[i+1] == '=') {
                 printf("<=\t");
                 printf("%d\n", leqsym);
+                i++;
             }
-            else if (tempArr[0] == '>' && inputArr[i] == '=') {
+            else if (tempArr[0] == '>' && inputArr[i+1] == '=') {
                 printf(">=\t");
                 printf("%d\n", geqsym);
+                i++; 
+            }
+            else if (tempArr[0] == '<' && inputArr[i+1] == '>') {
+                printf("<>\t");
+                printf("%d\n", neqsym);
+                i++; 
             }
             else {
                 printf("%c\t", tempArr[0]); 
-                printf("%d\n", ssym[tempArr[0]]); 
+                if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
+                    || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
+                    || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18 || ssym[tempArr[0]] == 20)
+                    printf("%d\n", ssym[tempArr[0]]); 
+                else {
+                    printf("error invalid symbol\n");
+                }
             }
             free(tempArr); 
         }
