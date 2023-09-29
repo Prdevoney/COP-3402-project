@@ -154,6 +154,7 @@ int main(int argc, char *argv[]){
                 halt = 1; 
                 break; 
             }
+            
             // if scanned in keyword, ident, or num follwed by specialChar. 
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
