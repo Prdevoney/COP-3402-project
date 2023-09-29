@@ -1,4 +1,5 @@
 m
+<<<<<<< HEAD
 7
 4
 +
@@ -6,6 +7,28 @@ m
 */
 ifel
 =<>
+=======
+heat
+treat 
+sweet
+beat
+repeat
+7
+hello
+66666
+888888
+:
+& 
+%
+@
++
+-
+*
+/
+ifel
+=
+<>
+>>>>>>> d059939fcf5d042072c3339693e0957b999b2aac
 <
 <=
 >
@@ -32,7 +55,13 @@ else
 4lpha
 /* Comment should be ignored and not tokenized */
 identifierToLong
+<<<<<<< HEAD
 9999999999
 !@_#$^
 
 
+=======
+that
+9999999999
+!@_#$^
+>>>>>>> d059939fcf5d042072c3339693e0957b999b2aac

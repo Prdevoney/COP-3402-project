@@ -300,21 +300,11 @@ int main(int argc, char *argv[]){
                     int wordLen = strlen(tempArr) + 1;
                     identArr[identCount] = malloc(wordLen*sizeof(char));
                     strcpy(identArr[identCount], tempArr); 
-                    
                     //printf("here and indentCount %d   ", identCount);
                     tokenType[tokenCount] = identsym;
                     tokenCount++;
                     //printf("went here\t");
                     len = wordLen;
-                    //printf("count: %d  ", identCount);
-                    //printf("len: %d  ", len);
-                    // if(identCount == 27){
-                    //     for (int x = 0; x < identCount; x++) {
-                    //         printf("%s" ,identArr[27]);
-                    //     }
-                    //     //printf("jdflkasdj  ");
-                    //     //printf("\n%s", identArr[0]);
-                    // }
                     printf("%s", identArr[identCount]);
                     //printf("%s", tempArr);
                     printf("\t%d\n", identsym);
