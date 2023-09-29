@@ -1,8 +1,7 @@
-Source Program:
 /*lets try a comment*/
 + - * = / ( ) , . < > ; : &
 <> <= >= :=
-skip if else become begin end then while do call const var procedure write read ifel
+if else begin end then while do call const var procedure write read ifel
 /*
     Lets
     try

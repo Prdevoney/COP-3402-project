@@ -59,6 +59,7 @@ int main(int argc, char *argv[]){
     FILE *fp = fopen("output.txt","w");
 
     int chcount = 0;
+    int endOfFile = 0;
 
     // Print out input file. 
     // **************************************|
@@ -144,13 +145,16 @@ int main(int argc, char *argv[]){
             }
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
-                // create a for loop that goes until you run out of '\0'
+                // create a for loop that goes until you run out of '\0'.
                 while (inputArr[i] == '\0') {
                     i++; 
                     if (i == chcount - 1)
-                        goto endloop; 
+                        endOfFile = 1;
+                        //goto endloop; 
+                        //reak;
                 }
                 tempArr[tempArrCount] = inputArr[i];
+                
             }
             // first scan, specialChar
             if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
@@ -186,7 +190,7 @@ int main(int argc, char *argv[]){
                 for (int k = 0; k < digitCount; k++){
                     printf("%d", tempArr[k] - 48); 
                 }
-                printf("\tError number too long!\n"); 
+                printf("\tError: Number too long!\n"); 
                 i++; 
                 free(tempArr);
                 continue; 
@@ -230,15 +234,19 @@ int main(int argc, char *argv[]){
 
             //=================== Identifier Check ===================
             if (keyWordCheck == 0) {
-                strcpy(&identArr[identCount], tempArr); 
-                identCount++;
+                if (!(tempArrCount > 11)) {
+                    strcpy(&identArr[identCount], tempArr); 
+                    identCount++;
+                    //printf("here and indentCount %d   ", identCount);
+                }
+                
 
                 for (int k = 0; k < identCount; k++) {
                     if (tempArrCount > 11){
                         for (int l = 0; tempArr[l] != '\0'; l++) {
                             printf("%c", tempArr[l]);
                         }
-                        printf("\tError idenfitier is too long!\n"); 
+                        printf("\tError: Idenfitier is too long!\n"); 
                         break;
                     }
                     else if (strcmp(tempArr, &identArr[k]) == 0) {
@@ -273,35 +281,49 @@ int main(int argc, char *argv[]){
             else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
                 printf(":=\t");
                 printf("%d\n", becomessym);
+
+
+                tokenType[tokenCount] = becomessym;
+                tokenCount++;
                 i++;  
             }
             else if (tempArr[0] == '<' && inputArr[i+1] == '=') {
                 printf("<=\t");
                 printf("%d\n", leqsym);
+
+
+                tokenType[tokenCount] = leqsym;
+                tokenCount++;
                 i++;
             }
             else if (tempArr[0] == '>' && inputArr[i+1] == '=') {
                 printf(">=\t");
                 printf("%d\n", geqsym);
+
+                tokenType[tokenCount] = geqsym;
+                tokenCount++;
                 i++; 
             }
             else if (tempArr[0] == '<' && inputArr[i+1] == '>') {
                 printf("<>\t");
                 printf("%d\n", neqsym);
+
+                tokenType[tokenCount] = neqsym;
+                tokenCount++;
                 i++; 
             }
             else {
-                printf("%c\t", tempArr[0]); 
-                if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
-                    || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
-                    || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18)
-                    printf("%d\n", ssym[tempArr[0]]); 
-                else if (tempArr[0] == '\n') {
-
-                    
-                } 
-                else {
-                    printf("error invalid symbol\n");
+                if (!endOfFile) {
+                    printf("%c\t", tempArr[0]); 
+                    if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
+                        || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
+                        || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
+                        printf("%d\n", ssym[tempArr[0]]);
+                        tokenType[tokenCount] = ssym[tempArr[0]];
+                        tokenCount++;
+                    } else {
+                        printf("Error: Invalid symbol!\n");
+                    }
                 }
             }
             free(tempArr); 
@@ -310,13 +332,22 @@ int main(int argc, char *argv[]){
     }
 
     int tokenListSize = tokenCount + identCount;
-    int tempIndentIndex = 0;
     int tempTokenIndex = 0;
+    int tempIdentIndex = 0;
+   
+        //printf("%d", tempIdentIndex);
 
-    endloop:
+    //endloop:
 
+    // printf("Size of list: %d\t", tokenListSize);
+    // printf("Size of tokenCount: %d\t", tokenCount);
+    // printf("Size of identCount: %d", identCount);
     printf("\nToken List:\n");
     fprintf(fp,"\nToken List:\n");
+
+     for (int j = 0; j < identCount; j++){
+        printf("%c\t", identArr[j]);
+    }
 
     for (int n = 0; n < tokenListSize; n++) {
 
@@ -324,11 +355,15 @@ int main(int argc, char *argv[]){
         fprintf(fp, "%d ",tokenType[tempTokenIndex]);
 
         if((tokenType[tempTokenIndex] == 2)) {
-            printf("%c ", identArr[tempIndentIndex]);
-            fprintf(fp,"%c ", identArr[tempIndentIndex]);
+           printf("here");
+            //printf("%d", tempIdentIndex);
+            //for (int a = 0; indentArr[tempIdentIndex])
+            printf("%c ", identArr[tempIdentIndex]);
+
+            fprintf(fp,"%c ", identArr[tempIdentIndex]);
             n++;
             // strcpy(&tokenList[n], &identArr[tempIndentIndex]);
-            tempIndentIndex++;
+            tempIdentIndex++;
         }
         tempTokenIndex++;
     }
