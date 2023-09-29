@@ -396,12 +396,10 @@ int main(int argc, char *argv[]){
         fprintf(fp, "%d ",tokenType[tempTokenIndex]);
 
         if((tokenType[tempTokenIndex] == 2) || tokenType[tempTokenIndex] == 3) {
-           
             printf("%s ", identArr[tempIdentIndex]);
             fprintf(fp,"%s ", identArr[tempIdentIndex]);
             tempIdentIndex++;
         }
-
     }
     
     printf("here0"); 
