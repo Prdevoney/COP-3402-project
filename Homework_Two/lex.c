@@ -372,7 +372,7 @@ int main(int argc, char *argv[]){
                         fprintf(fp,"%d\n", ssym[tempArr[0]]);
                         tokenType[tokenCount] = ssym[tempArr[0]];
                         tokenCount++;
-                        i++;
+                        // i++;
                     } else {
                         printf("Error: Invalid symbol!\n");
                         fprintf(fp,"Error: Invalid symbol!\n");
@@ -382,10 +382,6 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         i++; 
-    }
-
-    for (int k = 0; k < identCount; k++){
-        printf("%s ", identArr[k]); 
     }
 
     int tokenListSize = tokenCount + identCount;
