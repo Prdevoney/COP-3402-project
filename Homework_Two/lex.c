@@ -409,7 +409,7 @@ int main(int argc, char *argv[]){
     fclose(fp);
     printf("here1"); 
 
-    for (int z = 0; z < identSize; z++) {
+    for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
     printf("here2"); 
