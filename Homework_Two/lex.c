@@ -211,7 +211,7 @@ int main(int argc, char *argv[]){
                 printf("\tError: Number too long!\n");
                 fprintf(fp,"\tError: Number too long!\n"); 
                 i++; 
-                // free(tempArr);
+                free(tempArr);
                 continue; 
             }
             // print digit if meets requirements. 
@@ -231,7 +231,7 @@ int main(int argc, char *argv[]){
                 identCount++; 
                 tokenCount++; 
                 i++; 
-                // free(tempArr);
+                free(tempArr);
                 continue; 
             }
 
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]){
                     tokenType[tokenCount] = wsym[k];
                     tokenCount++;
                     keyWordCheck = 1; 
-                    // free(tempArr);
+                    free(tempArr);
                     continue; 
                 }
             }
@@ -305,7 +305,7 @@ int main(int argc, char *argv[]){
                     identSize *= 2;
                     identArr = realloc(identArr, sizeof(int*) *identSize);
                 }
-                // free(tempArr); 
+                free(tempArr); 
             }
         } 
         else {
