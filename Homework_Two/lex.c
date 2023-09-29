@@ -126,13 +126,25 @@ int main(int argc, char *argv[]){
         // 1 for keyword, identifier, or num .
         // 2 for special character. 
         int caseCheck = 0; 
-
         int halt = 0;
         // ================ All cases for looping trough inputArr ================
         do {
             // scan in to tempArr. 
             tempArr[tempArrCount] = inputArr[i]; 
             
+            // first scan, is digit. 
+            if (isdigit(tempArr[tempArrCount]) && tempArrCount == 0){
+                caseCheck = 1; 
+                i++; 
+                tempArrCount++; 
+                while (isdigit(inputArr[i])){
+                    tempArr[tempArrCount] = inputArr[i]; 
+                    i++; 
+                    tempArrCount++;
+                }
+                //  i++; 
+                break; 
+            }
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
@@ -195,7 +207,6 @@ int main(int argc, char *argv[]){
                     printf("%d", tempArr[k] - 48); 
                 }
                 printf("\tError: Number too long!\n"); 
-                i++; 
                 free(tempArr);
                 continue; 
             }
@@ -207,7 +218,6 @@ int main(int argc, char *argv[]){
                 tokenType[tokenCount] = numbersym; 
                 printf("\t%d\n", tokenType[tokenCount]);
                 tokenCount++; 
-                i++; 
                 // dynamically resize identArr if necessary
                     if (identCount == identSize-1) {
                         identSize *= 2; 
