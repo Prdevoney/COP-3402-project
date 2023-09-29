@@ -366,7 +366,6 @@ int main(int argc, char *argv[]){
             tempIdentIndex++;
         }
         tempTokenIndex++;
-
     }
     
     return 0;
