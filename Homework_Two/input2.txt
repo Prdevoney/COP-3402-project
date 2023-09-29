@@ -1,4 +1,4 @@
-const m = 7, n = 85;
+const m = 7, n = 8577777777;
 var i,x,y,z,q,r;
 procedure mult;
 var a, b;
