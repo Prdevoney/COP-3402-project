@@ -309,7 +309,8 @@ int main(int argc, char *argv[]){
         }
         i++; 
     }
-<<<<<<< HEAD
+    
+
     int tokenListSize = tokenCount + identCount;
     int tempIndentIndex = 0;
     int tempTokenIndex = 0;
@@ -332,8 +333,7 @@ int main(int argc, char *argv[]){
         tempTokenIndex++;
 
     }
-=======
     endloop:
->>>>>>> 4da10b83dfaec0bbd601ce12fa311f2450943c19
+    
     return 0;
 }
