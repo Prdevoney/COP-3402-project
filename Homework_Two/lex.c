@@ -159,7 +159,6 @@ int main(int argc, char *argv[]){
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
-                //printf("teal ");
                 i--;
                 break; 
             }
@@ -167,19 +166,15 @@ int main(int argc, char *argv[]){
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
                 
                 while (inputArr[i] == '\0') {
-                    //printf("black");
                     i++; 
                     if (i == chcount - 1)
                         endOfFile = 1;
-                        //goto endloop; 
-                        //reak;
                 }
                 tempArr[tempArrCount] = inputArr[i];
                 
             }
             // first scan, specialChar
             if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
-                //printf("grey ");
                 caseCheck = 2; 
                 break; 
             }
@@ -242,7 +237,6 @@ int main(int argc, char *argv[]){
 
             //=================== resWords Check ===================
             int keyWordCheck = 0; 
-            //printf("pink ");
             for (int k = 0; k < norw; k++) {
                 if (strcmp(tempArr, resWords[k]) == 0) {
                     // print out lexem and token 
@@ -266,7 +260,6 @@ int main(int argc, char *argv[]){
                     continue; 
                 }
             }
-            //printf("blue ");
             //=================== Identifier Check ===================
             if (keyWordCheck == 0) {
                 int len = 0;
@@ -317,7 +310,6 @@ int main(int argc, char *argv[]){
         } 
         else {
             // ======================= Special Character Check =======================
-           // printf("overhere");
             if (tempArr[0] == '/' && inputArr[i+1] == '*') {
                 i += 2; 
                 while (inputArr[i] != '*' && inputArr[i+1] != '/') {
@@ -390,12 +382,11 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         i++; 
-
     }
 
-    // for (int k = 0; k < identCount; k++){
-    //     printf("%s ", identArr[k]); 
-    // }
+    for (int k = 0; k < identCount; k++){
+        printf("%s ", identArr[k]); 
+    }
 
     int tokenListSize = tokenCount + identCount;
     int tempIdentIndex = 0;
@@ -412,7 +403,6 @@ int main(int argc, char *argv[]){
            
             printf("%s ", identArr[tempIdentIndex]);
             fprintf(fp,"%s ", identArr[tempIdentIndex]);
-           
             tempIdentIndex++;
         }
 

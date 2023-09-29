@@ -1,8 +1,8 @@
 
 repeat
 
-7
- 66666
+7;ifel;ifel;
+ 66666;const;f;
 888888
 :
 :=
