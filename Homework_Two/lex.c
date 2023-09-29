@@ -145,7 +145,6 @@ int main(int argc, char *argv[]){
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
                 // create a for loop that goes until you run out of '\0'
-                
                 while (inputArr[i] == '\0') {
                     i++; 
                     if (i == chcount - 1)
