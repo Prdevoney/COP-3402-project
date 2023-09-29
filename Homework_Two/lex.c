@@ -404,11 +404,17 @@ int main(int argc, char *argv[]){
 
     }
     fclose(fp);
+    printf("here1"); 
+
     for (int z = 0; z < identSize; z++) {
         free(identArr[z]);
     }
+    printf("here2"); 
     free(identArr);
+    printf("here3"); 
+
     free(tokenType);
+    printf("here4"); 
 
     printf("\n");
     fprintf(fp,"\n");
