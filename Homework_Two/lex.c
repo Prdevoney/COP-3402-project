@@ -261,7 +261,7 @@ int main(int argc, char *argv[]){
                     }
                     printf("\tError: Idenfitier is too long!\n"); 
                     free(tempArr); 
-                    break;
+                    // break;
                 }
                 else {
                     // print out lexem and token 
@@ -335,27 +335,26 @@ int main(int argc, char *argv[]){
                 i++; 
             }
             else {
-                // if (!endOfFile) {
-                    printf("%c\t", tempArr[0]); 
-                    if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
-                        || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
-                        || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
-                        printf("%d\n", ssym[tempArr[0]]);
-                        tokenType[tokenCount] = ssym[tempArr[0]];
-                        tokenCount++;
-                    } else {
-                        printf("Error: Invalid symbol!\n");
-                    }
-                // }
+                printf("%c\t", tempArr[0]); 
+                if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
+                    || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
+                    || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
+                    printf("%d\n", ssym[tempArr[0]]);
+                    tokenType[tokenCount] = ssym[tempArr[0]];
+                    tokenCount++;
+                } else {
+                    printf("Error: Invalid symbol!\n");
+                }
             }
             free(tempArr); 
         }
         i++; 
     }
 
-    int listCount = tokenCount;
-
+    int listCount;
+    
     endloop:
+    listCount = tokenCount;
 
     tokenCount = 0; 
     identCount = 0; 

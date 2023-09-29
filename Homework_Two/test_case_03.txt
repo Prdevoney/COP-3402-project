@@ -45,6 +45,6 @@ else
 4lpha
 /* Comment should be ignored and not tokenized */
 identifierToLong
+that
 9999999999
 !@_#$^
-
