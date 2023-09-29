@@ -116,7 +116,7 @@ int main(int argc, char *argv[]){
     int tokenCount = 0; 
 
     // dynamically allocate memory for identifier array
-    int identSize = 50; 
+    int identSize = 100; 
     char **identArr = malloc(sizeof(char*) * identSize);
     int identCount = 0;
     // for (int counter = 0; counter < identSize; counter++) {
@@ -138,10 +138,34 @@ int main(int argc, char *argv[]){
         // ================ All cases for looping trough inputArr ================
         do {
             // scan in to tempArr. 
-            tempArr[tempArrCount] = inputArr[i]; 
+           
+            tempArr[tempArrCount] = inputArr[i];
+            // printf("this is I==== %d ====", i);
+            // printf("=== Array|%c|\n", inputArr[i]);
+            // if (i == 191) {
+            //     //i--;
+            //     printf("%c", inputArr[190]);
+            // }
+             
+            //printf("green ");
+            // first scan is digit.
+            if(isdigit(tempArr[tempArrCount]) && tempArrCount == 0) {
+                caseCheck = 1;
+                i++;
+                tempArrCount++;
+                //printf("red ");
+                while(isdigit(inputArr[i])) {
+                    tempArr[tempArrCount] = inputArr[i];
+                    i++;
+                    tempArrCount++;
+                }
+                // ladskfjk
+                //break;
+            }
             
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
+                //printf("yellow ");
                 caseCheck = 1; 
                 halt = 1; 
                 break; 
@@ -150,13 +174,16 @@ int main(int argc, char *argv[]){
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
+                //printf("teal ");
                 i--;
                 break; 
             }
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
                 // create a for loop that goes until you run out of '\0'.
+                //printf("white ");
                 while (inputArr[i] == '\0') {
+                    //printf("black");
                     i++; 
                     if (i == chcount - 1)
                         endOfFile = 1;
@@ -168,6 +195,7 @@ int main(int argc, char *argv[]){
             }
             // first scan, specialChar
             if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
+                //printf("grey ");
                 caseCheck = 2; 
                 break; 
             }
@@ -185,7 +213,7 @@ int main(int argc, char *argv[]){
         tempArr[tempArrCount+1] = '\0'; 
 
         // =============== Find out what is in tempArr ===============
-
+        //printf("orange ");
         if (caseCheck == 1) {
             //=================== Digit Check ===================
             int digitCount = 0; 
@@ -195,8 +223,13 @@ int main(int argc, char *argv[]){
                 digitCount++; 
                 u++; 
             }
+          // printf("here\t");
             // print error, if digit too long. 
-            if (digitCount == tempArrCount && digitCount > 5) {
+            // printf("\tDC: %d", digitCount);
+            //  printf("\t TC: %d\t", tempArrCount);
+            
+            if (digitCount > 5) {
+                //printf(" in here\t");
                 for (int k = 0; k < digitCount; k++){
                     printf("%d", tempArr[k] - 48);
                     fprintf(fp,"%d", tempArr[k] - 48); 
@@ -224,6 +257,7 @@ int main(int argc, char *argv[]){
 
             //=================== resWords Check ===================
             int keyWordCheck = 0; 
+            //printf("pink ");
             for (int k = 0; k < norw; k++) {
                 if (strcmp(tempArr, resWords[k]) == 0) {
                     // print out lexem and token 
@@ -247,43 +281,94 @@ int main(int argc, char *argv[]){
                     continue; 
                 }
             }
-
+            //printf("blue ");
             //=================== Identifier Check ===================
             if (keyWordCheck == 0) {
                 int len = 0;
+
                 //printf("\n why skipped?: %d", tempArrCount);
-                if (!(tempArrCount > 11)) {
-                    //printf("%d", strlen(tempArr));
+                if (tempArrCount > 11){
+                    //printf("\ncount: %d", tempArrCount);
+                    for (int l = 0; tempArr[l] != '\0'; l++) {
+                        printf("%c", tempArr[l]);
+                        fprintf(fp,"%c", tempArr[l]);
+                    }
+                    printf("\tError: Idenfitier is too long!\n");
+                    fprintf(fp,"\tError: Idenfitier is too long!\n"); 
+                } else {
+                    //printf("  %d", strlen(tempArr));
                     int wordLen = strlen(tempArr) + 1;
                     identArr[identCount] = malloc(wordLen*sizeof(char));
                     strcpy(identArr[identCount], tempArr); 
-                    identCount++;
+                    
                     //printf("here and indentCount %d   ", identCount);
-                     tokenType[tokenCount] = identsym;
+                    tokenType[tokenCount] = identsym;
                     tokenCount++;
                     //printf("went here\t");
                     len = wordLen;
-                    printf("%s", identArr[identCount-1]);
+                    //printf("count: %d  ", identCount);
+                    //printf("len: %d  ", len);
+                    // if(identCount == 27){
+                    //     for (int x = 0; x < identCount; x++) {
+                    //         printf("%s" ,identArr[27]);
+                    //     }
+                    //     //printf("jdflkasdj  ");
+                    //     //printf("\n%s", identArr[0]);
+                    // }
+                    printf("%s", identArr[identCount]);
+                    //printf("%s", tempArr);
                     printf("\t%d\n", identsym);
 
-                    fprintf(fp,"%s", identArr[identCount-1]);
+                    fprintf(fp,"%s", identArr[identCount]);
                     fprintf(fp,"\t%d\n", identsym);
+
+                    identCount++;
                 }
+                //if ((tempArrCount <= 11)) {
+                    // //printf("  %d", strlen(tempArr));
+                    // int wordLen = strlen(tempArr) + 1;
+                    // identArr[identCount] = malloc(wordLen*sizeof(char));
+                    // strcpy(identArr[identCount], tempArr); 
+                    
+                    // printf("here and indentCount %d   ", identCount);
+                    // tokenType[tokenCount] = identsym;
+                    // tokenCount++;
+                    // //printf("went here\t");
+                    // len = wordLen;
+                    // //printf("count: %d  ", identCount);
+                    // printf("len: %d  ", len);
+                    // if(identCount == 27){
+                    //     for (int x = 0; x < identCount; x++) {
+                    //         printf("%s" ,identArr[27]);
+                    //     }
+                    //     printf("jdflkasdj  ");
+                    //     //printf("\n%s", identArr[0]);
+                    // }
+                    // printf("%s", identArr[identCount]);
+                    // //printf("%s", tempArr);
+                    // printf("\t%d\n", identsym);
+
+                    // //fprintf(fp,"%s", identArr[identCount]);
+                    // fprintf(fp,"\t%d\n", identsym);
+
+                    // identCount++;
+                    
+                //}
                 
-                // printf("ahhhhh\t");
+                //printf("ahhhhh\t");
                 // printf("%s", identArr[identCount-1]);
                 // printf("\t%d\n", identsym);
 
                 //for (int k = 0; k < identCount; k++) {
-                    if (tempArrCount > 11){
-                        //printf("\ncount: %d", tempArrCount);
-                        for (int l = 0; tempArr[l] != '\0'; l++) {
-                            printf("%c", tempArr[l]);
-                            fprintf(fp,"%c", tempArr[l]);
-                        }
-                        printf("\tError: Idenfitier is too long!\n");
-                        fprintf(fp,"\tError: Idenfitier is too long!\n"); 
-                    }
+                // if (tempArrCount > 11){
+                //     //printf("\ncount: %d", tempArrCount);
+                //     for (int l = 0; tempArr[l] != '\0'; l++) {
+                //         printf("%c", tempArr[l]);
+                //         fprintf(fp,"%c", tempArr[l]);
+                //     }
+                //     printf("\tError: Idenfitier is too long!\n");
+                //     fprintf(fp,"\tError: Idenfitier is too long!\n"); 
+                // }
                     // else if (strcmp(tempArr, identArr[k]) == 0) {
                     //     // print out lexem and token 
 
@@ -296,21 +381,21 @@ int main(int argc, char *argv[]){
                     //     printf("\t%d\n", identsym);
 
                         // dynamically resize tokenType array if necessary. 
-                        if (tokenCount == tokenTypeSize-1) {
-                            tokenTypeSize *= 2; 
-                            tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
-                        }
-                        if (identCount == identSize-1) {
-                            int saveSize = identSize;
-                            identSize *= 2;
-                            identArr = realloc(identArr, sizeof(int*) *identSize);
-                            // for (int index = identSize; index < identSize; index++) {
-                            //     identArr[index] = (char*)malloc(sizeof(char)*11);
-                            // }
-                        }
+                if (tokenCount == tokenTypeSize-1) {
+                    tokenTypeSize *= 2; 
+                    tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                }
+                if (identCount == identSize-1) {
+                    int saveSize = identSize;
+                    identSize *= 2;
+                    identArr = realloc(identArr, sizeof(int*) *identSize);
+                    // for (int index = identSize; index < identSize; index++) {
+                    //     identArr[index] = (char*)malloc(sizeof(char)*11);
+                    // }
+                }
                         
                     //}
-                    //printf("\t what is happeing  ");
+               // printf("\t what is happeing  ");
                 //}
                 // tokenType[tokenCount] = identsym;
                 // tokenCount++;
@@ -321,6 +406,7 @@ int main(int argc, char *argv[]){
         } 
         else {
             // ======================= Special Character Check =======================
+           // printf("overhere");
             if (tempArr[0] == '/' && inputArr[i+1] == '*') {
                 i += 2; 
                 while (inputArr[i] != '*' && inputArr[i+1] != '/') {
@@ -383,6 +469,7 @@ int main(int argc, char *argv[]){
                         fprintf(fp,"%d\n", ssym[tempArr[0]]);
                         tokenType[tokenCount] = ssym[tempArr[0]];
                         tokenCount++;
+                        i++;
                     } else {
                         printf("Error: Invalid symbol!\n");
                         fprintf(fp,"Error: Invalid symbol!\n");
@@ -392,11 +479,16 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         //printf("_______ ");
+        //  if (i == 190) {
+        //         i++;
+        //         printf("%c", inputArr[189]);
+        //     }
         i++; 
+
     }
 
     int tokenListSize = tokenCount + identCount;
-    int tempTokenIndex = 0;
+    //int tempTokenIndex = 0;
     int tempIdentIndex = 0;
    
         //printf("%d", tempIdentIndex);
@@ -413,7 +505,7 @@ int main(int argc, char *argv[]){
     //     printf("%s\t", identArr[j]);
     // }
 
-    for (int n = 0; n < tokenListSize; n++) {
+    for (int tempTokenIndex = 0; tempTokenIndex < tokenCount; tempTokenIndex++) {
 
         printf("%d ",tokenType[tempTokenIndex]);
         fprintf(fp, "%d ",tokenType[tempTokenIndex]);
@@ -423,13 +515,13 @@ int main(int argc, char *argv[]){
             //printf("%d", tempIdentIndex);
             //for (int a = 0; indentArr[tempIdentIndex])
             printf("%s ", identArr[tempIdentIndex]);
-
             fprintf(fp,"%s ", identArr[tempIdentIndex]);
-            n++;
+            //n++;
             // strcpy(&tokenList[n], &identArr[tempIndentIndex]);
             tempIdentIndex++;
         }
-        tempTokenIndex++;
+        //tempTokenIndex++;
+
 
     }
     fclose(fp);
@@ -439,6 +531,9 @@ int main(int argc, char *argv[]){
     }
     free(identArr);
     free(tokenType);
+
+    printf("\n");
+    fprintf(fp,"\n");
 
     
     return 0;
