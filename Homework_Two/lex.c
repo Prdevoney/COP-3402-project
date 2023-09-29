@@ -151,10 +151,11 @@ int main(int argc, char *argv[]){
                 // create a for loop that goes until you run out of '\0'.
                 while (inputArr[i] == '\0') {
                     i++; 
-                    if (i == chcount - 1)
-                        endOfFile = 1;
-                        //goto endloop; 
-                        //reak;
+                    if (i == chcount - 1){
+                        // endOfFile = 1;
+                        free(tempArr); 
+                        goto endloop; 
+                    }
                 }
                 tempArr[tempArrCount] = inputArr[i];
                 
@@ -324,7 +325,7 @@ int main(int argc, char *argv[]){
                 i++; 
             }
             else {
-                if (!endOfFile) {
+                // if (!endOfFile) {
                     printf("%c\t", tempArr[0]); 
                     if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
                         || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
@@ -335,10 +336,11 @@ int main(int argc, char *argv[]){
                     } else {
                         printf("Error: Invalid symbol!\n");
                     }
-                }
+                // }
             }
             free(tempArr); 
         }
+        printf("\n"); 
         i++; 
     }
 
