@@ -403,6 +403,9 @@ int main(int argc, char *argv[]){
         }
 
     }
+    
+    printf("here0"); 
+
     fclose(fp);
     printf("here1"); 
 
