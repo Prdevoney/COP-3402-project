@@ -337,7 +337,7 @@ int main(int argc, char *argv[]){
    
         //printf("%d", tempIdentIndex);
 
-    //endloop:
+    endloop:
 
     // printf("Size of list: %d\t", tokenListSize);
     // printf("Size of tokenCount: %d\t", tokenCount);
@@ -354,8 +354,7 @@ int main(int argc, char *argv[]){
         printf("%d ",tokenType[tempTokenIndex]);
         fprintf(fp, "%d ",tokenType[tempTokenIndex]);
 
-        if((tokenType[tempTokenIndex] == 2)) {
-           printf("here");
+        if(tokenType[tempTokenIndex] == 2 || tokenType[tempTokenIndex] == 3) {
             //printf("%d", tempIdentIndex);
             //for (int a = 0; indentArr[tempIdentIndex])
             printf("%c ", identArr[tempIdentIndex]);
