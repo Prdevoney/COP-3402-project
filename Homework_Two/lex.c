@@ -89,9 +89,6 @@ int main(int argc, char *argv[]){
     while(!feof(inputFile)) {
         char c = fgetc(inputFile); 
         if (isspace(c)) {
-            // if (inputArr[i-1] == '\0') {
-            //     continue; 
-            // }
             inputArr[i] = '\0'; 
         } else {
             inputArr[i] = c; 
@@ -148,8 +145,11 @@ int main(int argc, char *argv[]){
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
                 // create a for loop that goes until you run out of '\0'
+                
                 while (inputArr[i] == '\0') {
                     i++; 
+                    if (i == chcount - 1)
+                        goto endloop; 
                 }
                 tempArr[tempArrCount] = inputArr[i];
             }
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]){
             i++;
             tempArrCount++; 
         } while (halt == 0); 
-        
+       
         tempArr[tempArrCount+1] = '\0'; 
 
         // =============== Find out what is in tempArr ===============
@@ -309,6 +309,7 @@ int main(int argc, char *argv[]){
         }
         i++; 
     }
+<<<<<<< HEAD
     int tokenListSize = tokenCount + identCount;
     int tempIndentIndex = 0;
     int tempTokenIndex = 0;
@@ -331,5 +332,8 @@ int main(int argc, char *argv[]){
         tempTokenIndex++;
 
     }
+=======
+    endloop:
+>>>>>>> 4da10b83dfaec0bbd601ce12fa311f2450943c19
     return 0;
 }
