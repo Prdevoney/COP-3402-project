@@ -331,7 +331,6 @@ int main(int argc, char *argv[]){
             tempIndentIndex++;
         }
         tempTokenIndex++;
-
     }
     
     return 0;
