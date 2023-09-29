@@ -350,10 +350,9 @@ int main(int argc, char *argv[]){
     identCount = 0; 
 
     printf("\nToken List:\n");
-    fprintf(fp,"\nToken List:\n");
-    int count = 0; 
-    for (int n = 0; n < listCount; n++) {
 
+    fprintf(fp,"\nToken List:\n");
+    for (int n = 0; n < listCount; n++) {
         printf("%d ",tokenType[tokenCount]);
         fprintf(fp, "%d ",tokenType[tokenCount]);
         if(tokenType[tokenCount] == 2 || tokenType[tokenCount] == 3) {
@@ -361,9 +360,7 @@ int main(int argc, char *argv[]){
             fprintf(fp,"%s ", identArr[identCount]);
             identCount++;
         }
-        count++; 
-        n++;
         tokenCount++;
-    }    
+    }
     return 0;
 }
