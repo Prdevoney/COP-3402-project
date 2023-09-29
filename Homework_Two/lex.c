@@ -363,6 +363,7 @@ int main(int argc, char *argv[]){
         tokenCount++;
     }
     free(tokenType);
-    free(identArr); 
+    free(identArr);
+    fclose(fp);
     return 0;
 }
