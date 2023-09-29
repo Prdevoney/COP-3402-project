@@ -26,7 +26,7 @@ typedef enum {
     readsym , elsesym
 } token_type;
 
-int main(){
+int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
                         "call", "begin", "end", "if", 
@@ -58,29 +58,39 @@ int main(){
 
     int chcount = 0;
 
+    // Create output file.
+    // --------------------------------------|
+    FILE *fp = fopen("Output.txt", "w");
+    // --------------------------------------|
+
     // Print out input file. 
     // **************************************|
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(argv[1], "r");
     char ch;
     if (NULL == file) {
-        printf("The file cannot be opened\n");
+        printf("No input file recieved, please put: 'input.txt' after executable file! \n");
+        fprintf(fp,"No input file recieved, please put: 'input.txt' after executable file! \n");
         return 0;
     }
     printf("Source Code:\n");
+    fprintf(fp, "Source Code:\n");
     while (!feof(file)) {
         chcount++;
         ch = fgetc(file);
         printf("%c", ch);
+        fprintf(fp, "%c", ch);
     }
     printf("\n\n"); 
+    fprintf(fp, "\n\n");
     fclose(file);
     // ****************************************|
 
     // *******Put input file into array.*******|
     char inputArr[chcount+1];
-    FILE *inputFile = fopen("input.txt", "r");
+    FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
-        printf("The file cannot be opened\n");
+        printf("No input file recieved, please put: 'input.txt' after executable file! \n");
+        fprintf(fp,"No input file recieved, please put: 'input.txt' after executable file! \n");
         return 0; // or do you put exit 1; ??
     }
     int i = 0; 
@@ -99,6 +109,7 @@ int main(){
     
     // Print out lexeme table titles. 
     printf("Lexeme Table: \n\nlexeme\ttoken type\n");
+    fprintf(fp,"Lexeme Table: \n\nlexeme\ttoken type\n");
     
     // dynamically allocate memory for tokenType array
     int tokenTypeSize = 50; 
@@ -109,6 +120,11 @@ int main(){
     int identSize = 50; 
     char *identArr = malloc(sizeof(char) * identSize);
     int identCount = 0;
+
+    // dynamically allocate memory for TokenList array
+    // int tokenListSize = 50;
+    // char *tokenList = malloc(sizeof(char) * tokenListSize);
+    // int listCount = 0;
 
     // *********** loops though inputArr ***********|
     i = 0; 
@@ -177,9 +193,12 @@ int main(){
             // print error, if digit too long. 
             if (digitCount == tempArrCount && digitCount > 5) {
                 for (int k = 0; k < digitCount; k++){
-                    printf("%d", tempArr[k] - 48); 
+                    printf("%d", tempArr[k] - 48);
+                    fprintf(fp, "%d", tempArr[k] - 48); 
                 }
-                printf("\tError number too long!\n"); 
+                printf("\tError number too long!\n");
+                fprintf(fp,"\tError number too long!\n");
+                 
                 i++; 
                 free(tempArr);
                 continue; 
@@ -187,10 +206,12 @@ int main(){
             // print digit if meets requirements. 
             if (digitCount == tempArrCount && digitCount <= 5) {
                 for (int k = 0; k < digitCount; k++){
-                        printf("%d", tempArr[k] - 48); 
+                        printf("%d", tempArr[k] - 48);
+                        fprintf(fp, "%d", tempArr[k] - 48); 
                 }
                 tokenType[tokenCount] = numbersym; 
                 printf("\t%d\n", tokenType[tokenCount]);
+                fprintf(fp,"\t%d\n", tokenType[tokenCount]);
                 tokenCount++; 
                 i++; 
                 free(tempArr);
@@ -204,8 +225,10 @@ int main(){
                     // print out lexem and token 
                     for (int l = 0; tempArr[l] != '\0'; l++) {
                         printf("%c", tempArr[l]);
+                        fprintf(fp, "%c", tempArr[l]);
                     }
                     printf("\t%d\n", wsym[k]);
+                    fprintf(fp, "\t%d\n", wsym[k]);
 
                     // dynamically resize tokenType array if necessary. 
                     if (tokenCount == tokenTypeSize-1) {
@@ -213,7 +236,7 @@ int main(){
                         tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
                     }
                     // put the token in the array. 
-                    tokenType[i] = wsym[k];
+                    tokenType[tokenCount] = wsym[k];
                     tokenCount++;
                     keyWordCheck = 1; 
                     free(tempArr);
@@ -230,16 +253,20 @@ int main(){
                     if (tempArrCount > 11){
                         for (int l = 0; tempArr[l] != '\0'; l++) {
                             printf("%c", tempArr[l]);
+                            fprintf(fp,"%c", tempArr[l]);
                         }
-                        printf("\tError idenfitier is too long!\n"); 
+                        printf("\tError idenfitier is too long!\n");
+                        fprintf(fp,"\tError idenfitier is too long!\n");
                     }
                     else if (strcmp(tempArr, &identArr[k]) == 0) {
                         // print out lexem and token 
                         for (int l = 0; tempArr[l] != '\0'; l++) {
                             printf("%c", tempArr[l]);
+                            fprintf(fp, "%c", tempArr[l]);
                         }
 
                         printf("\t%d\n", identsym);
+                        fprintf(fp,"\t%d\n", identsym);
 
                         // dynamically resize tokenType array if necessary. 
                         if (tokenCount == tokenTypeSize-1) {
@@ -258,19 +285,40 @@ int main(){
             if (tempArr[0] == ':' && inputArr[i+1] == '=') {
                 printf(":=\t");
                 printf("%d\n", becomessym);
-                i++;  
+                fprintf(fp,":=\t");
+                fprintf(fp,"%d\n", becomessym);
+                tokenType[tokenCount] = becomessym;
+                tokenCount++;
+                i++;   // why is i++ here and not in the toher 3??
             }
             else if (tempArr[0] == '<' && inputArr[i] == '=') {
                 printf("<=\t");
                 printf("%d\n", leqsym);
+                fprintf(fp, "<=\t");
+                fprintf(fp,"%d\n", leqsym);
+
+                tokenType[tokenCount] = leqsym;
+                tokenCount++;
+                i++;
             }
             else if (tempArr[0] == '>' && inputArr[i] == '=') {
                 printf(">=\t");
                 printf("%d\n", geqsym);
+                fprintf(fp, ">=\t");
+                fprintf(fp, "%d\n", geqsym);
+
+                tokenType[tokenCount] = geqsym;
+                tokenCount++;
+                i++;
             }
             else {
                 printf("%c\t", tempArr[0]); 
-                printf("%d\n", ssym[tempArr[0]]); 
+                printf("%d\n", ssym[tempArr[0]]);
+                fprintf(fp,"%c\t", tempArr[0]); 
+                fprintf(fp,"%d\n", ssym[tempArr[0]]); 
+
+                tokenType[tokenCount] = ssym[tempArr[0]];
+                tokenCount++;
             }
             free(tempArr); 
         }
@@ -278,5 +326,34 @@ int main(){
         i++; 
         // free(tempArr); 
     }
+    int tokenListSize = tokenCount + identCount;
+    int tempIndentIndex = 0;
+    int tempTokenIndex = 0;
+
+    printf("\nToken List:\n");
+    fprintf(fp,"\nToken List:\n");
+
+    for (int n = 0; n < tokenListSize; n++) {
+
+        printf("%d ",tokenType[tempTokenIndex]);
+        fprintf(fp, "%d ",tokenType[tempTokenIndex]);
+
+        if((tokenType[tempTokenIndex] == 2)) {
+            printf("%c ", identArr[tempIndentIndex]);
+            fprintf(fp,"%c ", identArr[tempIndentIndex]);
+            n++;
+            // strcpy(&tokenList[n], &identArr[tempIndentIndex]);
+            tempIndentIndex++;
+        }
+        tempTokenIndex++;
+    }
+
+
+  
+
+    printf("\n");
+    fprintf(fp, "\n");
+
+    fclose(fp);
     return 0;
 }
