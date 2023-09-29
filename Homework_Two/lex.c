@@ -141,7 +141,6 @@ int main(){
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
                 i--;
-
                 break; 
             }
             // first scan, whitespace, skip 
@@ -153,9 +152,8 @@ int main(){
                 tempArr[tempArrCount] = inputArr[i];
             }
             // first scan, specialChar
-            else if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
+            if (tempArr[tempArrCount] != '\0' && !isalnum(tempArr[tempArrCount]) && tempArrCount == 0) {
                 caseCheck = 2; 
-
                 break; 
             }
 
@@ -269,7 +267,7 @@ int main(){
                 while (inputArr[i] != '*' && inputArr[i+1] != '/') {
                     i++; 
                 }
-                i += 2; 
+                i += 1; 
             }
             else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
                 printf(":=\t");
