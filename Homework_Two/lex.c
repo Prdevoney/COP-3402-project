@@ -308,11 +308,12 @@ int main(int argc, char *argv[]){
         }
         i++; 
     }
-    
 
     int tokenListSize = tokenCount + identCount;
     int tempIndentIndex = 0;
     int tempTokenIndex = 0;
+
+    endloop:
 
     printf("\nToken List:\n");
     fprintf(fp,"\nToken List:\n");
@@ -332,7 +333,6 @@ int main(int argc, char *argv[]){
         tempTokenIndex++;
 
     }
-    endloop:
     
     return 0;
 }
