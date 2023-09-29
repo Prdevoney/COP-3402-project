@@ -266,7 +266,6 @@ int main(int argc, char *argv[]){
                             printf("%c", tempArr[l]);
                         }
                         printf("\tError: Idenfitier is too long!\n"); 
-                        free(tempArr); 
                         // break;
                         continue; 
                     }
