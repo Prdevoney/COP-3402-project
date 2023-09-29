@@ -293,7 +293,7 @@ int main(){
                 printf("%c\t", tempArr[0]); 
                 if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
                     || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
-                    || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18 || ssym[tempArr[0]] == 20)
+                    || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18)
                     printf("%d\n", ssym[tempArr[0]]); 
                 else {
                     printf("error invalid symbol\n");
