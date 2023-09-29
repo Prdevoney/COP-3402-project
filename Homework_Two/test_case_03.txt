@@ -5,6 +5,7 @@ sweet
 beat
 repeat
 7
+hello
 66666
 888888
 :

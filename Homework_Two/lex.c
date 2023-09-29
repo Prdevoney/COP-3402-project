@@ -142,7 +142,6 @@ int main(int argc, char *argv[]){
                     i++; 
                     tempArrCount++;
                 }
-                //  i++; 
                 break; 
             }
             // if scaned in keyword, ident, or num follwed by '\0'. 
