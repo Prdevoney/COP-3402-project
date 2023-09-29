@@ -1,4 +1,6 @@
-const m = 7, n = 123456789;
+const m = 7, n = 123456789;;;;
+f5
+
 var i,x,y,z,q,r;
 procedure mult;
 var a, b;
