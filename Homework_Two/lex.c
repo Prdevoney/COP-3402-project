@@ -432,7 +432,7 @@ int main(int argc, char *argv[]){
         tempTokenIndex++;
 
     }
-
+    fclose(fp);
     //identArr[z] != '\0'
     for (int z = 0; z < identSize; z++) {
         free(identArr[z]);
