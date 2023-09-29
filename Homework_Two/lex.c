@@ -350,7 +350,6 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
-        printf("\n"); 
         i++; 
     }
 
