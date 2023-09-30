@@ -402,20 +402,15 @@ int main(int argc, char *argv[]){
         }
     }
     
-    printf("here0"); 
 
     fclose(fp);
-    printf("here1"); 
 
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
-    printf("here2"); 
     free(identArr);
-    printf("here3"); 
 
     free(tokenType);
-    printf("here4"); 
 
     printf("\n");
     fprintf(fp,"\n");
