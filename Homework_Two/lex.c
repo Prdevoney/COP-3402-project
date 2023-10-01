@@ -281,7 +281,7 @@ int main(int argc, char *argv[]){
 
                         identCount++;
                     }
-
+                    
                     // dynamically resize tokenType array if necessary. 
                     if (tokenCount == tokenTypeSize-1) {
                         tokenTypeSize *= 2; 
