@@ -211,7 +211,7 @@ int main(int argc, char *argv[]){
                 printf("\tError: Number too long!\n");
                 fprintf(fp,"\tError: Number too long!\n"); 
                 i++; 
-                // free(tempArr);
+                free(tempArr);
                 continue; 
             }
             // print digit if meets requirements. 
@@ -231,7 +231,7 @@ int main(int argc, char *argv[]){
                 identCount++; 
                 tokenCount++; 
                 i++; 
-                // free(tempArr);
+                free(tempArr);
                 continue; 
             }
 
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]){
                     tokenType[tokenCount] = wsym[k];
                     tokenCount++;
                     keyWordCheck = 1; 
-                    // free(tempArr);
+                    free(tempArr);
                     continue; 
                 }
             }
@@ -264,9 +264,7 @@ int main(int argc, char *argv[]){
             if (keyWordCheck == 0) {
                 int len = 0;
 
-                //printf("\n why skipped?: %d", tempArrCount);
                 if (tempArrCount > 11){
-                    //printf("\ncount: %d", tempArrCount);
                     for (int l = 0; tempArr[l] != '\0'; l++) {
                         printf("%c", tempArr[l]);
                         fprintf(fp,"%c", tempArr[l]);
@@ -274,19 +272,15 @@ int main(int argc, char *argv[]){
                     printf("\tError: Idenfitier is too long!\n");
                     fprintf(fp,"\tError: Idenfitier is too long!\n"); 
                 } else {
-                    //printf("  %d", strlen(tempArr));
 
                     int wordLen = strlen(tempArr) + 1;
                     identArr[identCount] = malloc(wordLen*sizeof(char));
                     strcpy(identArr[identCount], tempArr); 
 
-                    //printf("here and indentCount %d   ", identCount);
                     tokenType[tokenCount] = identsym;
                     tokenCount++;
-                    //printf("went here\t");
                     len = wordLen;
                     printf("%s", identArr[identCount]);
-                    //printf("%s", tempArr);
                     printf("\t%d\n", identsym);
 
                     fprintf(fp,"%s", identArr[identCount]);
@@ -305,7 +299,7 @@ int main(int argc, char *argv[]){
                     identSize *= 2;
                     identArr = realloc(identArr, sizeof(int*) *identSize);
                 }
-                // free(tempArr); 
+                free(tempArr); 
             }
         } 
         else {
@@ -381,6 +375,7 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
+        // free(tempArr); 
         i++; 
     }
 
@@ -402,18 +397,25 @@ int main(int argc, char *argv[]){
         }
     }
     
-
+    printf("\n1\n"); 
     fclose(fp);
+    printf("\n2\n"); 
 
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
+    printf("\n3\n"); 
+
     free(identArr);
+    printf("\n4\n"); 
 
     free(tokenType);
+    printf("\n5\n"); 
 
     printf("\n");
     fprintf(fp,"\n");
+    printf("\n6\n"); 
+
 
     
     return 0;
