@@ -90,7 +90,7 @@ int main(int argc, char *argv[]){
     if (NULL == inputFile) {
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
         fprintf(fp,"No input file recieved, please put: 'input.txt' after executable file! \n");
-        return 0; // or do you put exit 1; ??
+        return 0; 
     }
     int i = 0; 
     while(!feof(inputFile)) {
@@ -146,6 +146,9 @@ int main(int argc, char *argv[]){
                     i++;
                     tempArrCount++;
                 }
+                tempArr[tempArrCount] = '\0';
+                i -= 2; 
+                break; 
             }
             
             // if scaned in keyword, ident, or num follwed by '\0'. 
@@ -190,7 +193,6 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
-
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -201,112 +203,97 @@ int main(int argc, char *argv[]){
                 digitCount++; 
                 u++; 
             }
-          
-            // digit too long. 
-            if (digitCount > 5) {
-                for (int k = 0; k < digitCount; k++){
-                    printf("%d", tempArr[k] - 48);
-                    fprintf(fp,"%d", tempArr[k] - 48); 
+            if (digitCount > 0) {
+                // digit too long. 
+                if (digitCount > 5) {
+                    
+                    printf("%s", tempArr);
+                    printf("\tError: Number too long!\n");
+                    fprintf(fp,"\tError: Number too long!\n"); 
+                    i++; 
+                    free(tempArr);
                 }
-                printf("\tError: Number too long!\n");
-                fprintf(fp,"\tError: Number too long!\n"); 
-                i++; 
-                // free(tempArr);
-                continue; 
-            }
-            // print digit if meets requirements. 
-            if (digitCount == tempArrCount && digitCount <= 5) {
-                for (int k = 0; k < digitCount; k++){
-                    printf("%d", tempArr[k] - 48);
-                    fprintf(fp,"%d", tempArr[k] - 48);  
+                // print digit if meets requirements. 
+                if (digitCount == tempArrCount && digitCount <= 5) {
+                    
+                    int digitLen = strlen(tempArr) + 1; 
+                    identArr[identCount] = malloc(digitLen * sizeof(char)); 
+                    strcpy(identArr[identCount], tempArr);
+
+                    printf("%s", identArr[identCount]); 
+
+                    tokenType[tokenCount] = numbersym; 
+                    printf("\t%d\n", tokenType[tokenCount]);
+                    fprintf(fp,"\t%d\n", tokenType[tokenCount]);
+
+                    identCount++; 
+                    tokenCount++; 
+                    i++; 
+                    free(tempArr);
                 }
-                tokenType[tokenCount] = numbersym; 
-                printf("here");
-                printf("\t%d\n", tokenType[tokenCount]);
-                fprintf(fp,"\t%d\n", tokenType[tokenCount]);
-
-                int digitLen = strlen(tempArr) + 1; 
-                identArr[identCount] = malloc(digitLen * sizeof(char)); 
-                strcpy(identArr[identCount], tempArr); 
-
-                identCount++; 
-                tokenCount++; 
-                i++; 
-                // free(tempArr);
-                continue; 
             }
+            else {
+                //=================== resWords Check ===================
+                int keyWordCheck = 0; 
+                for (int k = 0; k < norw; k++) {
+                    if (strcmp(tempArr, resWords[k]) == 0) {
+                        
+                        printf("%s", tempArr); 
+                        printf("\t%d\n", wsym[k]);
+                        fprintf(fp,"\t%d\n", wsym[k]);
 
-            //=================== resWords Check ===================
-            int keyWordCheck = 0; 
-            for (int k = 0; k < norw; k++) {
-                if (strcmp(tempArr, resWords[k]) == 0) {
-                    // print out lexem and token 
-                    for (int l = 0; tempArr[l] != '\0'; l++) {
-                        printf("%c", tempArr[l]);
-                        fprintf(fp,"%c", tempArr[l]);
+                        // dynamically resize tokenType array if necessary. 
+                        if (tokenCount == tokenTypeSize-1) {
+                            tokenTypeSize *= 2; 
+                            tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                        }
+                        // put the token in the array. 
+                        tokenType[tokenCount] = wsym[k];
+                        tokenCount++;
+                        keyWordCheck = 1; 
+                        free(tempArr);
                     }
-                    printf("\t%d\n", wsym[k]);
-                    fprintf(fp,"\t%d\n", wsym[k]);
+                }
+                //=================== Identifier Check ===================
+                if (keyWordCheck == 0) {
+                    int len = 0;
 
+                    if (tempArrCount > 11){
+                        
+                        printf("%s", tempArr); 
+                        printf("\tError: Idenfitier is too long!\n");
+                        fprintf(fp,"\tError: Idenfitier is too long!\n"); 
+                    } else {
+
+                        int wordLen = strlen(tempArr) + 1;
+                        identArr[identCount] = malloc(wordLen*sizeof(char));
+                        strcpy(identArr[identCount], tempArr); 
+
+                        tokenType[tokenCount] = identsym;
+                        tokenCount++;
+                        len = wordLen;
+                        
+                        printf("%s", identArr[identCount]);
+                        printf("\t%d\n", identsym);
+
+                        fprintf(fp,"%s", identArr[identCount]);
+                        fprintf(fp,"\t%d\n", identsym);
+
+                        identCount++;
+                    }
+                    
                     // dynamically resize tokenType array if necessary. 
                     if (tokenCount == tokenTypeSize-1) {
                         tokenTypeSize *= 2; 
                         tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
                     }
-                    // put the token in the array. 
-                    tokenType[tokenCount] = wsym[k];
-                    tokenCount++;
-                    keyWordCheck = 1; 
-                    // free(tempArr);
-                    continue; 
-                }
-            }
-            //=================== Identifier Check ===================
-            if (keyWordCheck == 0) {
-                int len = 0;
-
-                //printf("\n why skipped?: %d", tempArrCount);
-                if (tempArrCount > 11){
-                    //printf("\ncount: %d", tempArrCount);
-                    for (int l = 0; tempArr[l] != '\0'; l++) {
-                        printf("%c", tempArr[l]);
-                        fprintf(fp,"%c", tempArr[l]);
+                    if (identCount == identSize-1) {
+                        int saveSize = identSize;
+                        identSize *= 2;
+                        identArr = realloc(identArr, sizeof(int*) *identSize);
                     }
-                    printf("\tError: Idenfitier is too long!\n");
-                    fprintf(fp,"\tError: Idenfitier is too long!\n"); 
-                } else {
-                    //printf("  %d", strlen(tempArr));
-
-                    int wordLen = strlen(tempArr) + 1;
-                    identArr[identCount] = malloc(wordLen*sizeof(char));
-                    strcpy(identArr[identCount], tempArr); 
-
-                    //printf("here and indentCount %d   ", identCount);
-                    tokenType[tokenCount] = identsym;
-                    tokenCount++;
-                    //printf("went here\t");
-                    len = wordLen;
-                    printf("%s", identArr[identCount]);
-                    //printf("%s", tempArr);
-                    printf("\t%d\n", identsym);
-
-                    fprintf(fp,"%s", identArr[identCount]);
-                    fprintf(fp,"\t%d\n", identsym);
-
-                    identCount++;
+                    free(tempArr); 
                 }
-
-                // dynamically resize tokenType array if necessary. 
-                if (tokenCount == tokenTypeSize-1) {
-                    tokenTypeSize *= 2; 
-                    tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
-                }
-                if (identCount == identSize-1) {
-                    int saveSize = identSize;
-                    identSize *= 2;
-                    identArr = realloc(identArr, sizeof(int*) *identSize);
-                }
-                // free(tempArr); 
             }
         } 
         else {
@@ -373,7 +360,6 @@ int main(int argc, char *argv[]){
                         fprintf(fp,"%d\n", ssym[tempArr[0]]);
                         tokenType[tokenCount] = ssym[tempArr[0]];
                         tokenCount++;
-                        //i++;
                     } else {
                         printf("Error: Invalid symbol!\n");
                         fprintf(fp,"Error: Invalid symbol!\n");
@@ -382,10 +368,11 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
+        
         i++; 
     }
-
-    int tokenListSize = tokenCount + identCount;
+    
+    // int tokenListSize = tokenCount + identCount;
     int tempIdentIndex = 0;
    
     printf("\nToken List:\n");
@@ -402,20 +389,18 @@ int main(int argc, char *argv[]){
             tempIdentIndex++;
         }
     }
-    
 
     fclose(fp);
 
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
+
     free(identArr);
 
     free(tokenType);
 
     printf("\n");
-    fprintf(fp,"\n");
-
     
     return 0;
 }
