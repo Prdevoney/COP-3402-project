@@ -139,6 +139,7 @@ int main(int argc, char *argv[]){
             // scan in to tempArr. 
             tempArr[tempArrCount] = inputArr[i];
             
+            // first scan, is digit 
             if(isdigit(tempArr[tempArrCount]) && tempArrCount == 0) {
                 caseCheck = 1;
                 i++;
