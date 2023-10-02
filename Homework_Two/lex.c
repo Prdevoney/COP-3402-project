@@ -294,8 +294,8 @@ int main(int argc, char *argv[]){
 
                         identCount++;
                     }
-
-                    // dynamically resize tokenType & identArr array if necessary. 
+                    
+                    // dynamically resize tokenType array if necessary. 
                     if (tokenCount == tokenTypeSize-1) {
                         tokenTypeSize *= 2; 
                         tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
