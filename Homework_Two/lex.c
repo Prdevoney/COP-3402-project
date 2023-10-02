@@ -211,6 +211,8 @@ int main(int argc, char *argv[]){
                 if (digitCount > 5) {
                     
                     printf("%s", tempArr);
+                    fprintf(fp, "%s", tempArr); 
+
                     printf("\tError: Number too long!\n");
                     fprintf(fp,"\tError: Number too long!\n"); 
                     i++; 
@@ -220,7 +222,7 @@ int main(int argc, char *argv[]){
                 if (digitCount == tempArrCount && digitCount <= 5) {
                     
                     strcpy(identArr[identCount], tempArr);
-
+                    fprintf(fp, "%s", identArr[identCount]); 
                     printf("%s", identArr[identCount]); 
 
                     tokenType[tokenCount] = numbersym; 
@@ -251,6 +253,7 @@ int main(int argc, char *argv[]){
                     if (strcmp(tempArr, resWords[k]) == 0) {
                         
                         printf("%s", tempArr); 
+                        fprintf(fp, "%s", tempArr); 
                         printf("\t%d\n", wsym[k]);
                         fprintf(fp,"\t%d\n", wsym[k]);
 
@@ -273,6 +276,8 @@ int main(int argc, char *argv[]){
                     if (tempArrCount > 11){
                         
                         printf("%s", tempArr); 
+                        fprintf(fp, "%s", tempArr); 
+
                         printf("\tError: Identifier is too long!\n");
                         fprintf(fp,"\tError: Identifier is too long!\n"); 
                     } else {
