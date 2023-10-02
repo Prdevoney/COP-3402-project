@@ -119,6 +119,9 @@ int main(int argc, char *argv[]){
     int identSize = 100; 
     char **identArr = malloc(sizeof(char*) * identSize);
     int identCount = 0;
+    for (int k = 0; k < identSize; k++) {
+        identArr[k] = malloc(sizeof(char) * 12); 
+    }
 
     // *********** loops though inputArr ***********|
     i = 0; 
@@ -185,7 +188,7 @@ int main(int argc, char *argv[]){
             // if input is too long resize. 
             if (tempArrCount == tempArrSize - 1) {
                 tempArrSize *= 2; 
-                tempArr = realloc(tempArr, tempArrSize * sizeof(int));
+                tempArr = realloc(tempArr, tempArrSize * sizeof(char));
             }
 
             i++;
@@ -216,8 +219,8 @@ int main(int argc, char *argv[]){
                 // print digit if meets requirements. 
                 if (digitCount == tempArrCount && digitCount <= 5) {
                     
-                    int digitLen = strlen(tempArr) + 1; 
-                    identArr[identCount] = malloc(digitLen * sizeof(char)); 
+                    // int digitLen = strlen(tempArr) + 1; 
+                    // identArr[identCount] = malloc(digitLen * sizeof(char)); 
                     strcpy(identArr[identCount], tempArr);
 
                     printf("%s", identArr[identCount]); 
@@ -230,6 +233,11 @@ int main(int argc, char *argv[]){
                     tokenCount++; 
                     i++; 
                     free(tempArr);
+                }
+                if (identCount == identSize-1) {
+                    int saveSize = identSize;
+                    identSize *= 2;
+                    identArr = realloc(identArr, sizeof(char*) *identSize);
                 }
             }
             else {
@@ -290,7 +298,7 @@ int main(int argc, char *argv[]){
                     if (identCount == identSize-1) {
                         int saveSize = identSize;
                         identSize *= 2;
-                        identArr = realloc(identArr, sizeof(int*) *identSize);
+                        identArr = realloc(identArr, sizeof(char*) *identSize);
                     }
                     free(tempArr); 
                 }
@@ -395,10 +403,14 @@ int main(int argc, char *argv[]){
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
+    printf("\n4\n"); 
+
 
     free(identArr);
+    printf("\n5\n"); 
 
     free(tokenType);
+    printf("\n6\n"); 
 
     printf("\n");
     
