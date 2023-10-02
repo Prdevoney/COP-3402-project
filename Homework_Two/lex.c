@@ -219,8 +219,6 @@ int main(int argc, char *argv[]){
                 // print digit if meets requirements. 
                 if (digitCount == tempArrCount && digitCount <= 5) {
                     
-                    // int digitLen = strlen(tempArr) + 1; 
-                    // identArr[identCount] = malloc(digitLen * sizeof(char)); 
                     strcpy(identArr[identCount], tempArr);
 
                     printf("%s", identArr[identCount]); 
@@ -275,12 +273,10 @@ int main(int argc, char *argv[]){
                     if (tempArrCount > 11){
                         
                         printf("%s", tempArr); 
-                        printf("\tError: Idenfitier is too long!\n");
-                        fprintf(fp,"\tError: Idenfitier is too long!\n"); 
+                        printf("\tError: Identifier is too long!\n");
+                        fprintf(fp,"\tError: Identifier is too long!\n"); 
                     } else {
 
-                        // int wordLen = strlen(tempArr) + 1;
-                        // identArr[identCount] = malloc(wordLen*sizeof(char));
                         strcpy(identArr[identCount], tempArr); 
 
                         tokenType[tokenCount] = identsym;
