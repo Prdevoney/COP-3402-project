@@ -271,7 +271,6 @@ int main(int argc, char *argv[]){
                 }
                 //=================== Identifier Check ===================
                 if (keyWordCheck == 0) {
-                    int len = 0;
 
                     if (tempArrCount > 11){
                         
