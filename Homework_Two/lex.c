@@ -234,6 +234,11 @@ int main(int argc, char *argv[]){
                     i++; 
                     free(tempArr);
                 }
+                // dynamically realocate tokenType & identArr 
+                if (tokenCount == tokenTypeSize-1) {
+                    tokenTypeSize *= 2; 
+                    tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                }
                 if (identCount == identSize-1) {
                     identSize *= 2;
                     identArr = realloc(identArr, sizeof(char*) *identSize);
@@ -290,7 +295,7 @@ int main(int argc, char *argv[]){
                         identCount++;
                     }
 
-                    // dynamically resize tokenType array if necessary. 
+                    // dynamically resize tokenType & identArr array if necessary. 
                     if (tokenCount == tokenTypeSize-1) {
                         tokenTypeSize *= 2; 
                         tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
@@ -362,8 +367,11 @@ int main(int argc, char *argv[]){
                 if (!endOfFile) {
                     printf("%c\t", tempArr[0]); 
                     fprintf(fp,"%c\t", tempArr[0]);
-                    if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 || ssym[tempArr[0]] == 15 
-                        || ssym[tempArr[0]] == 16 || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
+                    if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
+                        || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
+                        || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
+                        || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
+                        || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
                         || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
                         printf("%d\n", ssym[tempArr[0]]);
                         fprintf(fp,"%d\n", ssym[tempArr[0]]);
@@ -376,9 +384,9 @@ int main(int argc, char *argv[]){
                 }
             }
             if (tokenCount == tokenTypeSize-1) {
-                            tokenTypeSize *= 2; 
-                            tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
-                        }
+                tokenTypeSize *= 2; 
+                tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+            }
             free(tempArr); 
         }
         
@@ -403,24 +411,16 @@ int main(int argc, char *argv[]){
     }
 
     fclose(fp);
-    printf("\n3\n");
 
-    for (int s = 0; s < identCount; s++)
-        printf("%s ", identArr[s]); 
-    printf("\n"); 
-
+   
     for (int z = 0; z < identCount; z++) {
-        printf("-"); 
         free(identArr[z]);
     }
 
-    printf("\n4\n"); 
 
     free(identArr);
-    printf("\n5\n"); 
 
     free(tokenType);
-    printf("\n6\n"); 
 
     printf("\n");
     return 0;
