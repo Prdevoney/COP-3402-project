@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const m = 7, n = 85;
-=======
 const 6m = 7, n = 85;
->>>>>>> 7f7ea0591600df51781bcb7501acb8ac02739d8e
 var i,x,y,z,q,r;
 procedure mult;
     var a, b;
@@ -16,23 +12,7 @@ procedure mult;
         end
     end;
 begin
-<<<<<<< HEAD
-a := x; b := y; z := 0;
-while b > 0 do
-begin
-if x =1 then z := z+a;
-a := 2*a;
-b := b/2;
-
-end
-end;
-begin
-x := m;
-y := n;
-call mult;
-=======
     x := m;
     y := n;
     call mult;
->>>>>>> 7f7ea0591600df51781bcb7501acb8ac02739d8e
 end.
