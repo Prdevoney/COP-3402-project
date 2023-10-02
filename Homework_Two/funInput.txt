@@ -9,4 +9,5 @@ if else begin end then while do call const var procedure write read ifel
     comment
 *//*Sike here's another*/
 goodLength badLength123
-= 5 /* One last comment */
+4 
+/* One last comment */
