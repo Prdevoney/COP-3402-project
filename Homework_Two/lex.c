@@ -211,6 +211,8 @@ int main(int argc, char *argv[]){
                 if (digitCount > 5) {
                     
                     printf("%-12s", tempArr);
+                    fprintf(fp, "%-12s", tempArr); 
+
                     printf("\tError: Number too long!\n");
                     fprintf(fp,"\tError: Number too long!\n"); 
                     i++; 
@@ -220,7 +222,7 @@ int main(int argc, char *argv[]){
                 if (digitCount == tempArrCount && digitCount <= 5) {
                     
                     strcpy(identArr[identCount], tempArr);
-
+                    fprintf(fp, "%-12s", identArr[identCount]); 
                     printf("%-12s", identArr[identCount]); 
 
                     tokenType[tokenCount] = numbersym; 
@@ -251,6 +253,7 @@ int main(int argc, char *argv[]){
                     if (strcmp(tempArr, resWords[k]) == 0) {
                         
                         printf("%-12s", tempArr); 
+                        fprintf(fp, "%-12s", tempArr); 
                         printf("\t%d\n", wsym[k]);
                         fprintf(fp,"\t%d\n", wsym[k]);
 
@@ -273,6 +276,8 @@ int main(int argc, char *argv[]){
                     if (tempArrCount > 11){
                         
                         printf("%-12s", tempArr); 
+                        fprintf(fp, "%-12s", tempArr); 
+
                         printf("\tError: Identifier is too long!\n");
                         fprintf(fp,"\tError: Identifier is too long!\n"); 
                     } else {
@@ -369,13 +374,13 @@ int main(int argc, char *argv[]){
                         || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
                         || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
                         || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
-                        printf("%d", ssym[tempArr[0]]);
-                        fprintf(fp,"%d", ssym[tempArr[0]]);
+                        printf("%d\n", ssym[tempArr[0]]);
+                        fprintf(fp,"%d\n", ssym[tempArr[0]]);
                         tokenType[tokenCount] = ssym[tempArr[0]];
                         tokenCount++;
                     } else {
-                        printf("\nError: Invalid symbol!\n");
-                        fprintf(fp,"\nError: Invalid symbol!\n");
+                        printf("Error: Invalid symbol!\n");
+                        fprintf(fp,"Error: Invalid symbol!\n");
                     }
                 }
             }
@@ -406,18 +411,18 @@ int main(int argc, char *argv[]){
         }
     }
 
+    printf("\n");
+    fprintf(fp,"\n");
+
     fclose(fp);
 
-   
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
-
 
     free(identArr);
 
     free(tokenType);
 
-    printf("\n");
     return 0;
 }
