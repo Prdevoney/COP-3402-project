@@ -375,6 +375,10 @@ int main(int argc, char *argv[]){
                     }
                 }
             }
+            if (tokenCount == tokenTypeSize-1) {
+                            tokenTypeSize *= 2; 
+                            tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
+                        }
             free(tempArr); 
         }
         
@@ -382,7 +386,7 @@ int main(int argc, char *argv[]){
     }
     
     int tempIdentIndex = 0;
-   
+
     printf("\nToken List:\n");
     fprintf(fp,"\nToken List:\n");
 
@@ -397,14 +401,19 @@ int main(int argc, char *argv[]){
             tempIdentIndex++;
         }
     }
-    printf("\n\n%d %d\n", identCount, identSize); 
+
     fclose(fp);
     printf("\n3\n");
-    for (int s = 0; s < identSize; s++)
+
+    for (int s = 0; s < identCount; s++)
         printf("%s ", identArr[s]); 
-    for (int z = 0; z < identSize; z++) {
+    printf("\n"); 
+
+    for (int z = 0; z < identCount; z++) {
+        printf("-"); 
         free(identArr[z]);
     }
+
     printf("\n4\n"); 
 
     free(identArr);
