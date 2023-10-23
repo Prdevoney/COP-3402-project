@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 34580  4/* One last comment */
+=======
+ 123456 /* One last comment */
+>>>>>>> 6bf31d612bd67b656361e70b2114c5d0185adf89
