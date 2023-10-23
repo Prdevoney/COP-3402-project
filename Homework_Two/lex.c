@@ -139,6 +139,8 @@ int main(int argc, char *argv[]){
         do {
             // scan in to tempArr. 
             tempArr[tempArrCount] = inputArr[i];
+
+            //printf("--%d--",i);
             
             if(isdigit(tempArr[tempArrCount]) && tempArrCount == 0) {
                 caseCheck = 1;
@@ -166,17 +168,25 @@ int main(int argc, char *argv[]){
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
                 i--;
+                //printf("green ");
                 break; 
             }
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
-                
+                int spaceCount = 0;
                 while (inputArr[i] == '\0') {
                     i++; 
+                    //spaceCount +=1;
+                    //printf("teal");
                     if (i == chcount - 1)
                         endOfFile = 1;
                 }
+                // if (spaceCount > 1) {
+                //     i--;
+                // }
+                
                 tempArr[tempArrCount] = inputArr[i];
+                //printf("grey ");
                 
             }
             // first scan, specialChar
@@ -209,7 +219,7 @@ int main(int argc, char *argv[]){
             if (digitCount > 0) {
                 // digit too long. 
                 if (digitCount > 5) {
-                    
+                    printf("red ");
                     printf("%-12s", tempArr);
                     fprintf(fp, "%-12s", tempArr); 
 
@@ -221,6 +231,7 @@ int main(int argc, char *argv[]){
                 // print digit if meets requirements. 
                 if (digitCount == tempArrCount && digitCount <= 5) {
                     
+
                     strcpy(identArr[identCount], tempArr);
                     fprintf(fp, "%-12s", identArr[identCount]); 
                     printf("%-12s", identArr[identCount]); 
@@ -228,10 +239,12 @@ int main(int argc, char *argv[]){
                     tokenType[tokenCount] = numbersym; 
                     printf("\t%d\n", tokenType[tokenCount]);
                     fprintf(fp,"\t%d\n", tokenType[tokenCount]);
-
+                    //printf("yellow ");
                     identCount++; 
                     tokenCount++; 
-                    i++; 
+                    //printf("=HERE===|%c|=====", tempArr[0]);
+                    i++;
+                    //printf("===== what is i here===%d====",i); 
                     free(tempArr);
                 }
                 // dynamically realocate tokenType & identArr 
@@ -281,7 +294,7 @@ int main(int argc, char *argv[]){
                         printf("\tError: Identifier is too long!\n");
                         fprintf(fp,"\tError: Identifier is too long!\n"); 
                     } else {
-
+                        //printf("purple ");
                         strcpy(identArr[identCount], tempArr); 
 
                         tokenType[tokenCount] = identsym;
@@ -314,10 +327,12 @@ int main(int argc, char *argv[]){
         else {
             // ======================= Special Character Check =======================
             if (tempArr[0] == '/' && inputArr[i+1] == '*') {
+                //printf("blue ");
                 i += 2; 
                 while (inputArr[i] != '*' && inputArr[i+1] != '/') {
                     i++; 
                 }
+                //printf("pink ");
                 i += 1; 
             }
             else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
@@ -391,6 +406,7 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         
+        //printf("____");
         i++; 
     }
     
