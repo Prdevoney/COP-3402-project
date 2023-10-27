@@ -28,6 +28,14 @@ typedef enum {
     readsym , elsesym
 } token_type;
 
+typedef struct {
+    int kind;      // const = 1, var = 2, proc = 3
+    char name[12]; // name up to 11 chars
+    int val;       // number (ASCII value)
+    int level;     // L level
+    int addr;      // M address
+} symbol;
+
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
