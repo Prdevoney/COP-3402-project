@@ -477,3 +477,55 @@ void block () {
     emit(INC, 0, 3 + numVars);
     statement();
 }
+
+void constDeclaration(char * tokenType, int tokenIndex) {
+    if (tokenType[tokenIndex] == constsym) {
+        do {
+            tokenIndex++;
+            if (tokenType[tokenIndex] != identsym) {
+                printf("Error: const, var, procedure must be followed by identifier.\n");
+                exit(1);
+            }
+            char * identName = tokenType[tokenIndex];
+            tokenIndex++;
+            if (tokenType[tokenIndex] != eqsym) {
+                printf("Error: Identifier must be followed by =.\n");
+                exit(1);
+            }
+            tokenIndex++;
+            if (tokenType[tokenIndex] != numbersym) {
+                printf("Error: = must be followed by a number.\n");
+                exit(1);
+            }
+            initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
+            tokenIndex++;
+        } while (tokenType[tokenIndex] == commasym);
+        if (tokenType[tokenIndex] != semicolonsym) {
+            printf("Error: Semicolon or comma missing.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+}
+
+int varDeclaration(char * tokenType, int tokenIndex) {
+    int numVars = 0;
+    if (tokenType[tokenIndex] == varsym) {
+        do {
+            tokenIndex++;
+            if (tokenType[tokenIndex] != identsym) {
+                printf("Error: const, var, procedure must be followed by identifier.\n");
+                exit(1);
+            }
+            initSymbolTable(2, tokenType[tokenIndex], 0, 0, 2 + numVars);
+            numVars++;
+            tokenIndex++;
+        } while (tokenType[tokenIndex] == commasym);
+        if (tokenType[tokenIndex] != semicolonsym) {
+            printf("Error: Semicolon or comma missing.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+    return numVars;
+}
