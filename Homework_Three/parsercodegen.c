@@ -20,7 +20,7 @@
 
 // Internal representation of PL/0 symbols.
 typedef enum { 
-    skipsym = 1, identsym, numbersym, plussym, minussym,
+    oddsym = 1, identsym, numbersym, plussym, minussym,
     multsym,  slashsym, ifelsym, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
@@ -434,4 +434,46 @@ int main(int argc, char *argv[]){
     free(tokenType);
 
     return 0;
+}
+
+
+
+// ------------- The parser codegen part of the compiler ------------------------
+
+
+void initSymbolTable (int kind, char *name, int val, int level, int addr) {
+    symbol *s = malloc(sizeof(symbol));
+    s->kind = kind;
+    strcpy(s->name, name);
+    s->val = val;
+    s->level = level;
+    s->addr = addr;
+}
+
+void emit(int op, int l, int m) {
+    if (cx > CODE_SIZE) {
+        printf("Error: Code too long!\n");
+        exit(1);
+    } else {
+        code[cx].op = op;
+        code[cx].l = l;
+        code[cx].m = m;
+        cx++;
+    }
+}
+
+void program(char *tokenType, int tokenIndex) {
+    block();
+    if (tokenType[tokenIndex] != periodsym) {
+        printf("Error: Period expected.\n");
+        exit(1);
+    }
+    emit(SIO, 0, 3);
+}
+
+void block () {
+    constDeclaration();
+    int numVars = varDeclaration();
+    emit(INC, 0, 3 + numVars);
+    statement();
 }
