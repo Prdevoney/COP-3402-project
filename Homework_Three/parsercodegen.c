@@ -17,13 +17,21 @@
 
 // Internal representation of PL/0 symbols.
 typedef enum { 
-    skipsym = 1, identsym, numbersym, plussym, minussym,
+    oddsym = 1, identsym, numbersym, plussym, minussym,
     multsym,  slashsym, ifelsym, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
     whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
     readsym , elsesym
 } token_type;
+
+typedef struct {
+    int kind;      // const = 1, var = 2, proc = 3
+    char name[12]; // name up to 11 chars
+    int val;       // number (ASCII value)
+    int level;     // L level
+    int addr;      // M address
+} symbol;
 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
@@ -423,4 +431,98 @@ int main(int argc, char *argv[]){
     free(tokenType);
 
     return 0;
+}
+
+
+
+// ------------- The parser codegen part of the compiler ------------------------
+
+
+void initSymbolTable (int kind, char *name, int val, int level, int addr) {
+    symbol *s = malloc(sizeof(symbol));
+    s->kind = kind;
+    strcpy(s->name, name);
+    s->val = val;
+    s->level = level;
+    s->addr = addr;
+}
+
+void emit(int op, int l, int m) {
+    if (cx > CODE_SIZE) {
+        printf("Error: Code too long!\n");
+        exit(1);
+    } else {
+        code[cx].op = op;
+        code[cx].l = l;
+        code[cx].m = m;
+        cx++;
+    }
+}
+
+void program(char *tokenType, int tokenIndex) {
+    block();
+    if (tokenType[tokenIndex] != periodsym) {
+        printf("Error: Period expected.\n");
+        exit(1);
+    }
+    emit(SIO, 0, 3);
+}
+
+void block () {
+    constDeclaration();
+    int numVars = varDeclaration();
+    emit(INC, 0, 3 + numVars);
+    statement();
+}
+
+void constDeclaration(char * tokenType, int tokenIndex) {
+    if (tokenType[tokenIndex] == constsym) {
+        do {
+            tokenIndex++;
+            if (tokenType[tokenIndex] != identsym) {
+                printf("Error: const, var, procedure must be followed by identifier.\n");
+                exit(1);
+            }
+            char * identName = tokenType[tokenIndex];
+            tokenIndex++;
+            if (tokenType[tokenIndex] != eqsym) {
+                printf("Error: Identifier must be followed by =.\n");
+                exit(1);
+            }
+            tokenIndex++;
+            if (tokenType[tokenIndex] != numbersym) {
+                printf("Error: = must be followed by a number.\n");
+                exit(1);
+            }
+            initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
+            tokenIndex++;
+        } while (tokenType[tokenIndex] == commasym);
+        if (tokenType[tokenIndex] != semicolonsym) {
+            printf("Error: Semicolon or comma missing.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+}
+
+int varDeclaration(char * tokenType, int tokenIndex) {
+    int numVars = 0;
+    if (tokenType[tokenIndex] == varsym) {
+        do {
+            tokenIndex++;
+            if (tokenType[tokenIndex] != identsym) {
+                printf("Error: const, var, procedure must be followed by identifier.\n");
+                exit(1);
+            }
+            initSymbolTable(2, tokenType[tokenIndex], 0, 0, 2 + numVars);
+            numVars++;
+            tokenIndex++;
+        } while (tokenType[tokenIndex] == commasym);
+        if (tokenType[tokenIndex] != semicolonsym) {
+            printf("Error: Semicolon or comma missing.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+    return numVars;
 }
