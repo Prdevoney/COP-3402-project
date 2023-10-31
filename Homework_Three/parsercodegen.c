@@ -5,8 +5,6 @@
     COP 3402, Fall 2023.
 */
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +14,6 @@
 #define imax 32767  // Max integer val. 
 #define cmax 11     // Max number of chars for indents. 
 #define strmax 256  // Max n
-
 
 // Internal representation of PL/0 symbols.
 typedef enum { 
@@ -42,7 +39,7 @@ int main(int argc, char *argv[]){
                     readsym, writesym};
 
     // Array for special characters. 
-    int ssym [256];
+    int ssym [256]; 
     ssym['+'] = plussym; 
     ssym['-'] = minussym; 
     ssym['*'] = multsym; 
@@ -60,8 +57,8 @@ int main(int argc, char *argv[]){
 
     FILE *fp = fopen("out.txt","w");
 
-    int chcount = 0;
-    int endOfFile = 0;
+    int chcount = 0; 
+    int endOfFile = 0; 
 
     // Print out input file. 
     // **************************************|
