@@ -14,6 +14,8 @@
 #define imax 32767  // Max integer val. 
 #define cmax 11     // Max number of chars for indents. 
 #define strmax 256  // Max n
+int cx = 0;   // starting index.
+#define CODE_SIZE 150  // Max code length.
 
 // Internal representation of PL/0 symbols.
 typedef enum { 
@@ -424,6 +426,10 @@ int main(int argc, char *argv[]){
     fprintf(fp,"\n");
 
     fclose(fp);
+
+    // Call parser codegen function.
+    // do we need to do anything with tokenCount???
+    program(tokenType, 0);
 
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
