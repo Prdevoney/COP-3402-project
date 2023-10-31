@@ -460,17 +460,19 @@ void emit(int op, int l, int m) {
 }
 
 void program(char *tokenType, int tokenIndex) {
-    block();
+    block(tokenType, tokenIndex);
     if (tokenType[tokenIndex] != periodsym) {
         printf("Error: Period expected.\n");
         exit(1);
     }
+    char SIO[] = "SIO";
     emit(SIO, 0, 3);
 }
 
-void block () {
-    constDeclaration();
-    int numVars = varDeclaration();
+void block (char * tokenType, int tokenIndex) {
+    constDeclaration(tokenType, tokenIndex);
+    int numVars = varDeclaration(tokenType, tokenIndex);
+    char INC[] = "INC";
     emit(INC, 0, 3 + numVars);
     statement();
 }
