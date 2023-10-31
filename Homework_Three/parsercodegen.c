@@ -35,6 +35,10 @@ typedef struct {
     int addr;      // M address
 } symbol;
 
+// Initialization of global arrays: 
+int *tokenType;
+char **identArr;
+
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
@@ -123,12 +127,14 @@ int main(int argc, char *argv[]){
     
     // dynamically allocate memory for tokenType array
     int tokenTypeSize = 50; 
-    int *tokenType = malloc(sizeof(int) * tokenTypeSize);
+    // Global Array 
+    tokenType = malloc(sizeof(int) * tokenTypeSize);
     int tokenCount = 0; 
 
     // dynamically allocate memory for identifier array
     int identSize = 100; 
-    char **identArr = malloc(sizeof(char*) * identSize);
+    // Global Array 
+    identArr = malloc(sizeof(char*) * identSize);
     int identCount = 0;
     for (int k = 0; k < identSize; k++) {
         identArr[k] = malloc(sizeof(char) * 12); 
