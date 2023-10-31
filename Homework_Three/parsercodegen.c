@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
                     readsym, writesym};
 
     // Array for special characters. 
-    int ssym [256];
+    int ssym [256]; 
     ssym['+'] = plussym; 
     ssym['-'] = minussym; 
     ssym['*'] = multsym; 
@@ -68,8 +68,8 @@ int main(int argc, char *argv[]){
 
     FILE *fp = fopen("out.txt","w");
 
-    int chcount = 0;
-    int endOfFile = 0;
+    int chcount = 0; 
+    int endOfFile = 0; 
 
     // Print out input file. 
     // **************************************|
@@ -94,7 +94,10 @@ int main(int argc, char *argv[]){
     // ****************************************|
 
     // *******Put input file into array.*******|
-    char inputArr[chcount+1];
+
+    // dynamically allocate memory for the inputArr 
+    char * inputArr = malloc( sizeof(char) * (chcount+1));
+
     FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
@@ -438,6 +441,9 @@ int main(int argc, char *argv[]){
     free(identArr);
 
     free(tokenType);
+
+    // free memory for the inputArr
+    free(inputArr); 
 
     return 0;
 }
