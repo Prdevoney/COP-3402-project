@@ -16,6 +16,7 @@
 #define strmax 256  // Max n
 int cx = 0;   // starting index.
 #define CODE_SIZE 150  // Max code length.
+# define MAX_SYMBOL_TABLE_SIZE 500
 
 // Internal representation of PL/0 symbols.
 typedef enum { 
@@ -426,8 +427,10 @@ int main(int argc, char *argv[]){
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
-    program(tokenType, 0);
+    symbol symbol_table[MAX_SYMBOL_TABLE_SIZE];
+    program(tokenType, 0, symbol_table, 0);
 
+    
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
@@ -444,13 +447,15 @@ int main(int argc, char *argv[]){
 // ------------- The parser codegen part of the compiler ------------------------
 
 
-void initSymbolTable (int kind, char *name, int val, int level, int addr) {
+symbol initSymbolTable (int kind, char *name, int val, int level, int addr) {
     symbol *s = malloc(sizeof(symbol));
     s->kind = kind;
     strcpy(s->name, name);
     s->val = val;
     s->level = level;
     s->addr = addr;
+    return s;
+    
 }
 
 void emit(int op, int l, int m) {
@@ -465,8 +470,8 @@ void emit(int op, int l, int m) {
     }
 }
 
-void program(char *tokenType, int tokenIndex) {
-    block(tokenType, tokenIndex);
+void program(char *tokenType, int tokenIndex, char *symbol_table[], int sTindex) {
+    block(tokenType, tokenIndex, symbol_table, sTindex);
     if (tokenType[tokenIndex] != periodsym) {
         printf("Error: Period expected.\n");
         exit(1);
@@ -475,7 +480,7 @@ void program(char *tokenType, int tokenIndex) {
     emit(SIO, 0, 3);
 }
 
-void block (char * tokenType, int tokenIndex) {
+void block (char * tokenType, int tokenIndex,char *symbol_table[], int *sTindex) {
     constDeclaration(tokenType, tokenIndex);
     int numVars = varDeclaration(tokenType, tokenIndex);
     char INC[] = "INC";
@@ -483,7 +488,7 @@ void block (char * tokenType, int tokenIndex) {
     statement();
 }
 
-void constDeclaration(char * tokenType, int tokenIndex) {
+void constDeclaration(char * tokenType, int tokenIndex, char *symbol_table[], int *sTindex) {
     if (tokenType[tokenIndex] == constsym) {
         do {
             tokenIndex++;
@@ -502,7 +507,7 @@ void constDeclaration(char * tokenType, int tokenIndex) {
                 printf("Error: = must be followed by a number.\n");
                 exit(1);
             }
-            initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
+            SymbolTable[sTindex] = initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
             tokenIndex++;
         } while (tokenType[tokenIndex] == commasym);
         if (tokenType[tokenIndex] != semicolonsym) {
