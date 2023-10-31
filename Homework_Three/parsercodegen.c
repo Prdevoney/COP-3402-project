@@ -14,7 +14,6 @@
 #define imax 32767  // Max integer val. 
 #define cmax 11     // Max number of chars for indents. 
 #define strmax 256  // Max n
-int cx = 0;   // starting index.
 #define CODE_SIZE 150  // Max code length.
 # define MAX_SYMBOL_TABLE_SIZE 500
 
@@ -36,9 +35,14 @@ typedef struct {
     int addr;      // M address
 } symbol;
 
-// Initialization of global arrays: 
-int *tokenType;
-char **identArr;
+// Initialization of global variables: 
+int *tokenType; // token list 
+char **identArr; // identity array
+symbol symbolTable[MAX_SYMBOL_TABLE_SIZE]; // symbol table array
+int cx = 0;   // starting index.
+int tokenIndex = 0; 
+int symbolIndex = 0; 
+
 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
@@ -436,8 +440,7 @@ int main(int argc, char *argv[]){
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
-    symbol symbol_table[MAX_SYMBOL_TABLE_SIZE];
-    program(tokenType, 0, symbol_table, 0);
+    program( 0, 0);
 
     
     for (int z = 0; z < identCount; z++) {
@@ -482,8 +485,8 @@ void emit(int op, int l, int m) {
     }
 }
 
-void program(char *tokenType, int tokenIndex, char *symbol_table[], int sTindex) {
-    block(tokenType, tokenIndex, symbol_table, sTindex);
+void program(char *tokenType, int tokenIndex, char *symbolTable[], int sTindex) {
+    block(tokenType, tokenIndex, symbolTable, sTindex);
     if (tokenType[tokenIndex] != periodsym) {
         printf("Error: Period expected.\n");
         exit(1);
@@ -492,7 +495,7 @@ void program(char *tokenType, int tokenIndex, char *symbol_table[], int sTindex)
     emit(SIO, 0, 3);
 }
 
-void block (char * tokenType, int tokenIndex,char *symbol_table[], int *sTindex) {
+void block (char * tokenType, int tokenIndex,char *symbolTable[], int *sTindex) {
     constDeclaration(tokenType, tokenIndex);
     int numVars = varDeclaration(tokenType, tokenIndex);
     char INC[] = "INC";
@@ -500,7 +503,7 @@ void block (char * tokenType, int tokenIndex,char *symbol_table[], int *sTindex)
     statement();
 }
 
-void constDeclaration(char * tokenType, int tokenIndex, char *symbol_table[], int *sTindex) {
+void constDeclaration(char * tokenType, int tokenIndex, char *symbolTable[], int *sTindex) {
     if (tokenType[tokenIndex] == constsym) {
         do {
             tokenIndex++;
