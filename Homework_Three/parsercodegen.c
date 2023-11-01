@@ -35,10 +35,22 @@ typedef struct {
     int addr;      // M address
 } symbol;
 
+// Key for OP instructions generation.
+typedef enum { 
+    LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SYS
+} OP_code;
+
+typedef struct { 
+    int op; // opcode
+    int l;  // L level
+    int m;  // M address
+} instruction;
+
 // Initialization of global variables: 
 int *tokenType; // token list 
 char **identArr; // identity array
-symbol symbolTable[MAX_SYMBOL_TABLE_SIZE]; // symbol table array
+symbol *symbolTable[MAX_SYMBOL_TABLE_SIZE]; // symbol table array
+instruction code[CODE_SIZE]; // code array
 int cx = 0;   // starting index.
 int tokenIndex = 0; 
 int symbolIndex = 0; 
@@ -440,7 +452,7 @@ int main(int argc, char *argv[]){
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
-    program( 0, 0);
+    program();
 
     
     for (int z = 0; z < identCount; z++) {
@@ -462,7 +474,7 @@ int main(int argc, char *argv[]){
 // ------------- The parser codegen part of the compiler ------------------------
 
 
-symbol initSymbolTable (int kind, char *name, int val, int level, int addr) {
+symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     symbol *s = malloc(sizeof(symbol));
     s->kind = kind;
     strcpy(s->name, name);
@@ -485,17 +497,16 @@ void emit(int op, int l, int m) {
     }
 }
 
-void program(char *tokenType, int tokenIndex, char *symbolTable[], int sTindex) {
-    block(tokenType, tokenIndex, symbolTable, sTindex);
+void program() {
+    block();
     if (tokenType[tokenIndex] != periodsym) {
         printf("Error: Period expected.\n");
         exit(1);
     }
-    char SIO[] = "SIO";
-    emit(SIO, 0, 3);
+    emit(SYS, 0, 3);
 }
 
-void block (char * tokenType, int tokenIndex,char *symbolTable[], int *sTindex) {
+void block () {
     constDeclaration(tokenType, tokenIndex);
     int numVars = varDeclaration(tokenType, tokenIndex);
     char INC[] = "INC";
@@ -503,7 +514,7 @@ void block (char * tokenType, int tokenIndex,char *symbolTable[], int *sTindex) 
     statement();
 }
 
-void constDeclaration(char * tokenType, int tokenIndex, char *symbolTable[], int *sTindex) {
+void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
         do {
             tokenIndex++;
@@ -522,7 +533,17 @@ void constDeclaration(char * tokenType, int tokenIndex, char *symbolTable[], int
                 printf("Error: = must be followed by a number.\n");
                 exit(1);
             }
-            SymbolTable[sTindex] = initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
+            // this bit is extra idk if it is needed
+            if (tokenType[tokenIndex] == numbersym) {
+                tokenIndex++;
+                int number = atoi(tokenType[tokenIndex]); // Convert string to integer
+                symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
+                tokenIndex++;
+                // to here just get rid of the if else and keep the line in the else statement
+            } else {
+                symbolTable[symbolIndex] = initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
+                // make sure the tokenType[tokenIndex] doesnt need to be cased to an int
+            }
             tokenIndex++;
         } while (tokenType[tokenIndex] == commasym);
         if (tokenType[tokenIndex] != semicolonsym) {
@@ -533,7 +554,7 @@ void constDeclaration(char * tokenType, int tokenIndex, char *symbolTable[], int
     }
 }
 
-int varDeclaration(char * tokenType, int tokenIndex) {
+int varDeclaration() {
     int numVars = 0;
     if (tokenType[tokenIndex] == varsym) {
         do {
