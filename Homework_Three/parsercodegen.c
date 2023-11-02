@@ -46,16 +46,37 @@ typedef struct {
     int m;  // M address
 } instruction;
 
-// Initialization of global variables: 
-int *tokenType; // token list 
-char **identArr; // identity array
-symbol *symbolTable[MAX_SYMBOL_TABLE_SIZE]; // symbol table array
-instruction code[CODE_SIZE]; // code array
-int cx = 0;   // starting index.
-int tokenIndex = 0; 
+/* Initialization of global variables: */
+// symbol table array
+symbol *symbolTable[MAX_SYMBOL_TABLE_SIZE]; 
 int symbolIndex = 0; 
 
+// token list 
+int *tokenType; 
+int tokenIndex = 0; 
 
+// identity array
+char **identArr; 
+int identIndex = 0; 
+
+instruction code[CODE_SIZE]; // code array
+int cx = 0;   // starting index.
+
+// function declarations for parsecodegen part 
+symbol *initSymbolTable (int kind, char *name, int val, int level, int addr);
+int symbolTableCheck(char *name);
+void emit(int op, int l, int m);
+void program();
+void block ();
+void constDeclaration();
+int varDeclaration();
+void statement();
+void condition();
+void expression();
+void term();
+void factor();
+
+// ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
@@ -469,9 +490,10 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-// ------------- The parser codegen part of the compiler ------------------------
 
+// ------------- The parser codegen part of the compiler -------------
 
+// creates a struct for each symbol and then returns it to be stored in the symbolTable array 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     symbol *s = malloc(sizeof(symbol));
     s->kind = kind;
@@ -482,10 +504,12 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     return s;
 }
 
-symbolTableCheck(char *name) {
+// Determines if an identifier is initialized. If yes return index, else return -1 
+int symbolTableCheck(char *name) {
+    // loop through symbol table to see if identifier is in array. 
     for(int i = 0; i < symbolIndex; i++) {
         if (strcmp(symbolTable[i]->name, name) == 0)
-            return 1; 
+            return i; 
     }
     return -1; 
 }
@@ -504,6 +528,7 @@ void emit(int op, int l, int m) {
 
 void program() {
     block();
+    // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
         printf("Error: Period expected.\n");
         exit(1);
@@ -512,51 +537,55 @@ void program() {
 }
 
 void block () {
-    constDeclaration(tokenType, tokenIndex);
-    int numVars = varDeclaration(tokenType, tokenIndex);
+    constDeclaration();
+    int numVars = varDeclaration();
     char INC[] = "INC";
     emit(INC, 0, 3 + numVars);
     statement();
 }
 
+// constdeclaration ::= [ “const” ident "=" number {"," ident "=" number} ";"]
 void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
+        // checks structure of the const declaration 
         do {
             tokenIndex++;
+            // identity check 
             if (tokenType[tokenIndex] != identsym) {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
-            if(symboltableCheck(tokenType[tokenIndex]) != -1) {
+            // has the identifier already been declared? 
+            if(symbolTableCheck(identArr[identIndex]) != -1) {
                 printf("Error: This variable has already been declared.\n");
                 exit(1);
             }
-            char * identName = tokenType[tokenIndex];
+            // get the identifier from the identArray 
+            char * identName = identArr[identIndex];
+            identIndex++; 
             tokenIndex++;
+            // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
                 printf("Error: Identifier must be followed by =.\n");
                 exit(1);
             }
             tokenIndex++;
+            // number check 
             if (tokenType[tokenIndex] != numbersym) {
                 printf("Error: = must be followed by a number.\n");
                 exit(1);
             }
-            // this bit is extra idk if it is needed
-            if (tokenType[tokenIndex] == numbersym) {
-                tokenIndex++;
-                int number = atoi(tokenType[tokenIndex]); // Convert string to integer
-                symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
-                tokenIndex++;
-                symbolIndex++;
-                // to here just get rid of the if else and keep the line in the else statement
-            } else {
-                symbolTable[symbolIndex] = initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
-                symbolIndex++;
-                // make sure the tokenType[tokenIndex] doesnt need to be cased to an int
-            }
+            
+            // if num then we add (kind, name, L, and M) to the symbol table
+            int number = atoi(identArr[identIndex]); // Convert string to integer
+            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
+            symbolIndex++;
+
             tokenIndex++;
+            // if "," then repeate for next declaration else we break then check for ";"
         } while (tokenType[tokenIndex] == commasym);
+
+        // check if const declaration is ended with a ";"
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: Semicolon or comma missing.\n");
             exit(1);
@@ -565,45 +594,63 @@ void constDeclaration() {
     }
 }
 
+// var-declaration ::= [ "var" ident {"," ident} ";"]
 int varDeclaration() {
     int numVars = 0;
     if (tokenType[tokenIndex] == varsym) {
         do {
             numVars++;
             tokenIndex++;
+            // ident check
             if (tokenType[tokenIndex] != identsym) {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
-            if (SYMBOLTABLECHECK(tokenType[tokenIndex]) != -1) {
+            // has the identifier already been declared? 
+            if (symbolTableCheck(identArr[identIndex]) != -1) {
                 printf("Error: This variable has already been declared.\n");
                 exit(1);
             }
-            initSymbolTable(2, tokenType[tokenIndex], 0, 0, 2 + numVars);
+
+            // if valid identifier then initialize it in symbolTable 
+            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars);
+            identIndex++; 
+            symbolIndex++; 
             tokenIndex++;
+
+            // if "," then continue scaning varDeclaration, else break and check for ";"
         } while (tokenType[tokenIndex] == commasym);
+
+        // check if varDeclaration ends with ";"
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: Semicolon or comma missing.\n");
             exit(1);
         }
         tokenIndex++;
     }
+    // return the number of declared variables
     return numVars;
 }
 
-void statement(){
+void statement() {
     int symIdx, jpcIdx, loopIdx;
+    // if identifier 
     if (tokenType[tokenIndex] == identsym) {
-        symIdx = SYMBOLTABLECHECK(tokenType[tokenIndex]);
+        // check to see if in symbolTable 
+        symIdx = symbolTableCheck(identArr[identIndex]);
+        identArr++; 
+        // not in symbolTable
         if (symIdx == -1) {
             printf("Error: Undeclared variable.\n");
             exit(1);
         }
+        // not a variable
         if(symbolTable[symIdx]->kind != 2) {
             printf("Error: Not a var.\n");
             exit(1);
         }
         tokenIndex++;
+        // if not ":="
         if (tokenType[tokenIndex] != becomessym) {
             printf("Error: Assignment operator expected.\n");
             exit(1);
@@ -611,8 +658,9 @@ void statement(){
         tokenIndex++;
         expression();
         emit(STO, 0, symbolTable[symIdx]->addr);
-        return 0;
+        return;
     }
+    // if "begin" 
     if (tokenType[tokenIndex] == beginsym) {
         do { 
             tokenIndex++;
@@ -623,8 +671,9 @@ void statement(){
             exit(1);
         }
         tokenIndex++;
-        return 0;
+        return;
     }
+    // if "if"
     if (tokenType[tokenIndex] == ifsym) {
         tokenIndex++;
         condition();
@@ -637,6 +686,177 @@ void statement(){
         tokenIndex++;
         statement();
         code[jpcIdx].m = cx;
-        return 0;
+        return;
+    }
+    // if "while" 
+    if (tokenType[tokenIndex] == whilesym) {
+        loopIdx = cx;
+        tokenIndex++;
+        condition();
+        if (tokenType[tokenIndex] != dosym) {
+            printf("Error: do expected.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        jpcIdx = cx;
+        emit(JPC, 0, 0);
+        statement();
+        emit(JMP, 0, loopIdx);
+        code[jpcIdx].m = cx;
+        return;
+    }
+    // if "read"
+    if (tokenType[tokenIndex] == readsym) {
+        tokenIndex++;
+        if (tokenType[tokenIndex] != identsym) {
+            printf("Error: Assignment to constant or procedure is not allowed.\n");
+            exit(1);
+        }
+        // check to see if identifier is in array 
+        symIdx = symbolTableCheck(identArr[identIndex]);
+        if (symIdx == -1) {
+            printf("Error: Undeclared variable.\n");
+            exit(1);
+        }
+        if (symbolTable[symIdx]->kind != 2) {
+            printf("Error: Assignment to constant or procedure is not allowed.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        emit(SYS, 0, 2); //read
+        emit(STO, 0, symbolTable[symIdx]->addr);
+        return;
+    }
+    // if "write"
+    if (tokenType[tokenIndex] == writesym) {
+        tokenIndex++;
+        expression();
+        emit(SYS, 0, 1); //write
+        return;
     }
 }
+
+void condition() {
+    if (tokenType[tokenIndex] == oddsym) {
+        tokenIndex++;
+        expression();
+        emit(OPR, 0, 11);
+    } else {
+        expression();
+        if (tokenType[tokenIndex] != eqsym && tokenType[tokenIndex] != neqsym && 
+        tokenType[tokenIndex] != lessym && tokenType[tokenIndex] != leqsym && 
+        tokenType[tokenIndex] != gtrsym && tokenType[tokenIndex] != geqsym) {
+            printf("Error: Relational operator expected.\n");
+            exit(1);
+        }
+        int relOp = tokenType[tokenIndex];
+        tokenIndex++;
+        expression();
+        switch (relOp) {
+            case eqsym:
+                emit(OPR, 0, 8);
+                break;
+            case neqsym:
+                emit(OPR, 0, 9);
+                break;
+            case lessym:
+                emit(OPR, 0, 10);
+                break;
+            case leqsym:
+                emit(OPR, 0, 11);
+                break;
+            case gtrsym:
+                emit(OPR, 0, 12);
+                break;
+            case geqsym:
+                emit(OPR, 0, 13);
+                break;
+        }
+    }
+}
+
+void expression() {
+    if (tokenType[tokenIndex] == minussym) {
+        tokenIndex++;
+        term();
+        emit(OPR, 0, 1);
+        while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
+            int addOp = tokenType[tokenIndex];
+            tokenIndex++;
+            term();
+            if (addOp == plussym) {
+                emit(OPR, 0, 2);
+            } else {
+                emit(OPR, 0, 3);
+            }
+        }
+    } else {
+        if (tokenType[tokenIndex] == plussym) {
+            tokenIndex++;
+        }
+        term();
+        while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
+            int addOp = tokenType[tokenIndex];
+            tokenIndex++;
+            term();
+            if (addOp == plussym) {
+                emit(OPR, 0, 2);
+            } else {
+                emit(OPR, 0, 3);
+            }
+        }
+    }
+}
+
+void term() {
+    factor();
+    while (tokenType[tokenIndex] == multsym || tokenType[tokenIndex] == slashsym) {
+        int multOp = tokenType[tokenIndex];
+        tokenIndex++;
+        factor();
+        if (multOp == multsym) {
+            emit(OPR, 0, 4);
+        } else {
+            emit(OPR, 0, 5);
+        }
+    }
+}
+
+void factor() {
+    if (tokenType[tokenIndex] == identsym) {
+        int symIdx = symbolTableCheck(identArr[identIndex]);
+        identIndex++; 
+        if (symIdx == -1) {
+            printf("Error: Undeclared variable.\n");
+            exit(1);
+        }
+        if (symbolTable[symIdx]->kind == 1) {
+            emit(LIT, 0, symbolTable[symIdx]->val);
+        } else if (symbolTable[symIdx]->kind == 2) {
+            emit(LOD, 0, symbolTable[symIdx]->addr);
+        } else {
+            printf("Error: Expression must not contain a procedure identifier.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+    else if (tokenType[tokenIndex] == numbersym) {
+        emit(LIT, 0, tokenType[tokenIndex]);
+        tokenIndex++;
+    }
+    else if (tokenType[tokenIndex] == lparentsym) {
+        tokenIndex++;
+        expression();
+        if (tokenType[tokenIndex] != rparentsym) {
+            printf("Error: Right parenthesis missing.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+    else {
+        printf("Error: The preceding factor cannot begin with this symbol.\n");
+        exit(1);
+    }
+}
+
+
