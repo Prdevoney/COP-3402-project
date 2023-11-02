@@ -545,7 +545,12 @@ void constDeclaration() {
                 printf("Error: = must be followed by a number.\n");
                 exit(1);
             }
-            // this bit is extra idk if it is needed
+
+            /* find out what we do with numbers */
+            /* the numbers and identifiers are not in the token type array, they are in identArray */
+            /* So, we have to get the identifier from the identArray */
+            /* all of this applies to the varDeclaration as well */
+
             if (tokenType[tokenIndex] == numbersym) {
                 tokenIndex++;
                 int number = atoi(tokenType[tokenIndex]); // Convert string to integer
@@ -578,7 +583,7 @@ int varDeclaration() {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
-            if (SYMBOLTABLECHECK(tokenType[tokenIndex]) != -1) {
+            if (symbolTableCheck(tokenType[tokenIndex]) != -1) {
                 printf("Error: This variable has already been declared.\n");
                 exit(1);
             }
