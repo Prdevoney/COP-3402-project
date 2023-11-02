@@ -64,7 +64,7 @@ int cx = 0;   // starting index.
 
 // function declarations for parsecodegen part 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr);
-symbolTableCheck(char *name);
+int symbolTableCheck(char *name);
 void emit(int op, int l, int m);
 void program();
 void block ();
@@ -504,8 +504,9 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     return s;
 }
 
-// This determines if an identifier has already been initialized. 
-symbolTableCheck(char *name) {
+// Determines if an identifier is initialized. If yes return index, else return -1 
+int symbolTableCheck(char *name) {
+    // loop through symbol table to see if identifier is in array. 
     for(int i = 0; i < symbolIndex; i++) {
         if (strcmp(symbolTable[i]->name, name) == 0)
             return i; 
@@ -536,8 +537,8 @@ void program() {
 }
 
 void block () {
-    constDeclaration(tokenType, tokenIndex);
-    int numVars = varDeclaration(tokenType, tokenIndex);
+    constDeclaration();
+    int numVars = varDeclaration();
     char INC[] = "INC";
     emit(INC, 0, 3 + numVars);
     statement();
@@ -555,7 +556,7 @@ void constDeclaration() {
                 exit(1);
             }
             // has the identifier already been declared? 
-            if(symboltableCheck(identArr[identIndex]) != -1) {
+            if(symbolTableCheck(identArr[identIndex]) != -1) {
                 printf("Error: This variable has already been declared.\n");
                 exit(1);
             }
@@ -612,7 +613,7 @@ int varDeclaration() {
             }
 
             // if valid identifier then initialize it in symbolTable 
-            symbolTable[symbolIndex] = (2, identArr[identIndex], 0, 0, 2 + numVars);
+            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars);
             identIndex++; 
             symbolIndex++; 
             tokenIndex++;
@@ -633,17 +634,23 @@ int varDeclaration() {
 
 void statement() {
     int symIdx, jpcIdx, loopIdx;
+    // if identifier 
     if (tokenType[tokenIndex] == identsym) {
-        symIdx = symbolTableCheck(tokenType[tokenIndex]);
+        // check to see if in symbolTable 
+        symIdx = symbolTableCheck(identArr[identIndex]);
+        identArr++; 
+        // not in symbolTable
         if (symIdx == -1) {
             printf("Error: Undeclared variable.\n");
             exit(1);
         }
+        // not a variable
         if(symbolTable[symIdx]->kind != 2) {
             printf("Error: Not a var.\n");
             exit(1);
         }
         tokenIndex++;
+        // if not ":="
         if (tokenType[tokenIndex] != becomessym) {
             printf("Error: Assignment operator expected.\n");
             exit(1);
@@ -651,8 +658,9 @@ void statement() {
         tokenIndex++;
         expression();
         emit(STO, 0, symbolTable[symIdx]->addr);
-        return 0;
+        return;
     }
+    // if "begin" 
     if (tokenType[tokenIndex] == beginsym) {
         do { 
             tokenIndex++;
@@ -663,8 +671,9 @@ void statement() {
             exit(1);
         }
         tokenIndex++;
-        return 0;
+        return;
     }
+    // if "if"
     if (tokenType[tokenIndex] == ifsym) {
         tokenIndex++;
         condition();
@@ -677,8 +686,9 @@ void statement() {
         tokenIndex++;
         statement();
         code[jpcIdx].m = cx;
-        return 0;
+        return;
     }
+    // if "while" 
     if (tokenType[tokenIndex] == whilesym) {
         loopIdx = cx;
         tokenIndex++;
@@ -693,15 +703,17 @@ void statement() {
         statement();
         emit(JMP, 0, loopIdx);
         code[jpcIdx].m = cx;
-        return 0;
+        return;
     }
+    // if "read"
     if (tokenType[tokenIndex] == readsym) {
         tokenIndex++;
         if (tokenType[tokenIndex] != identsym) {
             printf("Error: Assignment to constant or procedure is not allowed.\n");
             exit(1);
         }
-        symIdx = SYMBOLTABLECHECK(tokenType[tokenIndex]);
+        // check to see if identifier is in array 
+        symIdx = symbolTableCheck(identArr[identIndex]);
         if (symIdx == -1) {
             printf("Error: Undeclared variable.\n");
             exit(1);
@@ -713,13 +725,14 @@ void statement() {
         tokenIndex++;
         emit(SYS, 0, 2); //read
         emit(STO, 0, symbolTable[symIdx]->addr);
-        return 0;
+        return;
     }
+    // if "write"
     if (tokenType[tokenIndex] == writesym) {
         tokenIndex++;
         expression();
         emit(SYS, 0, 1); //write
-        return 0;
+        return;
     }
 }
 
@@ -811,7 +824,8 @@ void term() {
 
 void factor() {
     if (tokenType[tokenIndex] == identsym) {
-        int symIdx = SYMBOLTABLECHECK(tokenType[tokenIndex]);
+        int symIdx = symbolTableCheck(identArr[identIndex]);
+        identIndex++; 
         if (symIdx == -1) {
             printf("Error: Undeclared variable.\n");
             exit(1);
