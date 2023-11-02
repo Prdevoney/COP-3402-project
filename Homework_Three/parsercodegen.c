@@ -46,15 +46,21 @@ typedef struct {
     int m;  // M address
 } instruction;
 
-// Initialization of global variables: 
-int *tokenType; // token list 
-char **identArr; // identity array
-symbol *symbolTable[MAX_SYMBOL_TABLE_SIZE]; // symbol table array
-instruction code[CODE_SIZE]; // code array
-int cx = 0;   // starting index.
-int tokenIndex = 0; 
+/* Initialization of global variables: */
+// symbol table array
+symbol *symbolTable[MAX_SYMBOL_TABLE_SIZE]; 
 int symbolIndex = 0; 
 
+// token list 
+int *tokenType; 
+int tokenIndex = 0; 
+
+// identity array
+char **identArr; 
+int identIndex = 0; 
+
+instruction code[CODE_SIZE]; // code array
+int cx = 0;   // starting index.
 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
@@ -470,11 +476,9 @@ int main(int argc, char *argv[]){
 }
 
 
-
 // ------------- The parser codegen part of the compiler ------------------------
 
-
-
+// creates a struct for each symbol and then returns it to be stored in the symbolTable array 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     symbol *s = malloc(sizeof(symbol));
     s->kind = kind;
@@ -485,10 +489,11 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     return s;
 }
 
+// This determines if an identifier has already been initialized. 
 symbolTableCheck(char *name) {
     for(int i = 0; i < symbolIndex; i++) {
         if (strcmp(symbolTable[i]->name, name) == 0)
-            return 1; 
+            return i; 
     }
     return -1; 
 }
@@ -522,49 +527,48 @@ void block () {
     statement();
 }
 
+// constdeclaration ::= [ “const” ident "=" number {"," ident "=" number} ";"]
 void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
+        // checks structure of the const declaration 
         do {
             tokenIndex++;
+            // identity check 
             if (tokenType[tokenIndex] != identsym) {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
-            if(symboltableCheck(tokenType[tokenIndex]) != -1) {
+            // has the identifier already been declared? 
+            if(symboltableCheck(identArr[identIndex]) != -1) {
                 printf("Error: This variable has already been declared.\n");
                 exit(1);
             }
-            char * identName = tokenType[tokenIndex];
+            // get the identifier from the identArray 
+            char * identName = identArr[identIndex];
+            identIndex++; 
             tokenIndex++;
+            // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
                 printf("Error: Identifier must be followed by =.\n");
                 exit(1);
             }
             tokenIndex++;
+            // number check 
             if (tokenType[tokenIndex] != numbersym) {
                 printf("Error: = must be followed by a number.\n");
                 exit(1);
             }
+            
+            // if num then we add (kind, name, L, and M) to the symbol table
+            int number = atoi(identArr[identIndex]); // Convert string to integer
+            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
+            symbolIndex++;
 
-            /* find out what we do with numbers */
-            /* the numbers and identifiers are not in the token type array, they are in identArray */
-            /* So, we have to get the identifier from the identArray */
-            /* all of this applies to the varDeclaration as well */
-
-            if (tokenType[tokenIndex] == numbersym) {
-                tokenIndex++;
-                int number = atoi(tokenType[tokenIndex]); // Convert string to integer
-                symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
-                tokenIndex++;
-                symbolIndex++;
-                // to here just get rid of the if else and keep the line in the else statement
-            } else {
-                symbolTable[symbolIndex] = initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
-                symbolIndex++;
-                // make sure the tokenType[tokenIndex] doesnt need to be cased to an int
-            }
             tokenIndex++;
+            // if "," then repeate for next declaration else we break then check for ";"
         } while (tokenType[tokenIndex] == commasym);
+
+        // check if const declaration is ended with a ";"
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: Semicolon or comma missing.\n");
             exit(1);
@@ -573,36 +577,48 @@ void constDeclaration() {
     }
 }
 
+// var-declaration ::= [ "var" ident {"," ident} ";"]
 int varDeclaration() {
     int numVars = 0;
     if (tokenType[tokenIndex] == varsym) {
         do {
             numVars++;
             tokenIndex++;
+            // ident check
             if (tokenType[tokenIndex] != identsym) {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
-            if (symbolTableCheck(tokenType[tokenIndex]) != -1) {
+            // has the identifier already been declared? 
+            if (symbolTableCheck(identArr[identIndex]) != -1) {
                 printf("Error: This variable has already been declared.\n");
                 exit(1);
             }
-            initSymbolTable(2, tokenType[tokenIndex], 0, 0, 2 + numVars);
+
+            // if valid identifier then initialize it in symbolTable 
+            symbolTable[symbolIndex] = (2, identArr[identIndex], 0, 0, 2 + numVars);
+            identIndex++; 
+            symbolIndex++; 
             tokenIndex++;
+
+            // if "," then continue scaning varDeclaration, else break and check for ";"
         } while (tokenType[tokenIndex] == commasym);
+
+        // check if varDeclaration ends with ";"
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: Semicolon or comma missing.\n");
             exit(1);
         }
         tokenIndex++;
     }
+    // return the number of declared variables
     return numVars;
 }
 
 void statement(){
     int symIdx, jpcIdx, loopIdx;
     if (tokenType[tokenIndex] == identsym) {
-        symIdx = SYMBOLTABLECHECK(tokenType[tokenIndex]);
+        symIdx = symbolTableCheck(tokenType[tokenIndex]);
         if (symIdx == -1) {
             printf("Error: Undeclared variable.\n");
             exit(1);
