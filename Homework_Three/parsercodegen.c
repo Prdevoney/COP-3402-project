@@ -474,6 +474,7 @@ int main(int argc, char *argv[]){
 // ------------- The parser codegen part of the compiler ------------------------
 
 
+
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     symbol *s = malloc(sizeof(symbol));
     s->kind = kind;
@@ -482,7 +483,14 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
     s->level = level;
     s->addr = addr;
     return s;
-    
+}
+
+symbolTableCheck(char *name) {
+    for(int i = 0; i < symbolIndex; i++) {
+        if (strcmp(symbolTable[i]->name, name) == 0)
+            return 1; 
+    }
+    return -1; 
 }
 
 void emit(int op, int l, int m) {
@@ -522,7 +530,7 @@ void constDeclaration() {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
-            if(SYMBOLTABLECHECK(tokenType[tokenIndex]) != -1) {
+            if(symboltableCheck(tokenType[tokenIndex]) != -1) {
                 printf("Error: This variable has already been declared.\n");
                 exit(1);
             }
@@ -543,9 +551,11 @@ void constDeclaration() {
                 int number = atoi(tokenType[tokenIndex]); // Convert string to integer
                 symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
                 tokenIndex++;
+                symbolIndex++;
                 // to here just get rid of the if else and keep the line in the else statement
             } else {
                 symbolTable[symbolIndex] = initSymbolTable(1, identName, tokenType[tokenIndex], 0, 0);
+                symbolIndex++;
                 // make sure the tokenType[tokenIndex] doesnt need to be cased to an int
             }
             tokenIndex++;
