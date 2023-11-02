@@ -522,6 +522,10 @@ void constDeclaration() {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
+            if(SYMBOLTABLECHECK(tokenType[tokenIndex]) != -1) {
+                printf("Error: This variable has already been declared.\n");
+                exit(1);
+            }
             char * identName = tokenType[tokenIndex];
             tokenIndex++;
             if (tokenType[tokenIndex] != eqsym) {
@@ -558,13 +562,17 @@ int varDeclaration() {
     int numVars = 0;
     if (tokenType[tokenIndex] == varsym) {
         do {
+            numVars++;
             tokenIndex++;
             if (tokenType[tokenIndex] != identsym) {
                 printf("Error: const, var, procedure must be followed by identifier.\n");
                 exit(1);
             }
+            if (SYMBOLTABLECHECK(tokenType[tokenIndex]) != -1) {
+                printf("Error: This variable has already been declared.\n");
+                exit(1);
+            }
             initSymbolTable(2, tokenType[tokenIndex], 0, 0, 2 + numVars);
-            numVars++;
             tokenIndex++;
         } while (tokenType[tokenIndex] == commasym);
         if (tokenType[tokenIndex] != semicolonsym) {
@@ -574,4 +582,54 @@ int varDeclaration() {
         tokenIndex++;
     }
     return numVars;
+}
+
+void statement(){
+    int symIdx, jpcIdx, loopIdx;
+    if (tokenType[tokenIndex] == identsym) {
+        symIdx = SYMBOLTABLECHECK(tokenType[tokenIndex]);
+        if (symIdx == -1) {
+            printf("Error: Undeclared variable.\n");
+            exit(1);
+        }
+        if(symbolTable[symIdx]->kind != 2) {
+            printf("Error: Not a var.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        if (tokenType[tokenIndex] != becomessym) {
+            printf("Error: Assignment operator expected.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        expression();
+        emit(STO, 0, symbolTable[symIdx]->addr);
+        return 0;
+    }
+    if (tokenType[tokenIndex] == beginsym) {
+        do { 
+            tokenIndex++;
+            statement();
+        } while (tokenType[tokenIndex] == semicolonsym);
+        if (tokenType[tokenIndex] != endsym) {
+            printf("Error: Semicolon or } expected.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        return 0;
+    }
+    if (tokenType[tokenIndex] == ifsym) {
+        tokenIndex++;
+        condition();
+        jpcIdx = cx;
+        emit(JPC, 0, 0);
+        if (tokenType[tokenIndex] != thensym) {
+            printf("Error: then expected.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        statement();
+        code[jpcIdx].m = cx;
+        return 0;
+    }
 }
