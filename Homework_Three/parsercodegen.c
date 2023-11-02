@@ -469,10 +469,7 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-
-
 // ------------- The parser codegen part of the compiler ------------------------
-
 
 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
