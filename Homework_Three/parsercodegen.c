@@ -62,6 +62,21 @@ int identIndex = 0;
 instruction code[CODE_SIZE]; // code array
 int cx = 0;   // starting index.
 
+// function declarations for parsecodegen part 
+symbol *initSymbolTable (int kind, char *name, int val, int level, int addr);
+symbolTableCheck(char *name);
+void emit(int op, int l, int m);
+void program();
+void block ();
+void constDeclaration();
+int varDeclaration();
+void statement();
+void condition();
+void expression();
+void term();
+void factor();
+
+// ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"const", "var", "procedure", 
@@ -476,7 +491,7 @@ int main(int argc, char *argv[]){
 }
 
 
-// ------------- The parser codegen part of the compiler ------------------------
+// ------------- The parser codegen part of the compiler -------------
 
 // creates a struct for each symbol and then returns it to be stored in the symbolTable array 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
@@ -512,6 +527,7 @@ void emit(int op, int l, int m) {
 
 void program() {
     block();
+    // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
         printf("Error: Period expected.\n");
         exit(1);
