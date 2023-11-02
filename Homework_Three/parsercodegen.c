@@ -615,7 +615,7 @@ int varDeclaration() {
     return numVars;
 }
 
-void statement(){
+void statement() {
     int symIdx, jpcIdx, loopIdx;
     if (tokenType[tokenIndex] == identsym) {
         symIdx = symbolTableCheck(tokenType[tokenIndex]);
@@ -663,4 +663,170 @@ void statement(){
         code[jpcIdx].m = cx;
         return 0;
     }
+    if (tokenType[tokenIndex] == whilesym) {
+        loopIdx = cx;
+        tokenIndex++;
+        condition();
+        if (tokenType[tokenIndex] != dosym) {
+            printf("Error: do expected.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        jpcIdx = cx;
+        emit(JPC, 0, 0);
+        statement();
+        emit(JMP, 0, loopIdx);
+        code[jpcIdx].m = cx;
+        return 0;
+    }
+    if (tokenType[tokenIndex] == readsym) {
+        tokenIndex++;
+        if (tokenType[tokenIndex] != identsym) {
+            printf("Error: Assignment to constant or procedure is not allowed.\n");
+            exit(1);
+        }
+        symIdx = SYMBOLTABLECHECK(tokenType[tokenIndex]);
+        if (symIdx == -1) {
+            printf("Error: Undeclared variable.\n");
+            exit(1);
+        }
+        if (symbolTable[symIdx]->kind != 2) {
+            printf("Error: Assignment to constant or procedure is not allowed.\n");
+            exit(1);
+        }
+        tokenIndex++;
+        emit(SYS, 0, 2); //read
+        emit(STO, 0, symbolTable[symIdx]->addr);
+        return 0;
+    }
+    if (tokenType[tokenIndex] == writesym) {
+        tokenIndex++;
+        expression();
+        emit(SYS, 0, 1); //write
+        return 0;
+    }
 }
+
+void condition() {
+    if (tokenType[tokenIndex] == oddsym) {
+        tokenIndex++;
+        expression();
+        emit(OPR, 0, 11);
+    } else {
+        expression();
+        if (tokenType[tokenIndex] != eqsym && tokenType[tokenIndex] != neqsym && 
+        tokenType[tokenIndex] != lessym && tokenType[tokenIndex] != leqsym && 
+        tokenType[tokenIndex] != gtrsym && tokenType[tokenIndex] != geqsym) {
+            printf("Error: Relational operator expected.\n");
+            exit(1);
+        }
+        int relOp = tokenType[tokenIndex];
+        tokenIndex++;
+        expression();
+        switch (relOp) {
+            case eqsym:
+                emit(OPR, 0, 8);
+                break;
+            case neqsym:
+                emit(OPR, 0, 9);
+                break;
+            case lessym:
+                emit(OPR, 0, 10);
+                break;
+            case leqsym:
+                emit(OPR, 0, 11);
+                break;
+            case gtrsym:
+                emit(OPR, 0, 12);
+                break;
+            case geqsym:
+                emit(OPR, 0, 13);
+                break;
+        }
+    }
+}
+
+void expression() {
+    if (tokenType[tokenIndex] == minussym) {
+        tokenIndex++;
+        term();
+        emit(OPR, 0, 1);
+        while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
+            int addOp = tokenType[tokenIndex];
+            tokenIndex++;
+            term();
+            if (addOp == plussym) {
+                emit(OPR, 0, 2);
+            } else {
+                emit(OPR, 0, 3);
+            }
+        }
+    } else {
+        if (tokenType[tokenIndex] == plussym) {
+            tokenIndex++;
+        }
+        term();
+        while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
+            int addOp = tokenType[tokenIndex];
+            tokenIndex++;
+            term();
+            if (addOp == plussym) {
+                emit(OPR, 0, 2);
+            } else {
+                emit(OPR, 0, 3);
+            }
+        }
+    }
+}
+
+void term() {
+    factor();
+    while (tokenType[tokenIndex] == multsym || tokenType[tokenIndex] == slashsym) {
+        int multOp = tokenType[tokenIndex];
+        tokenIndex++;
+        factor();
+        if (multOp == multsym) {
+            emit(OPR, 0, 4);
+        } else {
+            emit(OPR, 0, 5);
+        }
+    }
+}
+
+void factor() {
+    if (tokenType[tokenIndex] == identsym) {
+        int symIdx = SYMBOLTABLECHECK(tokenType[tokenIndex]);
+        if (symIdx == -1) {
+            printf("Error: Undeclared variable.\n");
+            exit(1);
+        }
+        if (symbolTable[symIdx]->kind == 1) {
+            emit(LIT, 0, symbolTable[symIdx]->val);
+        } else if (symbolTable[symIdx]->kind == 2) {
+            emit(LOD, 0, symbolTable[symIdx]->addr);
+        } else {
+            printf("Error: Expression must not contain a procedure identifier.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+    else if (tokenType[tokenIndex] == numbersym) {
+        emit(LIT, 0, tokenType[tokenIndex]);
+        tokenIndex++;
+    }
+    else if (tokenType[tokenIndex] == lparentsym) {
+        tokenIndex++;
+        expression();
+        if (tokenType[tokenIndex] != rparentsym) {
+            printf("Error: Right parenthesis missing.\n");
+            exit(1);
+        }
+        tokenIndex++;
+    }
+    else {
+        printf("Error: The preceding factor cannot begin with this symbol.\n");
+        exit(1);
+    }
+}
+
+
