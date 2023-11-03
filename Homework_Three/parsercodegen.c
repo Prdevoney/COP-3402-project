@@ -223,10 +223,9 @@ int main(int argc, char *argv[]){
                 
                 while (inputArr[i] == '\0') {
                     // -1
-                    if (i == chcount)
+                    if (i == chcount-1)
                         endOfFile = 1;
                     i++; 
-
                 }
                 tempArr[tempArrCount] = inputArr[i];
                 
@@ -395,6 +394,7 @@ int main(int argc, char *argv[]){
                     } else {
                         printf("Error: Invalid symbol!\n");
                         fprintf(fp,"Error: Invalid symbol!\n");
+                        printf("%c hello", tempArr[1]); 
                         free(identArr);
                         free(tokenType);
                         exit(1); 
@@ -408,6 +408,7 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         i++; 
+        printf("%d \n", tokenType[tokenCount-1]); 
     }
 
     for (int i = 0; i < tokenCount; i++) {

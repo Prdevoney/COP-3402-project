@@ -1,0 +1,6 @@
+/* Error: const, var, procedure must be followed by identifier */ 
+
+var ;
+begin
+    x := y * 2; 
+end.
