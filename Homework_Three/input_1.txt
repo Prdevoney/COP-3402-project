@@ -1,0 +1,14 @@
+/* Example 2, if the input is: */
+
+
+var x, y;
+begin
+    z:= y * 2;
+end.
+
+
+/*
+Output:
+
+Error: undeclared identifier z
+*/
