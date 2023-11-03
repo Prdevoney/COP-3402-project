@@ -20,11 +20,11 @@
 // Internal representation of PL/0 symbols.
 typedef enum { 
     oddsym = 1, identsym, numbersym, plussym, minussym,
-    multsym,  slashsym, ifelsym, eqsym, neqsym, lessym, leqsym,
+    multsym,  slashsym, ifelsym_8, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
-    whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
-    readsym , elsesym
+    whilesym, dosym, callsym_8, constsym, varsym, procsym_8, writesym,
+    readsym , elsesym_8
 } token_type;
 
 typedef struct {
@@ -80,15 +80,15 @@ void factor();
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
-    char * resWords [] = {"const", "var", "procedure", 
-                        "call", "begin", "end", "if", 
-                        "then", "ifel", "else", "while", 
-                        "do", "read", "write"};
+    char * resWords [] = {"const", "var", "ifel_8", 
+                        "procedure_8", "begin", "end", "if", 
+                        "then",  "else_8", "while", 
+                        "do", "call_8", "read", "write"};
 
     // What the keywords correspond to. 
-    int wsym [] = {constsym, varsym, procsym, callsym, 
+    int wsym [] = {constsym, varsym, ifelsym_8, procsym_8,
                     beginsym, endsym, ifsym, thensym, 
-                    ifelsym, elsesym, whilesym, dosym, 
+                    elsesym_8, whilesym, dosym, callsym_8,
                     readsym, writesym};
 
     // Array for special characters. 
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    while (i < sizeof(inputArr) - 2){
+    while (i < sizeof(inputArr) - 1){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
         int tempArrCount = 0; 
@@ -217,13 +217,16 @@ int main(int argc, char *argv[]){
                 i--;
                 break; 
             }
+
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
                 
                 while (inputArr[i] == '\0') {
-                    i++; 
-                    if (i == chcount - 1)
+                    // -1
+                    if (i == chcount)
                         endOfFile = 1;
+                    i++; 
+
                 }
                 tempArr[tempArrCount] = inputArr[i];
                 
@@ -277,7 +280,6 @@ int main(int argc, char *argv[]){
                     strcpy(identArr[identCount], tempArr);
 
                     tokenType[tokenCount] = numbersym; 
-
                     identCount++; 
                     tokenCount++; 
                     i++; 
@@ -300,7 +302,7 @@ int main(int argc, char *argv[]){
                 int keyWordCheck = 0; 
                 for (int k = 0; k < norw; k++) {
                     if (strcmp(tempArr, resWords[k]) == 0) {
-                        
+
                         // dynamically resize tokenType array if necessary. 
                         if (tokenCount == tokenTypeSize-1) {
                             tokenTypeSize *= 2; 
@@ -315,7 +317,6 @@ int main(int argc, char *argv[]){
                 }
                 //=================== Identifier Check ===================
                 if (keyWordCheck == 0) {
-
                     if (tempArrCount > 11){
                         printf("\tError: Identifier is too long!\n");
                         fprintf(fp,"\tError: Identifier is too long!\n");
@@ -381,8 +382,7 @@ int main(int argc, char *argv[]){
                 i++; 
             }
             else {
-                if (!endOfFile) {
-                    
+                if (endOfFile != 1) {
                     if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
                         || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
                         || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
