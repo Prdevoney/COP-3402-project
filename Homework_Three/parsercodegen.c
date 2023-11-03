@@ -412,6 +412,8 @@ int main(int argc, char *argv[]){
         printf("%d \n", tokenType[tokenCount-1]); 
     }
 
+    parsecode: 
+
     for (int i = 0; i < tokenCount; i++) {
         printf("%d ", tokenType[i]); 
     }
@@ -419,7 +421,6 @@ int main(int argc, char *argv[]){
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
-    parsecode:
     program();
 
     printf("\n");
