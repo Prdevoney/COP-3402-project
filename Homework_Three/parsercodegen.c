@@ -544,7 +544,7 @@ int main(int argc, char *argv[]){
     }
 
 
-
+    printf("\n");
   
     printf("Kind | Name        | Value | Level | Address | Mark\n"); 
     for (int i = 0; i < symbolIndex; i++) {
