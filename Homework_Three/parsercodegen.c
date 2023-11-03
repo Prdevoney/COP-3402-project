@@ -20,10 +20,10 @@
 // Internal representation of PL/0 symbols.
 typedef enum { 
     oddsym = 1, identsym, numbersym, plussym, minussym,
-    multsym,  slashsym, ifelsym_7, eqsym, neqsym, lessym, leqsym,
+    multsym,  slashsym, ifelsym, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
-    periodsym, becomessym, beginsym, endsym, ifsym, thensym_9, 
-    whilesym, dosym, callsym_4, constsym, varsym, procsym_8, writesym,
+    periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
+    whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
     readsym , elsesym
 } token_type;
 
@@ -548,7 +548,7 @@ int main(int argc, char *argv[]){
   
     printf("Kind | Name        | Value | Level | Address | Mark\n"); 
     for (int i = 0; i < symbolIndex; i++) {
-        printf("%4d | %11s | %5d | %6d | %5d |    1\n", symbolTable[i]->kind, 
+        printf("%4d | %11s | %5d | %5d | %7d |    1\n", symbolTable[i]->kind, 
                                         symbolTable[i]->name, 
                                         symbolTable[i]->val, 
                                         symbolTable[i]->level, 
@@ -857,15 +857,15 @@ void expression() {
     if (tokenType[tokenIndex] == minussym) {
         tokenIndex++;
         term();
-        emit(OPR, 0, 1);
+        //emit(OPR, 0, 1); what is NEG in the pseudocode??????=======
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
             tokenIndex++;
             term();
             if (addOp == plussym) {
-                emit(OPR, 0, 2);
+                emit(OPR, 0, 1);
             } else {
-                emit(OPR, 0, 3);
+                emit(OPR, 0, 2);
             }
         }
     } else {
@@ -878,9 +878,9 @@ void expression() {
             tokenIndex++;
             term();
             if (addOp == plussym) {
-                emit(OPR, 0, 2);
+                emit(OPR, 0, 1);
             } else {
-                emit(OPR, 0, 3);
+                emit(OPR, 0, 2);
             }
         }
     }
@@ -893,9 +893,9 @@ void term() {
         tokenIndex++;
         factor();
         if (multOp == multsym) {
-            emit(OPR, 0, 4);
+            emit(OPR, 0, 3);
         } else {
-            emit(OPR, 0, 5);
+            emit(OPR, 0, 4);
         }
     }
 }
@@ -909,6 +909,7 @@ void factor() {
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
+            printf("Went here");
             emit(LIT, 0, symbolTable[symIdx]->val);
         } else if (symbolTable[symIdx]->kind == 2) {
             emit(LOD, 0, symbolTable[symIdx]->addr);
@@ -919,6 +920,7 @@ void factor() {
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == numbersym) {
+        printf("here"); // work here next
         emit(LIT, 0, tokenType[tokenIndex]);
         tokenIndex++;
     }
