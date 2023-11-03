@@ -40,6 +40,7 @@ typedef enum {
     LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SYS
 } OP_code;
 
+
 typedef struct { 
     int op; // opcode
     int l;  // L level
@@ -137,7 +138,7 @@ int main(int argc, char *argv[]){
     // *******Put input file into array.*******|
 
     // dynamically allocate memory for the inputArr 
-    char * inputArr = malloc( sizeof(char) * (chcount+1));
+    char *inputArr = malloc( sizeof(char) * (chcount+1));
 
     FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
@@ -475,6 +476,56 @@ int main(int argc, char *argv[]){
     // do we need to do anything with tokenCount???
     program();
 
+    printf("\n");
+    printf("Line    OP    L    M\n");
+    printf("  0    JMP    0    3\n");
+    for (int i = 0; i < cx; i++) {
+        int assemblyCodeNum = code[i].op;
+        char* assemblyInsName;
+        char* oprName;
+        int oprNum = code[i].m;
+        switch (assemblyCodeNum) {
+            case 1:
+                assemblyInsName = "LIT";
+                break;
+            case 2:
+                
+                switch (oprNum) {
+                    case 0: 
+                        oprName = "RTN";
+                        break;
+                }
+                break;
+            case 3:
+                assemblyInsName = "LOD";
+                break;
+            case 4: 
+                assemblyInsName = "STO";
+                break;
+            case 5:
+                assemblyInsName = "CAL";
+                break;
+            case 6:
+                assemblyInsName = "INC";
+                break;
+            case 7:
+                assemblyInsName = "JMP";
+                break;
+            case 8:
+                assemblyInsName = "JPC";
+                break;
+            case 9:
+                assemblyInsName = "SYS";
+                break;
+        }
+
+    
+        code[i].op; 
+        printf(" %2d   %s   %d   %2d\n", i, code[i].op, code[i].l, code[i].m);
+    }
+
+
+
     
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
@@ -527,6 +578,7 @@ void emit(int op, int l, int m) {
 }
 
 void program() {
+    emit(JMP, 0, 3);
     block();
     // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
@@ -539,7 +591,6 @@ void program() {
 void block () {
     constDeclaration();
     int numVars = varDeclaration();
-    char INC[] = "INC";
     emit(INC, 0, 3 + numVars);
     statement();
 }
@@ -754,22 +805,22 @@ void condition() {
         expression();
         switch (relOp) {
             case eqsym:
-                emit(OPR, 0, 8);
+                emit(OPR, 0, 5);
                 break;
             case neqsym:
-                emit(OPR, 0, 9);
+                emit(OPR, 0, 6);
                 break;
             case lessym:
-                emit(OPR, 0, 10);
+                emit(OPR, 0, 7);
                 break;
             case leqsym:
-                emit(OPR, 0, 11);
+                emit(OPR, 0, 8);
                 break;
             case gtrsym:
-                emit(OPR, 0, 12);
+                emit(OPR, 0, 9);
                 break;
             case geqsym:
-                emit(OPR, 0, 13);
+                emit(OPR, 0, 10);
                 break;
         }
     }
