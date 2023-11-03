@@ -409,17 +409,18 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         i++; 
-        printf("%d \n", tokenType[tokenCount-1]); 
+        printf("Token of tempArr: %d \n", tokenType[tokenCount-1]); 
     }
 
+    parsecode:
+
     for (int i = 0; i < tokenCount; i++) {
-        printf("%d ", tokenType[i]); 
+        printf("%d-", tokenType[i]); 
     }
     printf("\n"); 
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
-    parsecode:
     program();
 
     printf("\n");
