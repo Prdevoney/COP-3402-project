@@ -20,11 +20,11 @@
 // Internal representation of PL/0 symbols.
 typedef enum { 
     oddsym = 1, identsym, numbersym, plussym, minussym,
-    multsym,  slashsym, ifelsym, eqsym, neqsym, lessym, leqsym,
+    multsym,  slashsym, ifelsym_8, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
-    whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
-    readsym , elsesym
+    whilesym, dosym, callsym_8, constsym, varsym, procsym_8, writesym,
+    readsym , elsesym_8
 } token_type;
 
 typedef struct {
@@ -80,15 +80,15 @@ void factor();
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
-    char * resWords [] = {"const", "var", "procedure", 
-                        "call", "begin", "end", "if", 
-                        "then", "ifel", "else", "while", 
-                        "do", "read", "write"};
+    char * resWords [] = {"const", "var", "ifel_8", 
+                        "procedure_8", "begin", "end", "if", 
+                        "then",  "else_8", "while", 
+                        "do", "call_8", "read", "write"};
 
     // What the keywords correspond to. 
-    int wsym [] = {constsym, varsym, procsym, callsym, 
+    int wsym [] = {constsym, varsym, ifelsym_8, procsym_8,
                     beginsym, endsym, ifsym, thensym, 
-                    ifelsym, elsesym, whilesym, dosym, 
+                    elsesym_8, whilesym, dosym, callsym_8,
                     readsym, writesym};
 
     // Array for special characters. 
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    while (i < sizeof(inputArr) - 2){
+    while (i < sizeof(inputArr) - 1){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
         int tempArrCount = 0; 
@@ -217,13 +217,16 @@ int main(int argc, char *argv[]){
                 i--;
                 break; 
             }
+
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
                 
                 while (inputArr[i] == '\0') {
-                    i++; 
-                    if (i == chcount - 1)
+                    // -1
+                    if (i == chcount)
                         endOfFile = 1;
+                    i++; 
+
                 }
                 tempArr[tempArrCount] = inputArr[i];
                 
@@ -275,13 +278,8 @@ int main(int argc, char *argv[]){
                 if (digitCount == tempArrCount && digitCount <= 5) {
                     
                     strcpy(identArr[identCount], tempArr);
-                    // fprintf(fp, "%-12s", identArr[identCount]); 
-                    // printf("%-12s", identArr[identCount]); 
 
                     tokenType[tokenCount] = numbersym; 
-                    // printf("\t%d\n", tokenType[tokenCount]);
-                    // fprintf(fp,"\t%d\n", tokenType[tokenCount]);
-
                     identCount++; 
                     tokenCount++; 
                     i++; 
@@ -304,11 +302,6 @@ int main(int argc, char *argv[]){
                 int keyWordCheck = 0; 
                 for (int k = 0; k < norw; k++) {
                     if (strcmp(tempArr, resWords[k]) == 0) {
-                        
-                        // printf("%-12s", tempArr); 
-                        // fprintf(fp, "%-12s", tempArr); 
-                        // printf("\t%d\n", wsym[k]);
-                        // fprintf(fp,"\t%d\n", wsym[k]);
 
                         // dynamically resize tokenType array if necessary. 
                         if (tokenCount == tokenTypeSize-1) {
@@ -324,12 +317,7 @@ int main(int argc, char *argv[]){
                 }
                 //=================== Identifier Check ===================
                 if (keyWordCheck == 0) {
-
                     if (tempArrCount > 11){
-                        
-                        // printf("%-12s", tempArr); 
-                        // fprintf(fp, "%-12s", tempArr); 
-
                         printf("\tError: Identifier is too long!\n");
                         fprintf(fp,"\tError: Identifier is too long!\n");
                         free(identArr);
@@ -342,12 +330,6 @@ int main(int argc, char *argv[]){
                         tokenType[tokenCount] = identsym;
                         tokenCount++;
                         
-                        // printf("%-12s", identArr[identCount]);
-                        // printf("\t%d\n", identsym);
-
-                        // fprintf(fp,"%-12s", identArr[identCount]);
-                        // fprintf(fp,"\t%d\n", identsym);
-
                         identCount++;
                     }
                     
@@ -376,61 +358,38 @@ int main(int argc, char *argv[]){
                 i += 1; 
             }
             else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
-                // printf(":=\t");
-                // printf("%10d\n", becomessym);
-
-                // fprintf(fp,":=\t");
-                // fprintf(fp,"%10d\n", becomessym);
 
                 tokenType[tokenCount] = becomessym;
                 tokenCount++;
                 i++;  
             }
             else if (tempArr[0] == '<' && inputArr[i+1] == '=') {
-                // printf("<=\t");
-                // printf("%10d\n", leqsym);
-
-                // fprintf(fp,"<=\t");
-                // fprintf(fp,"%10d\n", leqsym);
 
                 tokenType[tokenCount] = leqsym;
                 tokenCount++;
                 i++;
             }
             else if (tempArr[0] == '>' && inputArr[i+1] == '=') {
-                // printf(">=\t");
-                // printf("%10d\n", geqsym);
-
-                // fprintf(fp,">=\t");
-                // fprintf(fp,"%10d\n", geqsym);
-
+              
                 tokenType[tokenCount] = geqsym;
                 tokenCount++;
                 i++; 
             }
             else if (tempArr[0] == '<' && inputArr[i+1] == '>') {
-                // printf("<>\t");
-                // printf("%10d\n", neqsym);
-
-                // fprintf(fp,"<>\t");
-                // fprintf(fp,"%10d\n", neqsym);
-
+                
                 tokenType[tokenCount] = neqsym;
                 tokenCount++;
                 i++; 
             }
             else {
-                if (!endOfFile) {
-                    // printf("%-12c\t", tempArr[0]); 
-                    // fprintf(fp,"%-12c\t", tempArr[0]);
+                if (endOfFile != 1) {
                     if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
                         || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
                         || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
                         || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
                         || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
                         || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
-                        // printf("%d\n", ssym[tempArr[0]]);
-                        // fprintf(fp,"%d\n", ssym[tempArr[0]]);
+                        
                         tokenType[tokenCount] = ssym[tempArr[0]];
                         tokenCount++;
                     } else {
@@ -450,9 +409,11 @@ int main(int argc, char *argv[]){
         }
         i++; 
     }
-    
-    int tempIdentIndex = 0;
 
+    for (int i = 0; i < tokenCount; i++) {
+        printf("%d ", tokenType[i]); 
+    }
+    printf("\n"); 
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
@@ -471,45 +432,6 @@ int main(int argc, char *argv[]){
                 break;
             case 2:
                 assemblyInsName = "OPR";
-                break;
-                // switch (oprNum) {
-                    // case 0: 
-                    //     oprName = "RTN";
-                    //     break;
-                    // case 1:
-                    //     oprName = "ADD";
-                    //     break;
-                    // case 2:
-                    //     oprName = "SUB";
-                    //     break;
-                    // case 3:
-                    //     oprName = "MUL";
-                    //     break;
-                    // case 4:
-                    //     oprName = "DIV";
-                    //     break;
-                    // case 5:
-                    //     oprName = "EQL";
-                    //     break;
-                    // case 6:
-                    //     oprName = "NEQ";
-                    //     break;
-                    // case 7:
-                    //     oprName = "LSS";
-                    //     break;
-                    // case 8:
-                    //     oprName = "LEQ";
-                    //     break;
-                    // case 9: 
-                    //     oprName = "GTR";
-                    //     break;
-                    // case 10:
-                    //     oprName = "GEQ";
-                    //     break;
-                    // case 11:
-                    //     oprName = "ODD";
-                    //     break;
-                // }
                 break;
             case 3:
                 assemblyInsName = "LOD";
@@ -533,11 +455,6 @@ int main(int argc, char *argv[]){
                 assemblyInsName = "SYS";
                 break;
         }
-        // if (assemblyCodeNum != 2) {
-        //     printf(" %2d   %s   %s   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
-        // } else {
-        //     printf(" %2d   %s   %s   %s\n", i, op, code[i].l, oprName);
-        // }
 
         printf(" %2d    %s    %d   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
         
@@ -589,7 +506,7 @@ int symbolTableCheck(char *name) {
         if (strcmp(symbolTable[i]->name, name) == 0)
             return i; 
     }
-    return -1; 
+    return -1;
 }
 
 void emit(int op, int l, int m) {
@@ -607,8 +524,10 @@ void emit(int op, int l, int m) {
 void program() {
     emit(JMP, 0, 3);
     block();
+    // error 1
     // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
+        printf("%d\n", tokenType[tokenIndex]);
         printf("Error: Period expected.\n");
         exit(1);
     }

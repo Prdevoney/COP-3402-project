@@ -124,7 +124,7 @@ int main(int argc, char *argv[]){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    while (i < sizeof(inputArr) - 2){
+    while (i < sizeof(inputArr) - 1){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
         int tempArrCount = 0; 
