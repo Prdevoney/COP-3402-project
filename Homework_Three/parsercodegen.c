@@ -20,10 +20,10 @@
 // Internal representation of PL/0 symbols.
 typedef enum { 
     oddsym = 1, identsym, numbersym, plussym, minussym,
-    multsym,  slashsym, ifelsym, eqsym, neqsym, lessym, leqsym,
+    multsym,  slashsym, ifelsym_7, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
-    periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
-    whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
+    periodsym, becomessym, beginsym, endsym, ifsym, thensym_9, 
+    whilesym, dosym, callsym_4, constsym, varsym, procsym_8, writesym,
     readsym , elsesym
 } token_type;
 
@@ -756,7 +756,7 @@ void statement() {
         tokenIndex++;
         condition();
         jpcIdx = cx;
-        emit(JPC, 0, 0);
+        emit(JPC, 0,  jpcIdx); // placeholder for M
         if (tokenType[tokenIndex] != thensym) {
             printf("Error: then expected.\n");
             exit(1);
@@ -777,7 +777,7 @@ void statement() {
         }
         tokenIndex++;
         jpcIdx = cx;
-        emit(JPC, 0, 0);
+        emit(JPC, 0, jpcIdx);
         statement();
         emit(JMP, 0, loopIdx);
         code[jpcIdx].m = cx;
