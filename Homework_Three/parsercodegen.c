@@ -465,7 +465,7 @@ int main(int argc, char *argv[]){
   
     printf("Kind | Name        | Value | Level | Address | Mark\n"); 
     for (int i = 0; i < symbolIndex; i++) {
-        printf("%4d | %11s | %5d | %6d | %5d |    1\n", symbolTable[i]->kind, 
+        printf("%4d | %11s | %5d | %5d | %7d |    1\n", symbolTable[i]->kind, 
                                         symbolTable[i]->name, 
                                         symbolTable[i]->val, 
                                         symbolTable[i]->level, 
@@ -674,7 +674,7 @@ void statement() {
         tokenIndex++;
         condition();
         jpcIdx = cx;
-        emit(JPC, 0, 0);
+        emit(JPC, 0,  jpcIdx); // placeholder for M
         if (tokenType[tokenIndex] != thensym) {
             printf("Error: then expected.\n");
             exit(1);
@@ -695,7 +695,7 @@ void statement() {
         }
         tokenIndex++;
         jpcIdx = cx;
-        emit(JPC, 0, 0);
+        emit(JPC, 0, jpcIdx);
         statement();
         emit(JMP, 0, loopIdx);
         code[jpcIdx].m = cx;
@@ -775,15 +775,15 @@ void expression() {
     if (tokenType[tokenIndex] == minussym) {
         tokenIndex++;
         term();
-        emit(OPR, 0, 1);
+        //emit(OPR, 0, 1); what is NEG in the pseudocode??????=======
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
             tokenIndex++;
             term();
             if (addOp == plussym) {
-                emit(OPR, 0, 2);
+                emit(OPR, 0, 1);
             } else {
-                emit(OPR, 0, 3);
+                emit(OPR, 0, 2);
             }
         }
     } else {
@@ -796,9 +796,9 @@ void expression() {
             tokenIndex++;
             term();
             if (addOp == plussym) {
-                emit(OPR, 0, 2);
+                emit(OPR, 0, 1);
             } else {
-                emit(OPR, 0, 3);
+                emit(OPR, 0, 2);
             }
         }
     }
@@ -811,9 +811,9 @@ void term() {
         tokenIndex++;
         factor();
         if (multOp == multsym) {
-            emit(OPR, 0, 4);
+            emit(OPR, 0, 3);
         } else {
-            emit(OPR, 0, 5);
+            emit(OPR, 0, 4);
         }
     }
 }
@@ -827,6 +827,7 @@ void factor() {
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
+            printf("Went here");
             emit(LIT, 0, symbolTable[symIdx]->val);
         } else if (symbolTable[symIdx]->kind == 2) {
             emit(LOD, 0, symbolTable[symIdx]->addr);
@@ -837,7 +838,8 @@ void factor() {
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == numbersym) {
-        emit(LIT, 0, tokenType[tokenIndex]);
+        printf("here"); // work here next
+        emit(LIT, 0, atoi(identArr[identIndex]));
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == lparentsym) {
