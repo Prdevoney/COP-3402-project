@@ -1,0 +1,8 @@
+/* if must be followed by then */
+
+var x, y, z;
+    x := 1;
+    y := 4;
+if x = 1  z := 5
+    x := y * 2; 
+.
