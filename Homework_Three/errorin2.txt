@@ -1,4 +1,4 @@
 var begin, y;
 begin
     x := y * 2; 
-end.
+end

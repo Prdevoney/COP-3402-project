@@ -205,6 +205,7 @@ int main(int argc, char *argv[]){
             
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
+                printf("went over here\n");
                 caseCheck = 1; 
                 halt = 1; 
                 break; 
@@ -212,6 +213,7 @@ int main(int argc, char *argv[]){
 
             // if scanned in keyword, ident, or num follwed by specialChar. 
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
+                 printf("red\n");
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
                 i--;
@@ -383,6 +385,19 @@ int main(int argc, char *argv[]){
             }
             else {
                 if (endOfFile != 1) {
+                    // if (tempArr == '\0') {
+                    //     printf("crazy bananas");
+                       
+                    // }
+                    //  if (tempArr == '\n') {
+                    //     printf("crazy grapes");
+                       
+                    // }
+                    //  if (tempArr == ' ') {
+                    //     printf("crazy carrots");
+                       
+                    // }
+                    printf("scanned in: %s\n", tempArr);
                     if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
                         || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
                         || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
@@ -393,6 +408,7 @@ int main(int argc, char *argv[]){
                         tokenType[tokenCount] = ssym[tempArr[0]];
                         tokenCount++;
                     } else {
+                        // ============== What does this mean? ==============
                         printf("Error: Invalid symbol!\n");
                         fprintf(fp,"Error: Invalid symbol!\n");
                         free(identArr);
@@ -674,7 +690,7 @@ void statement() {
         tokenIndex++;
         condition();
         jpcIdx = cx;
-        emit(JPC, 0,  jpcIdx); // placeholder for M
+        emit(JPC, 0,  0); // placeholder for M
         if (tokenType[tokenIndex] != thensym) {
             printf("Error: then expected.\n");
             exit(1);
