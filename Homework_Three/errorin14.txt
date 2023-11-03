@@ -1,0 +1,6 @@
+/* Error: right parenthesis must follow left parenthesis */ 
+
+var x, y, z; 
+
+z := 2 + (x * y
+.

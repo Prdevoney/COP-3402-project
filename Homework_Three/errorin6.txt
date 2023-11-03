@@ -1,0 +1,6 @@
+/* Error: constant and variable declarations must
+        be followed by a semicolon */ 
+
+const x = 7 
+var y
+.

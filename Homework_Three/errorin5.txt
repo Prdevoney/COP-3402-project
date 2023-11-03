@@ -1,2 +1,3 @@
-var x; 
-. 
+/* Error: constants must be assigned an integer value */ 
+const x = nonIntVal; 
+.
