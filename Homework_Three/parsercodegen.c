@@ -524,6 +524,7 @@ void emit(int op, int l, int m) {
 void program() {
     emit(JMP, 0, 3);
     block();
+    // error 1
     // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
         printf("%d\n", tokenType[tokenIndex]);
