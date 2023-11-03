@@ -122,15 +122,10 @@ int main(int argc, char *argv[]){
 
         return 0;
     }
-    printf("Source Code:\n");
-    fprintf(fp,"Source Code:\n");
+    
     while ((ch = fgetc(file)) != EOF) {
         chcount++;
-        printf("%c", ch);
-        fprintf(fp, "%c", ch);
     }
-    printf("\n\n");
-    fprintf(fp,"\n\n"); 
     fclose(file);
     // ****************************************|
 
@@ -160,10 +155,6 @@ int main(int argc, char *argv[]){
     fclose(inputFile);
     // ****************************************|
     
-    // Print out lexeme table titles. 
-    printf("Lexeme Table: \n\nlexeme          token type\n");
-    fprintf(fp,"Lexeme Table: \n\nlexeme          token type\n");
-    
     // dynamically allocate memory for tokenType array
     int tokenTypeSize = 50; 
     // Global Array 
@@ -181,7 +172,6 @@ int main(int argc, char *argv[]){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    printf("%d--------\n", sizeof(inputArr)); 
     while (i < sizeof(inputArr) - 2){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
@@ -273,6 +263,10 @@ int main(int argc, char *argv[]){
 
                     printf("\tError: Number too long!\n");
                     fprintf(fp,"\tError: Number too long!\n"); 
+
+                    free(identArr);
+                    free(tokenType);
+                    exit(1); 
                     i++; 
                     free(tempArr);
                 }
@@ -280,12 +274,12 @@ int main(int argc, char *argv[]){
                 if (digitCount == tempArrCount && digitCount <= 5) {
                     
                     strcpy(identArr[identCount], tempArr);
-                    fprintf(fp, "%-12s", identArr[identCount]); 
-                    printf("%-12s", identArr[identCount]); 
+                    // fprintf(fp, "%-12s", identArr[identCount]); 
+                    // printf("%-12s", identArr[identCount]); 
 
                     tokenType[tokenCount] = numbersym; 
-                    printf("\t%d\n", tokenType[tokenCount]);
-                    fprintf(fp,"\t%d\n", tokenType[tokenCount]);
+                    // printf("\t%d\n", tokenType[tokenCount]);
+                    // fprintf(fp,"\t%d\n", tokenType[tokenCount]);
 
                     identCount++; 
                     tokenCount++; 
@@ -310,10 +304,10 @@ int main(int argc, char *argv[]){
                 for (int k = 0; k < norw; k++) {
                     if (strcmp(tempArr, resWords[k]) == 0) {
                         
-                        printf("%-12s", tempArr); 
-                        fprintf(fp, "%-12s", tempArr); 
-                        printf("\t%d\n", wsym[k]);
-                        fprintf(fp,"\t%d\n", wsym[k]);
+                        // printf("%-12s", tempArr); 
+                        // fprintf(fp, "%-12s", tempArr); 
+                        // printf("\t%d\n", wsym[k]);
+                        // fprintf(fp,"\t%d\n", wsym[k]);
 
                         // dynamically resize tokenType array if necessary. 
                         if (tokenCount == tokenTypeSize-1) {
@@ -332,11 +326,14 @@ int main(int argc, char *argv[]){
 
                     if (tempArrCount > 11){
                         
-                        printf("%-12s", tempArr); 
-                        fprintf(fp, "%-12s", tempArr); 
+                        // printf("%-12s", tempArr); 
+                        // fprintf(fp, "%-12s", tempArr); 
 
                         printf("\tError: Identifier is too long!\n");
-                        fprintf(fp,"\tError: Identifier is too long!\n"); 
+                        fprintf(fp,"\tError: Identifier is too long!\n");
+                        free(identArr);
+                        free(tokenType); 
+                        exit(1); 
                     } else {
 
                         strcpy(identArr[identCount], tempArr); 
@@ -344,11 +341,11 @@ int main(int argc, char *argv[]){
                         tokenType[tokenCount] = identsym;
                         tokenCount++;
                         
-                        printf("%-12s", identArr[identCount]);
-                        printf("\t%d\n", identsym);
+                        // printf("%-12s", identArr[identCount]);
+                        // printf("\t%d\n", identsym);
 
-                        fprintf(fp,"%-12s", identArr[identCount]);
-                        fprintf(fp,"\t%d\n", identsym);
+                        // fprintf(fp,"%-12s", identArr[identCount]);
+                        // fprintf(fp,"\t%d\n", identsym);
 
                         identCount++;
                     }
@@ -378,44 +375,44 @@ int main(int argc, char *argv[]){
                 i += 1; 
             }
             else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
-                printf(":=\t");
-                printf("%10d\n", becomessym);
+                // printf(":=\t");
+                // printf("%10d\n", becomessym);
 
-                fprintf(fp,":=\t");
-                fprintf(fp,"%10d\n", becomessym);
+                // fprintf(fp,":=\t");
+                // fprintf(fp,"%10d\n", becomessym);
 
                 tokenType[tokenCount] = becomessym;
                 tokenCount++;
                 i++;  
             }
             else if (tempArr[0] == '<' && inputArr[i+1] == '=') {
-                printf("<=\t");
-                printf("%10d\n", leqsym);
+                // printf("<=\t");
+                // printf("%10d\n", leqsym);
 
-                fprintf(fp,"<=\t");
-                fprintf(fp,"%10d\n", leqsym);
+                // fprintf(fp,"<=\t");
+                // fprintf(fp,"%10d\n", leqsym);
 
                 tokenType[tokenCount] = leqsym;
                 tokenCount++;
                 i++;
             }
             else if (tempArr[0] == '>' && inputArr[i+1] == '=') {
-                printf(">=\t");
-                printf("%10d\n", geqsym);
+                // printf(">=\t");
+                // printf("%10d\n", geqsym);
 
-                fprintf(fp,">=\t");
-                fprintf(fp,"%10d\n", geqsym);
+                // fprintf(fp,">=\t");
+                // fprintf(fp,"%10d\n", geqsym);
 
                 tokenType[tokenCount] = geqsym;
                 tokenCount++;
                 i++; 
             }
             else if (tempArr[0] == '<' && inputArr[i+1] == '>') {
-                printf("<>\t");
-                printf("%10d\n", neqsym);
+                // printf("<>\t");
+                // printf("%10d\n", neqsym);
 
-                fprintf(fp,"<>\t");
-                fprintf(fp,"%10d\n", neqsym);
+                // fprintf(fp,"<>\t");
+                // fprintf(fp,"%10d\n", neqsym);
 
                 tokenType[tokenCount] = neqsym;
                 tokenCount++;
@@ -423,21 +420,24 @@ int main(int argc, char *argv[]){
             }
             else {
                 if (!endOfFile) {
-                    printf("%-12c\t", tempArr[0]); 
-                    fprintf(fp,"%-12c\t", tempArr[0]);
+                    // printf("%-12c\t", tempArr[0]); 
+                    // fprintf(fp,"%-12c\t", tempArr[0]);
                     if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
                         || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
                         || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
                         || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
                         || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
                         || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
-                        printf("%d\n", ssym[tempArr[0]]);
-                        fprintf(fp,"%d\n", ssym[tempArr[0]]);
+                        // printf("%d\n", ssym[tempArr[0]]);
+                        // fprintf(fp,"%d\n", ssym[tempArr[0]]);
                         tokenType[tokenCount] = ssym[tempArr[0]];
                         tokenCount++;
                     } else {
                         printf("Error: Invalid symbol!\n");
                         fprintf(fp,"Error: Invalid symbol!\n");
+                        free(identArr);
+                        free(tokenType);
+                        exit(1); 
                     }
                 }
             }
@@ -452,38 +452,21 @@ int main(int argc, char *argv[]){
     
     int tempIdentIndex = 0;
 
-    printf("\nToken List:\n");
-    fprintf(fp,"\nToken List:\n");
-
-    for (int tempTokenIndex = 0; tempTokenIndex < tokenCount; tempTokenIndex++) {
-
-        printf("%d ",tokenType[tempTokenIndex]);
-        fprintf(fp, "%d ",tokenType[tempTokenIndex]);
-
-        if((tokenType[tempTokenIndex] == 2) || tokenType[tempTokenIndex] == 3) {
-            printf("%s ", identArr[tempIdentIndex]);
-            fprintf(fp,"%s ", identArr[tempIdentIndex]);
-            tempIdentIndex++;
-        }
-    }
-
-    printf("\n");
-    fprintf(fp,"\n");
-
-    fclose(fp);
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
     program();
 
-    printf("Kind | Name       | Value  | Level  | Address  | Mark  \n"); 
+    printf("Kind | Name        | Value | Level | Address | Mark\n"); 
     for (int i = 0; i < symbolIndex; i++) {
-        printf("%d  %s  %d  %d  %d  1\n", symbolTable[i]->kind, 
+        printf("%4d | %11s | %5d | %6d | %5d |    1\n", symbolTable[i]->kind, 
                                         symbolTable[i]->name, 
                                         symbolTable[i]->val, 
                                         symbolTable[i]->level, 
                                         symbolTable[i]->addr);
     }
+
+    fclose(fp);
 
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
@@ -492,9 +475,6 @@ int main(int argc, char *argv[]){
     free(identArr);
 
     free(tokenType);
-
-    // free memory for the inputArr
-    free(inputArr); 
 
     return 0;
 }
@@ -866,3 +846,4 @@ void factor() {
         exit(1);
     }
 }
+
