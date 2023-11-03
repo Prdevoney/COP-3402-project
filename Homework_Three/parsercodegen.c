@@ -416,7 +416,6 @@ int main(int argc, char *argv[]){
     printf("\n"); 
 
     // Call parser codegen function.
-    // do we need to do anything with tokenCount???
     program();
 
     printf("\n");
@@ -549,7 +548,7 @@ void constDeclaration() {
             tokenIndex++;
             // identity check 
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, procedure must be followed by identifier.\n");
+                printf("Error: const, var, and read must be followed by identifier.\n");
                 exit(1);
             }
             // has the identifier already been declared? 
@@ -600,7 +599,7 @@ int varDeclaration() {
             tokenIndex++;
             // ident check
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, procedure must be followed by identifier.\n");
+                printf("Error: const, var, and read must be followed by identifier.\n");
                 exit(1);
             }
             // has the identifier already been declared? 
