@@ -120,21 +120,22 @@ int main(int argc, char *argv[]){
     if (NULL == file) {
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
         fprintf(fp,"No input file recieved, please put: 'input.txt' after executable file! \n");
-
         return 0;
     }
     
     while ((ch = fgetc(file)) != EOF) {
         chcount++;
     }
+
     fclose(file);
     // ****************************************|
 
     // *******Put input file into array.*******|
 
     // dynamically allocate memory for the inputArr 
-    //char *inputArr = malloc( sizeof(char) * (chcount + 1));
-    char inputArr[chcount+1];
+    // char *inputArr = malloc( sizeof(char) * (chcount + 1));
+    // char inputArr[chcount+1];
+    char inputArr[chcount];
     
     FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
@@ -173,7 +174,7 @@ int main(int argc, char *argv[]){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    while (i < sizeof(inputArr) - 1){
+    while (i < sizeof(inputArr)){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
         int tempArrCount = 0; 
@@ -199,10 +200,10 @@ int main(int argc, char *argv[]){
                     tempArrCount++;
                 }
                 tempArr[tempArrCount] = '\0';
-                i -= 2; 
+                i -= 1; 
                 break; 
             }
-            
+
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
                 caseCheck = 1; 
@@ -224,7 +225,8 @@ int main(int argc, char *argv[]){
                 while (inputArr[i] == '\0') {
                     // -1
                     if (i == chcount-1)
-                        endOfFile = 1;
+                        goto parsecode; 
+                        // endOfFile = 1;
                     i++; 
                 }
                 tempArr[tempArrCount] = inputArr[i];
@@ -247,6 +249,7 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
+        printf("Contents of tempArr: %s\n", tempArr); 
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -281,8 +284,8 @@ int main(int argc, char *argv[]){
                     tokenType[tokenCount] = numbersym; 
                     identCount++; 
                     tokenCount++; 
-                    i++; 
-                    free(tempArr);
+                    // i++; 
+                    free(tempArr); 
                 }
                 // dynamically realocate tokenType & identArr 
                 if (tokenCount == tokenTypeSize-1) {
@@ -381,24 +384,22 @@ int main(int argc, char *argv[]){
                 i++; 
             }
             else {
-                if (endOfFile != 1) {
-                    if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
-                        || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
-                        || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
-                        || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
-                        || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
-                        || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
-                        
-                        tokenType[tokenCount] = ssym[tempArr[0]];
-                        tokenCount++;
-                    } else {
-                        printf("Error: Invalid symbol!\n");
-                        fprintf(fp,"Error: Invalid symbol!\n");
-                        printf("%c hello", tempArr[1]); 
-                        free(identArr);
-                        free(tokenType);
-                        exit(1); 
-                    }
+                if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
+                    || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
+                    || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
+                    || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
+                    || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
+                    || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
+                    
+                    tokenType[tokenCount] = ssym[tempArr[0]];
+                    tokenCount++;
+                } else {
+                    printf("Error: Invalid symbol!\n");
+                    fprintf(fp,"Error: Invalid symbol!\n");
+                    printf("%c hello", tempArr[1]); 
+                    free(identArr);
+                    free(tokenType);
+                    exit(1); 
                 }
             }
             if (tokenCount == tokenTypeSize-1) {
@@ -418,6 +419,7 @@ int main(int argc, char *argv[]){
 
     // Call parser codegen function.
     // do we need to do anything with tokenCount???
+    parsecode:
     program();
 
     printf("\n");
@@ -664,8 +666,9 @@ void statement() {
             tokenIndex++;
             statement();
         } while (tokenType[tokenIndex] == semicolonsym);
+        // if not "end"
         if (tokenType[tokenIndex] != endsym) {
-            printf("Error: Semicolon or } expected.\n");
+            printf("Error: end expected.\n");
             exit(1);
         }
         tokenIndex++;
@@ -691,6 +694,7 @@ void statement() {
         loopIdx = cx;
         tokenIndex++;
         condition();
+        // if not "do"
         if (tokenType[tokenIndex] != dosym) {
             printf("Error: do expected.\n");
             exit(1);
@@ -780,11 +784,15 @@ void expression() {
         //emit(OPR, 0, 1); what is NEG in the pseudocode??????=======
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
-            tokenIndex++;
-            term();
+            // tokenIndex++;
+           // term();
             if (addOp == plussym) {
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 1);
             } else {
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 2);
             }
         }
@@ -795,11 +803,15 @@ void expression() {
         term();
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
-            tokenIndex++;
-            term();
+            // tokenIndex++;
+            // term();
             if (addOp == plussym) {
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 1);
             } else {
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 2);
             }
         }
@@ -810,11 +822,15 @@ void term() {
     factor();
     while (tokenType[tokenIndex] == multsym || tokenType[tokenIndex] == slashsym) {
         int multOp = tokenType[tokenIndex];
-        tokenIndex++;
-        factor();
+        // tokenIndex++;
+        // factor();
         if (multOp == multsym) {
+            tokenIndex++;
+            factor();
             emit(OPR, 0, 3);
         } else {
+            tokenIndex++;
+            factor();
             emit(OPR, 0, 4);
         }
     }
@@ -829,7 +845,6 @@ void factor() {
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
-            printf("Went here");
             emit(LIT, 0, symbolTable[symIdx]->val);
         } else if (symbolTable[symIdx]->kind == 2) {
             emit(LOD, 0, symbolTable[symIdx]->addr);
@@ -840,7 +855,6 @@ void factor() {
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == numbersym) {
-        printf("here"); // work here next
         emit(LIT, 0, atoi(identArr[identIndex]));
         tokenIndex++;
     }
