@@ -921,7 +921,7 @@ void factor() {
     }
     else if (tokenType[tokenIndex] == numbersym) {
         printf("here"); // work here next
-        emit(LIT, 0, tokenType[tokenIndex]);
+        emit(LIT, 0, atoi(identArr[identIndex]));
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == lparentsym) {
