@@ -629,7 +629,7 @@ void statement() {
         identArr++; 
         // not in symbolTable
         if (symIdx == -1) {
-            printf("Error: Undeclared variable.\n");
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         // not a variable
@@ -703,7 +703,7 @@ void statement() {
         // check to see if identifier is in array 
         symIdx = symbolTableCheck(identArr[identIndex]);
         if (symIdx == -1) {
-            printf("Error: Undeclared variable.\n");
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind != 2) {
@@ -815,7 +815,7 @@ void factor() {
         int symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
         if (symIdx == -1) {
-            printf("Error: Undeclared variable.\n");
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
