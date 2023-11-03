@@ -1,5 +1,4 @@
 /* Error: program must end with a period */ 
-
 var x, y;
 begin
     x := y * 2; 

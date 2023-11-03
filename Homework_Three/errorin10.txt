@@ -1,5 +1,5 @@
-/* begin must be followed by end */
-var x, y;
-begin
+/* begin must be followed by end */ 
+var x, y; 
+begin 
     x := y * 2; 
 .

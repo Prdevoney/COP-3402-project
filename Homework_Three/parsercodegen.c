@@ -360,6 +360,7 @@ int main(int argc, char *argv[]){
                 while (inputArr[i] != '*' && inputArr[i+1] != '/') {
                     i++; 
                 }
+                // change
                 i += 1; 
             }
             else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
@@ -399,7 +400,6 @@ int main(int argc, char *argv[]){
                 } else {
                     printf("Error: Invalid symbol!\n");
                     fprintf(fp,"Error: Invalid symbol!\n");
-                    printf("%c hello", tempArr[1]); 
                     free(identArr);
                     free(tokenType);
                     exit(1); 
@@ -510,6 +510,7 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
 int symbolTableCheck(char *name) {
     // loop through symbol table to see if identifier is in array. 
     for(int i = 0; i < symbolIndex; i++) {
+        printf("Curr contents of symbolTable: %s\n", symbolTable[i]->name); 
         if (strcmp(symbolTable[i]->name, name) == 0)
             return i; 
     }
@@ -573,7 +574,11 @@ void constDeclaration() {
             tokenIndex++;
             // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
+<<<<<<< HEAD
                 printf("Error: constant must be followed by =.\n");
+=======
+                printf("Error: constant must be assigned with =.\n");
+>>>>>>> 9cad54799e6956df015cd465d65ef8b716a07f9d
                 exit(1);
             }
             printf("%d (token) line: 577\n", tokenType[tokenIndex]); 
@@ -581,12 +586,13 @@ void constDeclaration() {
             tokenIndex++;
             // number check 
             if (tokenType[tokenIndex] != numbersym) {
-                printf("Error: = must be followed by a number.\n");
+                printf("Error: constants must be assigned an integer value.\n");
                 exit(1);
             }
             
             // if num then we add (kind, name, L, and M) to the symbol table
             int number = atoi(identArr[identIndex]); // Convert string to integer
+            identIndex++; 
             symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
             symbolIndex++;
             printf("%d (token) line: 590\n", tokenType[tokenIndex]); 
@@ -597,7 +603,7 @@ void constDeclaration() {
 
         // check if const declaration is ended with a ";"
         if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: Semicolon or comma missing.\n");
+            printf("Error: constant and variable declarations must be followed by a semicolon.\n"); 
             exit(1);
         }
             printf("%d (token) line: 601\n", tokenType[tokenIndex]); 
@@ -659,12 +665,17 @@ void statement() {
         identArr++; 
         // not in symbolTable
         if (symIdx == -1) {
+<<<<<<< HEAD
             printf("Error: 1 Undeclared identifier: %s\n", identArr[identIndex-1]);
+=======
+
+            printf("1 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+>>>>>>> 9cad54799e6956df015cd465d65ef8b716a07f9d
             exit(1);
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
-            printf("Error: Not a var.\n");
+            printf("Error: only variables can be altered.\n");
             exit(1);
         }
             printf("%d (token) line: 668\n", tokenType[tokenIndex]); 
@@ -672,7 +683,7 @@ void statement() {
         tokenIndex++;
         // if not ":="
         if (tokenType[tokenIndex] != becomessym) {
-            printf("Error: Assignment operator expected.\n");
+            printf("Error: assignment statements must use :=.\n");
             exit(1);
         }
             printf("%d (token) line: 676\n", tokenType[tokenIndex]); 
@@ -692,7 +703,7 @@ void statement() {
         } while (tokenType[tokenIndex] == semicolonsym);
         // if not "end"
         if (tokenType[tokenIndex] != endsym) {
-            printf("Error: end expected.\n");
+            printf("Error: begin must be followed by end.\n");
             exit(1);
         }
             printf("%d (token) line: 696\n", tokenType[tokenIndex]); 
@@ -728,7 +739,7 @@ void statement() {
         condition();
         // if not "do"
         if (tokenType[tokenIndex] != dosym) {
-            printf("Error: do expected.\n");
+            printf("Error: while must be follwed by do.\n");
             exit(1);
         }
             printf("%d (token) line: 732\n", tokenType[tokenIndex]); 
@@ -753,7 +764,7 @@ void statement() {
         // check to see if identifier is in array 
         symIdx = symbolTableCheck(identArr[identIndex]);
         if (symIdx == -1) {
-            printf("Error:  2 Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("2 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind != 2) {
@@ -790,7 +801,7 @@ void condition() {
         if (tokenType[tokenIndex] != eqsym && tokenType[tokenIndex] != neqsym && 
         tokenType[tokenIndex] != lessym && tokenType[tokenIndex] != leqsym && 
         tokenType[tokenIndex] != gtrsym && tokenType[tokenIndex] != geqsym) {
-            printf("Error: Relational operator expected.\n");
+            printf("Error: condition must contain comparision operator.\n");
             exit(1);
         }
         int relOp = tokenType[tokenIndex];
@@ -901,7 +912,7 @@ void factor() {
         int symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
         if (symIdx == -1) {
-            printf("Error: 3 Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("3 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
@@ -919,7 +930,8 @@ void factor() {
     else if (tokenType[tokenIndex] == numbersym) {
         emit(LIT, 0, atoi(identArr[identIndex]));
             printf("%d (token) line: 919\n", tokenType[tokenIndex]); 
-
+        // potentially may have to get rid of: identIndex++; 
+        identIndex++; 
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == lparentsym) {
@@ -928,7 +940,7 @@ void factor() {
         tokenIndex++;
         expression();
         if (tokenType[tokenIndex] != rparentsym) {
-            printf("Error: Right parenthesis missing.\n");
+            printf("Error: right parenthesis must follow left parenthesis.\n");
             exit(1);
         }
             printf("%d (token) line: 932\n", tokenType[tokenIndex]); 
@@ -936,7 +948,7 @@ void factor() {
         tokenIndex++;
     }
     else {
-        printf("Error: The preceding factor cannot begin with this symbol.\n");
+        printf("Error: arithmetic equations must contain operands, parentheses, and numbers, or symbols.\n");
         exit(1);
     }
 }

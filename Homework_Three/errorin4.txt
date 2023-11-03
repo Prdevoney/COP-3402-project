@@ -1,2 +1,4 @@
-const m - 7, n = 85;
+/* Error: constants must be assigned with = */ 
+
+const x := 7, y = 8; 
 .

@@ -1,5 +1,3 @@
-var x, y;
-const r = t;
-begin
-    x := y * 2; 
-end. 
+/* Error: constants must be assigned an integer value */ 
+const x = nonIntVal; 
+.

@@ -1,6 +1,9 @@
+/* Error: condition must contain comparision operator */
 
-var x;
-    x := 1;
-  while x  0 do
-    write x;
-.
+var counter;
+begin  counter := 0; 
+  while counter  10 do
+  begin 
+     counter := counter + 1; 
+    end ;
+end.
