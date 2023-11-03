@@ -454,6 +454,8 @@ int main(int argc, char *argv[]){
     printf("\nToken List:\n");
     fprintf(fp,"\nToken List:\n");
 
+    printf("%d", tokenCount); 
+
     for (int tempTokenIndex = 0; tempTokenIndex < tokenCount; tempTokenIndex++) {
 
         printf("%d ",tokenType[tempTokenIndex]);
@@ -475,7 +477,15 @@ int main(int argc, char *argv[]){
     // do we need to do anything with tokenCount???
     program();
 
-    
+    printf("Kind | Name       | Value  | Level  | Address  | Mark  \n"); 
+    for (int i = 0; i < symbolIndex; i++) {
+        printf("%d  %s  %d  %d  %d  %d  1\n", symbolTable[i]->kind, 
+                                        symbolTable[i]->name, 
+                                        symbolTable[i]->val, 
+                                        symbolTable[i]->level, 
+                                        symbolTable[i]->addr);
+    }
+
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
@@ -539,7 +549,6 @@ void program() {
 void block () {
     constDeclaration();
     int numVars = varDeclaration();
-    char INC[] = "INC";
     emit(INC, 0, 3 + numVars);
     statement();
 }
@@ -858,5 +867,3 @@ void factor() {
         exit(1);
     }
 }
-
-
