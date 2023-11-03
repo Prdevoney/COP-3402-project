@@ -387,39 +387,6 @@ int main(int argc, char *argv[]){
                 i++; 
             }
             else {
-<<<<<<< HEAD
-                if (endOfFile != 1) {
-                    // if (tempArr == '\0') {
-                    //     printf("crazy bananas");
-                       
-                    // }
-                    //  if (tempArr == '\n') {
-                    //     printf("crazy grapes");
-                       
-                    // }
-                    //  if (tempArr == ' ') {
-                    //     printf("crazy carrots");
-                       
-                    // }
-                    printf("scanned in: %s\n", tempArr);
-                    if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
-                        || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
-                        || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
-                        || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
-                        || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
-                        || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
-                        
-                        tokenType[tokenCount] = ssym[tempArr[0]];
-                        tokenCount++;
-                    } else {
-                        // ============== What does this mean? ==============
-                        printf("Error: Invalid symbol!\n");
-                        fprintf(fp,"Error: Invalid symbol!\n");
-                        free(identArr);
-                        free(tokenType);
-                        exit(1); 
-                    }
-=======
                 if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
                     || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
                     || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
@@ -436,7 +403,6 @@ int main(int argc, char *argv[]){
                     free(identArr);
                     free(tokenType);
                     exit(1); 
->>>>>>> 780f869b6e77941a120cf4a48eb4391cee3b7e1e
                 }
             }
             if (tokenCount == tokenTypeSize-1) {
@@ -607,7 +573,7 @@ void constDeclaration() {
             tokenIndex++;
             // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
-                printf("Error: Identifier must be followed by =.\n");
+                printf("Error: constant must be followed by =.\n");
                 exit(1);
             }
             printf("%d (token) line: 577\n", tokenType[tokenIndex]); 
@@ -693,7 +659,7 @@ void statement() {
         identArr++; 
         // not in symbolTable
         if (symIdx == -1) {
-            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("Error: 1 Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         // not a variable
@@ -787,7 +753,7 @@ void statement() {
         // check to see if identifier is in array 
         symIdx = symbolTableCheck(identArr[identIndex]);
         if (symIdx == -1) {
-            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("Error:  2 Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind != 2) {
@@ -935,7 +901,7 @@ void factor() {
         int symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
         if (symIdx == -1) {
-            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("Error: 3 Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
