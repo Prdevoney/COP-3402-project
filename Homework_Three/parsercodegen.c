@@ -137,8 +137,9 @@ int main(int argc, char *argv[]){
     // *******Put input file into array.*******|
 
     // dynamically allocate memory for the inputArr 
-    char * inputArr = malloc( sizeof(char) * (chcount+1));
-
+    // char * inputArr = malloc( sizeof(char) * (chcount + 1));
+    char inputArr[chcount+1];
+    
     FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
@@ -180,6 +181,7 @@ int main(int argc, char *argv[]){
 
     // *********** loops though inputArr ***********|
     i = 0; 
+    printf("%d--------\n", sizeof(inputArr)); 
     while (i < sizeof(inputArr) - 2){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
@@ -445,7 +447,6 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
-        
         i++; 
     }
     
@@ -453,8 +454,6 @@ int main(int argc, char *argv[]){
 
     printf("\nToken List:\n");
     fprintf(fp,"\nToken List:\n");
-
-    printf("%d", tokenCount); 
 
     for (int tempTokenIndex = 0; tempTokenIndex < tokenCount; tempTokenIndex++) {
 
@@ -479,7 +478,7 @@ int main(int argc, char *argv[]){
 
     printf("Kind | Name       | Value  | Level  | Address  | Mark  \n"); 
     for (int i = 0; i < symbolIndex; i++) {
-        printf("%d  %s  %d  %d  %d  %d  1\n", symbolTable[i]->kind, 
+        printf("%d  %s  %d  %d  %d  1\n", symbolTable[i]->kind, 
                                         symbolTable[i]->name, 
                                         symbolTable[i]->val, 
                                         symbolTable[i]->level, 
