@@ -1,6 +1,4 @@
-/* Error: const, var, procedure must be followed by identifier */ 
-
-var ;
+var begin, y;
 begin
     x := y * 2; 
 end.
