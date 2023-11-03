@@ -108,8 +108,6 @@ int main(int argc, char *argv[]){
     ssym[':'] = becomessym; 
 
 
-    FILE *fp = fopen("out.txt","w");
-
     int chcount = 0; 
     int endOfFile = 0; 
 
@@ -119,7 +117,6 @@ int main(int argc, char *argv[]){
     char ch;
     if (NULL == file) {
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
-        fprintf(fp,"No input file recieved, please put: 'input.txt' after executable file! \n");
         return 0;
     }
     
@@ -140,7 +137,6 @@ int main(int argc, char *argv[]){
     FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
-        fprintf(fp,"No input file recieved, please put: 'input.txt' after executable file! \n");
         return 0; 
     }
     int i = 0; 
@@ -265,11 +261,9 @@ int main(int argc, char *argv[]){
                 // digit too long. 
                 if (digitCount > 5) {
                     
-                    printf("%-12s", tempArr);
-                    fprintf(fp, "%-12s", tempArr); 
+                    // printf("%-12s", tempArr);
 
                     printf("\tError: Number too long!\n");
-                    fprintf(fp,"\tError: Number too long!\n"); 
 
                     free(identArr);
                     free(tokenType);
@@ -322,7 +316,6 @@ int main(int argc, char *argv[]){
                 if (keyWordCheck == 0) {
                     if (tempArrCount > 11){
                         printf("\tError: Identifier is too long!\n");
-                        fprintf(fp,"\tError: Identifier is too long!\n");
                         free(identArr);
                         free(tokenType); 
                         exit(1); 
@@ -397,8 +390,6 @@ int main(int argc, char *argv[]){
                     tokenCount++;
                 } else {
                     printf("Error: Invalid symbol!\n");
-                    fprintf(fp,"Error: Invalid symbol!\n");
-                    printf("%c hello", tempArr[1]); 
                     free(identArr);
                     free(tokenType);
                     exit(1); 
@@ -477,8 +468,6 @@ int main(int argc, char *argv[]){
                                         symbolTable[i]->level, 
                                         symbolTable[i]->addr);
     }
-
-    fclose(fp);
 
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
