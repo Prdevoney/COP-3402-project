@@ -138,8 +138,8 @@ int main(int argc, char *argv[]){
     // *******Put input file into array.*******|
 
     // dynamically allocate memory for the inputArr 
-    char *inputArr = malloc( sizeof(char) * (chcount + 1));
-    //char inputArr[chcount+1];
+    //char *inputArr = malloc( sizeof(char) * (chcount + 1));
+    char inputArr[chcount+1];
     
     FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
@@ -479,7 +479,6 @@ int main(int argc, char *argv[]){
 
     printf("\n");
     printf("Line    OP    L    M\n");
-    printf("  0    JMP    0    3\n");
     for (int i = 0; i < cx; i++) {
         int assemblyCodeNum = code[i].op;
         char* assemblyInsName;
@@ -490,12 +489,46 @@ int main(int argc, char *argv[]){
                 assemblyInsName = "LIT";
                 break;
             case 2:
-                
-                switch (oprNum) {
-                    case 0: 
-                        oprName = "RTN";
-                        break;
-                }
+                assemblyInsName = "OPR";
+                break;
+                // switch (oprNum) {
+                    // case 0: 
+                    //     oprName = "RTN";
+                    //     break;
+                    // case 1:
+                    //     oprName = "ADD";
+                    //     break;
+                    // case 2:
+                    //     oprName = "SUB";
+                    //     break;
+                    // case 3:
+                    //     oprName = "MUL";
+                    //     break;
+                    // case 4:
+                    //     oprName = "DIV";
+                    //     break;
+                    // case 5:
+                    //     oprName = "EQL";
+                    //     break;
+                    // case 6:
+                    //     oprName = "NEQ";
+                    //     break;
+                    // case 7:
+                    //     oprName = "LSS";
+                    //     break;
+                    // case 8:
+                    //     oprName = "LEQ";
+                    //     break;
+                    // case 9: 
+                    //     oprName = "GTR";
+                    //     break;
+                    // case 10:
+                    //     oprName = "GEQ";
+                    //     break;
+                    // case 11:
+                    //     oprName = "ODD";
+                    //     break;
+                // }
                 break;
             case 3:
                 assemblyInsName = "LOD";
@@ -519,10 +552,14 @@ int main(int argc, char *argv[]){
                 assemblyInsName = "SYS";
                 break;
         }
+        // if (assemblyCodeNum != 2) {
+        //     printf(" %2d   %s   %s   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
+        // } else {
+        //     printf(" %2d   %s   %s   %s\n", i, op, code[i].l, oprName);
+        // }
 
-    
-        code[i].op; 
-        printf(" %2d   %s   %d   %2d\n", i, code[i].op, code[i].l, code[i].m);
+        printf(" %2d    %s    %d   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
+        
     }
 
 
