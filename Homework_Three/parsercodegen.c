@@ -80,13 +80,13 @@ void factor();
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
-    char * resWords [] = {"const", "var", "ifel_8", 
+    char * resWords [] = {"odd", "const", "var", "ifel_8", 
                         "procedure_8", "begin", "end", "if", 
                         "then",  "else_8", "while", 
                         "do", "call_8", "read", "write"};
 
     // What the keywords correspond to. 
-    int wsym [] = {constsym, varsym, ifelsym_8, procsym_8,
+    int wsym [] = {oddsym, constsym, varsym, ifelsym_8, procsym_8,
                     beginsym, endsym, ifsym, thensym, 
                     elsesym_8, whilesym, dosym, callsym_8,
                     readsym, writesym};
