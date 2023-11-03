@@ -1,4 +1,5 @@
 Source Code:
+<<<<<<< HEAD
 const m = 7, n = 85;
 var i,x,y,z,q,r;
 procedure mult;
@@ -18,10 +19,21 @@ begin
     call mult;
 end.
 
+=======
+var x, y, z;
+var x;  /* This is an error because 'x' has already been declared */
+
+begin
+  x := 5;
+  y := x + 2;
+  z := y * 3;
+end.
+>>>>>>> 780f869b6e77941a120cf4a48eb4391cee3b7e1e
 
 Lexeme Table: 
 
 lexeme          token type
+<<<<<<< HEAD
 const       	28
 m           	2
 =           	9
@@ -32,11 +44,15 @@ n           	2
 var         	29
 i           	2
 ,           	17
+=======
+var         	29
+>>>>>>> 780f869b6e77941a120cf4a48eb4391cee3b7e1e
 x           	2
 ,           	17
 y           	2
 ,           	17
 z           	2
+<<<<<<< HEAD
 ,           	17
 q           	2
 ,           	17
@@ -104,8 +120,32 @@ n           	2
 call        	27
 mult        	2
 ;           	18
+=======
+;           	18
+var         	29
+x           	2
+;           	18
+begin       	21
+x           	2
+:=	        20
+5           	3
+y           	2
+:=	        20
+x           	2
++           	4
+2           	3
+z           	2
+:=	        20
+y           	2
+*           	6
+3           	3
+>>>>>>> 780f869b6e77941a120cf4a48eb4391cee3b7e1e
 end         	22
 .           	19
 
 Token List:
+<<<<<<< HEAD
 28 2 m 9 3 7 2 n 9 3 85 29 2 i 17 2 x 17 2 y 17 2 z 17 2 q 17 2 r 18 30 2 mult 18 29 2 a 17 2 b 18 21 2 a 20 2 x 18 2 b 20 2 y 18 2 z 20 3 0 25 2 b 13 3 0 2 o 21 23 2 x 9 3 1 24 2 z 20 2 z 4 2 a 18 2 a 20 3 2 18 2 b 20 2 b 7 3 2 18 22 22 18 21 2 x 20 2 m 18 2 y 20 2 n 18 27 2 mult 18 22 19 
+=======
+29 2 x 17 2 y 17 2 z 18 29 2 x 18 21 2 x 20 3 5 2 y 20 2 x 4 3 2 2 z 20 2 y 6 3 3 22 19 
+>>>>>>> 780f869b6e77941a120cf4a48eb4391cee3b7e1e

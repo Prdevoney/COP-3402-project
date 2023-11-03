@@ -120,21 +120,22 @@ int main(int argc, char *argv[]){
     if (NULL == file) {
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
         fprintf(fp,"No input file recieved, please put: 'input.txt' after executable file! \n");
-
         return 0;
     }
     
     while ((ch = fgetc(file)) != EOF) {
         chcount++;
     }
+
     fclose(file);
     // ****************************************|
 
     // *******Put input file into array.*******|
 
     // dynamically allocate memory for the inputArr 
-    //char *inputArr = malloc( sizeof(char) * (chcount + 1));
-    char inputArr[chcount+1];
+    // char *inputArr = malloc( sizeof(char) * (chcount + 1));
+    // char inputArr[chcount+1];
+    char inputArr[chcount];
     
     FILE *inputFile = fopen(argv[1], "r");
     if (NULL == inputFile) {
@@ -173,7 +174,7 @@ int main(int argc, char *argv[]){
 
     // *********** loops though inputArr ***********|
     i = 0; 
-    while (i < sizeof(inputArr) - 1){
+    while (i < sizeof(inputArr)){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
         int tempArrCount = 0; 
@@ -199,10 +200,10 @@ int main(int argc, char *argv[]){
                     tempArrCount++;
                 }
                 tempArr[tempArrCount] = '\0';
-                i -= 2; 
+                i -= 1; 
                 break; 
             }
-            
+
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
                 printf("went over here\n");
@@ -224,11 +225,12 @@ int main(int argc, char *argv[]){
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
                 
                 while (inputArr[i] == '\0') {
-                    // -1
-                    if (i == chcount)
-                        endOfFile = 1;
+                    /* if the counter is at the end of the input this will
+                     imediately take us to the parsecodegen section of the prog. */
+                    if (i == chcount-1) {
+                        goto parsecode; // right before: program(); (line 416)
+                    }
                     i++; 
-
                 }
                 tempArr[tempArrCount] = inputArr[i];
                 
@@ -250,6 +252,7 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
+        printf("Contents of tempArr: %s\n", tempArr); 
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -284,8 +287,8 @@ int main(int argc, char *argv[]){
                     tokenType[tokenCount] = numbersym; 
                     identCount++; 
                     tokenCount++; 
-                    i++; 
-                    free(tempArr);
+                    // i++; 
+                    free(tempArr); 
                 }
                 // dynamically realocate tokenType & identArr 
                 if (tokenCount == tokenTypeSize-1) {
@@ -384,6 +387,7 @@ int main(int argc, char *argv[]){
                 i++; 
             }
             else {
+<<<<<<< HEAD
                 if (endOfFile != 1) {
                     // if (tempArr == '\0') {
                     //     printf("crazy bananas");
@@ -415,6 +419,24 @@ int main(int argc, char *argv[]){
                         free(tokenType);
                         exit(1); 
                     }
+=======
+                if (ssym[tempArr[0]] == 4 || ssym[tempArr[0]] == 5 
+                    || ssym[tempArr[0]] == 6 || ssym[tempArr[0]] == 7 
+                    || ssym[tempArr[0]] == 15 || ssym[tempArr[0]] == 16 
+                    || ssym[tempArr[0]] == 9 || ssym[tempArr[0]] == 17 
+                    || ssym[tempArr[0]] == 19 || ssym[tempArr[0]] == 11 
+                    || ssym[tempArr[0]] == 13 || ssym[tempArr[0]] == 18) {
+                    
+                    tokenType[tokenCount] = ssym[tempArr[0]];
+                    tokenCount++;
+                } else {
+                    printf("Error: Invalid symbol!\n");
+                    fprintf(fp,"Error: Invalid symbol!\n");
+                    printf("%c hello", tempArr[1]); 
+                    free(identArr);
+                    free(tokenType);
+                    exit(1); 
+>>>>>>> 780f869b6e77941a120cf4a48eb4391cee3b7e1e
                 }
             }
             if (tokenCount == tokenTypeSize-1) {
@@ -424,12 +446,16 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         i++; 
+        printf("%d \n", tokenType[tokenCount-1]); 
     }
+
+    parsecode: 
+    printf("\ncontents of tokenType array: \n");
 
     for (int i = 0; i < tokenCount; i++) {
         printf("%d ", tokenType[i]); 
     }
-    printf("\n"); 
+    printf("\n\n"); 
 
     // Call parser codegen function.
     program();
@@ -541,8 +567,8 @@ void program() {
     block();
     // error 1
     // if the program does not end with a period throw an error 
+        printf("%d (last token) line: 534\n", tokenType[tokenIndex]);
     if (tokenType[tokenIndex] != periodsym) {
-        printf("%d\n", tokenType[tokenIndex]);
         printf("Error: Period expected.\n");
         exit(1);
     }
@@ -561,6 +587,7 @@ void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
         // checks structure of the const declaration 
         do {
+            printf("%d (token) line: 554\n", tokenType[tokenIndex]); 
             tokenIndex++;
             // identity check 
             if (tokenType[tokenIndex] != identsym) {
@@ -575,12 +602,16 @@ void constDeclaration() {
             // get the identifier from the identArray 
             char * identName = identArr[identIndex];
             identIndex++; 
+            printf("%d (token) line: 569\n", tokenType[tokenIndex]); 
+
             tokenIndex++;
             // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
                 printf("Error: Identifier must be followed by =.\n");
                 exit(1);
             }
+            printf("%d (token) line: 577\n", tokenType[tokenIndex]); 
+
             tokenIndex++;
             // number check 
             if (tokenType[tokenIndex] != numbersym) {
@@ -592,6 +623,7 @@ void constDeclaration() {
             int number = atoi(identArr[identIndex]); // Convert string to integer
             symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
             symbolIndex++;
+            printf("%d (token) line: 590\n", tokenType[tokenIndex]); 
 
             tokenIndex++;
             // if "," then repeate for next declaration else we break then check for ";"
@@ -602,6 +634,8 @@ void constDeclaration() {
             printf("Error: Semicolon or comma missing.\n");
             exit(1);
         }
+            printf("%d (token) line: 601\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
     }
 }
@@ -612,6 +646,8 @@ int varDeclaration() {
     if (tokenType[tokenIndex] == varsym) {
         do {
             numVars++;
+            printf("%d (token) line: 613\n", tokenType[tokenIndex]); 
+
             tokenIndex++;
             // ident check
             if (tokenType[tokenIndex] != identsym) {
@@ -628,6 +664,8 @@ int varDeclaration() {
             symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars);
             identIndex++; 
             symbolIndex++; 
+            printf("%d (token) line: 631\n", tokenType[tokenIndex]); 
+
             tokenIndex++;
 
             // if "," then continue scaning varDeclaration, else break and check for ";"
@@ -638,6 +676,8 @@ int varDeclaration() {
             printf("Error: Semicolon or comma missing.\n");
             exit(1);
         }
+            printf("%d (token) line: 643\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
     }
     // return the number of declared variables
@@ -661,12 +701,16 @@ void statement() {
             printf("Error: Not a var.\n");
             exit(1);
         }
+            printf("%d (token) line: 668\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         // if not ":="
         if (tokenType[tokenIndex] != becomessym) {
             printf("Error: Assignment operator expected.\n");
             exit(1);
         }
+            printf("%d (token) line: 676\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         expression();
         emit(STO, 0, symbolTable[symIdx]->addr);
@@ -675,18 +719,25 @@ void statement() {
     // if "begin" 
     if (tokenType[tokenIndex] == beginsym) {
         do { 
+            printf("%d (token) line: 686\n", tokenType[tokenIndex]); 
+
             tokenIndex++;
             statement();
         } while (tokenType[tokenIndex] == semicolonsym);
+        // if not "end"
         if (tokenType[tokenIndex] != endsym) {
-            printf("Error: Semicolon or } expected.\n");
+            printf("Error: end expected.\n");
             exit(1);
         }
+            printf("%d (token) line: 696\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         return;
     }
     // if "if"
     if (tokenType[tokenIndex] == ifsym) {
+            printf("%d (token) line: 703\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         condition();
         jpcIdx = cx;
@@ -695,6 +746,8 @@ void statement() {
             printf("Error: then expected.\n");
             exit(1);
         }
+            printf("%d (token) line: 713\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         statement();
         code[jpcIdx].m = cx;
@@ -703,12 +756,17 @@ void statement() {
     // if "while" 
     if (tokenType[tokenIndex] == whilesym) {
         loopIdx = cx;
+            printf("%d (token) line 723\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         condition();
+        // if not "do"
         if (tokenType[tokenIndex] != dosym) {
             printf("Error: do expected.\n");
             exit(1);
         }
+            printf("%d (token) line: 732\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         jpcIdx = cx;
         emit(JPC, 0, jpcIdx);
@@ -719,6 +777,8 @@ void statement() {
     }
     // if "read"
     if (tokenType[tokenIndex] == readsym) {
+            printf("%d (token) line: 744\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         if (tokenType[tokenIndex] != identsym) {
             printf("Error: Assignment to constant or procedure is not allowed.\n");
@@ -734,6 +794,8 @@ void statement() {
             printf("Error: Assignment to constant or procedure is not allowed.\n");
             exit(1);
         }
+            printf("%d (token) line: 761\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         emit(SYS, 0, 2); //read
         emit(STO, 0, symbolTable[symIdx]->addr);
@@ -741,6 +803,8 @@ void statement() {
     }
     // if "write"
     if (tokenType[tokenIndex] == writesym) {
+            printf("%d (token) line: 770\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         expression();
         emit(SYS, 0, 1); //write
@@ -750,6 +814,8 @@ void statement() {
 
 void condition() {
     if (tokenType[tokenIndex] == oddsym) {
+            printf("%d (token) line: 781\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         expression();
         emit(OPR, 0, 11);
@@ -762,6 +828,8 @@ void condition() {
             exit(1);
         }
         int relOp = tokenType[tokenIndex];
+            printf("%d (token) line: 795\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         expression();
         switch (relOp) {
@@ -789,31 +857,51 @@ void condition() {
 
 void expression() {
     if (tokenType[tokenIndex] == minussym) {
+            printf("%d (token) line: 824\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         term();
         //emit(OPR, 0, 1); what is NEG in the pseudocode??????=======
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
-            tokenIndex++;
-            term();
+            // tokenIndex++;
+           // term();
             if (addOp == plussym) {
+            printf("%d (token) line: 834\n", tokenType[tokenIndex]); 
+
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 1);
             } else {
+            printf("%d (token) line: 840\n", tokenType[tokenIndex]); 
+
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 2);
             }
         }
     } else {
         if (tokenType[tokenIndex] == plussym) {
+            printf("%d (token) line: 849\n", tokenType[tokenIndex]); 
+
             tokenIndex++;
         }
         term();
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
-            tokenIndex++;
-            term();
+            // tokenIndex++;
+            // term();
             if (addOp == plussym) {
+            printf("%d (token) line: 859\n", tokenType[tokenIndex]); 
+
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 1);
             } else {
+            printf("%d (token) line: 865\n", tokenType[tokenIndex]); 
+
+                tokenIndex++;
+                term();
                 emit(OPR, 0, 2);
             }
         }
@@ -824,11 +912,19 @@ void term() {
     factor();
     while (tokenType[tokenIndex] == multsym || tokenType[tokenIndex] == slashsym) {
         int multOp = tokenType[tokenIndex];
-        tokenIndex++;
-        factor();
+        // tokenIndex++;
+        // factor();
         if (multOp == multsym) {
+            printf("%d (token) line: 882\n", tokenType[tokenIndex]); 
+
+            tokenIndex++;
+            factor();
             emit(OPR, 0, 3);
         } else {
+            printf("%d (token) line: 888\n", tokenType[tokenIndex]); 
+
+            tokenIndex++;
+            factor();
             emit(OPR, 0, 4);
         }
     }
@@ -843,7 +939,6 @@ void factor() {
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
-            printf("Went here");
             emit(LIT, 0, symbolTable[symIdx]->val);
         } else if (symbolTable[symIdx]->kind == 2) {
             emit(LOD, 0, symbolTable[symIdx]->addr);
@@ -851,20 +946,27 @@ void factor() {
             printf("Error: Expression must not contain a procedure identifier.\n");
             exit(1);
         }
+            printf("%d (token) line: 913\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == numbersym) {
-        printf("here"); // work here next
         emit(LIT, 0, atoi(identArr[identIndex]));
+            printf("%d (token) line: 919\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == lparentsym) {
+            printf("%d (token) line: 924\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
         expression();
         if (tokenType[tokenIndex] != rparentsym) {
             printf("Error: Right parenthesis missing.\n");
             exit(1);
         }
+            printf("%d (token) line: 932\n", tokenType[tokenIndex]); 
+
         tokenIndex++;
     }
     else {
