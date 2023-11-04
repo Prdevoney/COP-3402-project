@@ -478,6 +478,9 @@ int main(int argc, char *argv[]){
         free(identArr[z]);
     }
 
+ 
+    free(identArr);
+
     identArr = NULL; 
 
     free(tokenType);
