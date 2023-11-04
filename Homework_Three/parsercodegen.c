@@ -130,9 +130,6 @@ int main(int argc, char *argv[]){
 
     // *******Put input file into array.*******|
 
-    // dynamically allocate memory for the inputArr 
-    // char *inputArr = malloc( sizeof(char) * (chcount + 1));
-    // char inputArr[chcount+1];
     char inputArr[chcount];
     
     FILE *inputFile = fopen(argv[1], "r");
