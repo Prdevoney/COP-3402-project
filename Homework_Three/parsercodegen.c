@@ -410,6 +410,8 @@ int main(int argc, char *argv[]){
 
     // Call parser codegen function.
     program();
+
+    // -----Print out the parser output-----.
     printf("Assembly Code:\n\n");
     
     printf("Line    OP    L    M\n");
@@ -466,6 +468,7 @@ int main(int argc, char *argv[]){
                                         symbolTable[i]->mark);
     }
 
+    // free memory
     for (int i = 0; i < symbolIndex; i++) {
         free(symbolTable[i]);
         symbolTable[i] = NULL; 
@@ -507,6 +510,7 @@ int symbolTableCheck(char *name) {
     return -1;
 }
 
+// creates the assembly instructions and stores them in the code array
 void emit(int op, int l, int m) {
     if (cx > CODE_SIZE) {
         printf("Error: Code too long!\n");
@@ -519,18 +523,20 @@ void emit(int op, int l, int m) {
     }
 }
 
+// program ::= block "."
 void program() {
     emit(JMP, 0, 3);
     block();
     // error 1
     // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
-        printf("Error: Period expected.\n");
+        printf("Error: Period expected\n");
         exit(1);
     }
     emit(SYS, 0, 3);
 }
 
+// block ::= const-declaration var-declaration statement
 void block () {
     constDeclaration();
     int numVars = varDeclaration();
@@ -546,12 +552,12 @@ void constDeclaration() {
             tokenIndex++;
             // identity check 
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, and read must be followed by identifier.\n");
+                printf("Error: const, var, and read must be followed by identifier\n");
                 exit(1);
             }
             // has the identifier already been declared? 
             if(symbolTableCheck(identArr[identIndex]) != -1) {
-                printf("Error: This variable has already been declared.\n");
+                printf("Error: This variable has already been declared\n");
                 exit(1);
             }
             // get the identifier from the identArray 
@@ -561,14 +567,14 @@ void constDeclaration() {
             tokenIndex++;
             // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
-                printf("Error: constant must be assigned with =.\n");
+                printf("Error: constant must be assigned with =\n");
                 exit(1);
             }
 
             tokenIndex++;
             // number check 
             if (tokenType[tokenIndex] != numbersym) {
-                printf("Error: constants must be assigned an integer value.\n");
+                printf("Error: constants must be assigned an integer value\n");
                 exit(1);
             }
             // if num then we add (kind, name, L, and M) to the symbol table
@@ -582,7 +588,7 @@ void constDeclaration() {
 
         // check if const declaration is ended with a ";"
         if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: constant and variable declarations must be followed by a semicolon.\n"); 
+            printf("Error: constant and variable declarations must be followed by a semicolon\n"); 
             exit(1);
         }
         tokenIndex++;
@@ -598,12 +604,12 @@ int varDeclaration() {
             tokenIndex++;
             // ident check
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, and read must be followed by identifier.\n");
+                printf("Error: const, var, and read must be followed by identifier\n");
                 exit(1);
             }
             // has the identifier already been declared? 
             if (symbolTableCheck(identArr[identIndex]) != -1) {
-                printf("Error: This variable has already been declared.\n");
+                printf("Error: This variable has already been declared\n");
                 exit(1);
             }
 
@@ -618,7 +624,7 @@ int varDeclaration() {
 
         // check if varDeclaration ends with ";"
         if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: Semicolon or comma missing.\n");
+            printf("Error: constant and variable declarations must be followed by a semicolon\n");
             exit(1);
         }
         tokenIndex++;
@@ -627,6 +633,11 @@ int varDeclaration() {
     return numVars;
 }
 
+/* 
+    statement ::= [ ident ":=" expression | "begin" statement {";" statement} "end" | 
+    "if" condition "then" statement | "while" condition "do" statement | "read" ident | 
+    "write" ident ] 
+ */
 void statement() {
     int symIdx, jpcIdx, loopIdx;
     // if identifier 
@@ -641,13 +652,13 @@ void statement() {
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
-            printf("Error: only variables can be altered.\n");
+            printf("Error: only variables can be altered\n");
             exit(1);
         }
         tokenIndex++;
         // if not ":="
         if (tokenType[tokenIndex] != becomessym) {
-            printf("Error: assignment statements must use :=.\n");
+            printf("Error: assignment statements must use :=\n");
             exit(1);
         }
 
@@ -707,7 +718,7 @@ void statement() {
     if (tokenType[tokenIndex] == readsym) {
         tokenIndex++;
         if (tokenType[tokenIndex] != identsym) {
-            printf("Error: Assignment to constant or procedure is not allowed\n");
+            printf("Error: input must be an identifier\n");
             exit(1);
         }
         // check to see if identifier is in array 
@@ -717,7 +728,7 @@ void statement() {
             exit(1);
         }
         if (symbolTable[symIdx]->kind != 2) {
-            printf("Error: Assignment to constant or procedure is not allowed\n");
+            printf("Error: not a variable\n");
             exit(1);
         }
         tokenIndex++;
@@ -734,19 +745,23 @@ void statement() {
     }
 }
 
+// condition ::= "odd" expression | expression rel-op expression
 void condition() {
+    // if "odd"
     if (tokenType[tokenIndex] == oddsym) {
         tokenIndex++;
         expression();
         emit(OPR, 0, 11);
     } else {
         expression();
+        // if not a relational operator
         if (tokenType[tokenIndex] != eqsym && tokenType[tokenIndex] != neqsym && 
         tokenType[tokenIndex] != lessym && tokenType[tokenIndex] != leqsym && 
         tokenType[tokenIndex] != gtrsym && tokenType[tokenIndex] != geqsym) {
             printf("Error: condition must contain comparision operator\n");
             exit(1);
         }
+        // relational operator
         int relOp = tokenType[tokenIndex];
         tokenIndex++;
         expression();
@@ -773,15 +788,14 @@ void condition() {
     }
 }
 
+// expression ::=  term { ("+"|"-") term}..
 void expression() {
+    // if "-"
     if (tokenType[tokenIndex] == minussym) {
         tokenIndex++;
         term();
-        //emit(OPR, 0, 1); what is NEG in the pseudocode??????=======
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
-            // tokenIndex++;
-           // term();
             if (addOp == plussym) {
                 tokenIndex++;
                 term();
@@ -793,14 +807,13 @@ void expression() {
             }
         }
     } else {
+        // if "+"
         if (tokenType[tokenIndex] == plussym) {
             tokenIndex++;
         }
         term();
         while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
             int addOp = tokenType[tokenIndex];
-            // tokenIndex++;
-            // term();
             if (addOp == plussym) {
                 tokenIndex++;
                 term();
@@ -816,6 +829,7 @@ void expression() {
 
 void term() {
     factor();
+    // if "*" or "/"
     while (tokenType[tokenIndex] == multsym || tokenType[tokenIndex] == slashsym) {
         int multOp = tokenType[tokenIndex];
         if (multOp == multsym) {
@@ -831,6 +845,7 @@ void term() {
 }
 
 void factor() {
+    // if identifier
     if (tokenType[tokenIndex] == identsym) {
         int symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
@@ -838,24 +853,25 @@ void factor() {
             printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
+        // const or var
         if (symbolTable[symIdx]->kind == 1) {
             emit(LIT, 0, symbolTable[symIdx]->val);
-        } else if (symbolTable[symIdx]->kind == 2) {
+        } else if(symbolTable[symIdx]->kind == 2) {
             emit(LOD, 0, symbolTable[symIdx]->addr);
-        } else {
-            printf("Error: Expression must not contain a procedure identifier.\n");
-            exit(1);
         }
         tokenIndex++;
     }
+    // if number
     else if (tokenType[tokenIndex] == numbersym) {
         emit(LIT, 0, atoi(identArr[identIndex]));
         identIndex++; 
         tokenIndex++;
     }
+    //  if "("
     else if (tokenType[tokenIndex] == lparentsym) {
         tokenIndex++;
         expression();
+        // if not ")"
         if (tokenType[tokenIndex] != rparentsym) {
             printf("Error: right parenthesis must follow left parenthesis.\n");
             exit(1);
