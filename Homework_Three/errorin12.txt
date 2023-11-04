@@ -1,0 +1,9 @@
+/* while must be follwed by do */ 
+
+var counter;
+begin  counter := 0; 
+  while counter < 10
+  begin 
+     counter := counter + 1; 
+    end ;
+end.

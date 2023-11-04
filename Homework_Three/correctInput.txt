@@ -1,3 +1,4 @@
+const z = 7; 
 var x, y;
 begin
     x := y * 2;

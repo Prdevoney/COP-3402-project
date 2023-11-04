@@ -1,8 +1,5 @@
-var x, y, z;
-var x;
-
+/* Error: symbol name has already been declared */
+var x, y, x;
 begin
-  x := 5;
-  y := x + 2;
-  z := y * 3;
-end. 
+  x := y * 2; 
+end.

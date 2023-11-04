@@ -1,3 +1,4 @@
-var x;
-    x := x * 2; 
-end.
+/* Error: constants must be assigned with = */ 
+
+const x := 7, y = 8; 
+.

@@ -1,6 +1,5 @@
-/* Error: const, var, procedure must be followed by identifier */ 
-
-var ;
+/* Error: const, var, and read nust be followed by identifier */ 
+var begin, y;
 begin
     x := y * 2; 
 end.
