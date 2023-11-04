@@ -486,7 +486,7 @@ int main(int argc, char *argv[]){
         printf("0"); 
         free(identArr[z]);
     }
-    printf("1\n"); 
+    printf("\n1\n"); 
 
     free(identArr);
     printf("2\n"); 
