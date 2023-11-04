@@ -483,6 +483,7 @@ int main(int argc, char *argv[]){
 
     free(identArr);
     printf("2"); 
+    identArr = NULL; 
 
     free(tokenType);
     printf("3"); 
