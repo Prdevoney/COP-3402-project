@@ -668,7 +668,7 @@ void statement() {
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
         symIdx = symbolTableCheck(identArr[identIndex]);
-        identArr++; 
+        identIndex++; 
         // not in symbolTable
         if (symIdx == -1) {
 
