@@ -491,7 +491,7 @@ int main(int argc, char *argv[]){
 
     printf("\n1\n"); 
     // printf("%d", identArr); 
-    // free(identArr);
+    free(identArr);
     printf("2\n"); 
     identArr = NULL; 
 
