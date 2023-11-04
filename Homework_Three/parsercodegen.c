@@ -203,6 +203,7 @@ int main(int argc, char *argv[]){
 
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
+                printf("went over here\n");
                 caseCheck = 1; 
                 halt = 1; 
                 break; 
@@ -210,6 +211,7 @@ int main(int argc, char *argv[]){
 
             // if scanned in keyword, ident, or num follwed by specialChar. 
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
+                 printf("red\n");
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
                 i--;
@@ -460,6 +462,7 @@ int main(int argc, char *argv[]){
 
 
     printf("\n");
+    printf("Symbol Table:\n\n");
 
     printf("Kind | Name        | Value | Level | Address | Mark\n"); 
     for (int i = 0; i < symbolIndex; i++) {
@@ -576,7 +579,7 @@ void constDeclaration() {
                 printf("Error: constants must be assigned an integer value.\n");
                 exit(1);
             }
-            
+            //printf("%d (token) line: 588\n", identArr[identIndex-1]);
             // if num then we add (kind, name, L, and M) to the symbol table
             int number = atoi(identArr[identIndex]); // Convert string to integer
             identIndex++; 
@@ -701,7 +704,7 @@ void statement() {
         tokenIndex++;
         condition();
         jpcIdx = cx;
-        emit(JPC, 0,  jpcIdx); // placeholder for M
+        emit(JPC, 0,  0); // placeholder for M
         if (tokenType[tokenIndex] != thensym) {
             printf("Error: then expected.\n");
             exit(1);
@@ -710,7 +713,7 @@ void statement() {
 
         tokenIndex++;
         statement();
-        code[jpcIdx].m = cx;
+        code[jpcIdx].m = cx * 3;
         return;
     }
     // if "while" 
@@ -729,10 +732,10 @@ void statement() {
 
         tokenIndex++;
         jpcIdx = cx;
-        emit(JPC, 0, jpcIdx);
+        emit(JPC, 0, jpcIdx * 3);
         statement();
-        emit(JMP, 0, loopIdx);
-        code[jpcIdx].m = cx;
+        emit(JMP, 0, loopIdx * 3);
+        code[jpcIdx].m = cx * 3;
         return;
     }
     // if "read"
