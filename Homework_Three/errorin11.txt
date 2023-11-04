@@ -1,8 +1,19 @@
 /* if must be followed by then */ 
 
-var x, y, z; 
-    x := 1
-    y := 4 
-if x = 1 z := 5
-    x := y * 2 
-.
+const limit = 5;
+var x, y, z;
+begin
+  read x;
+  if x > limit then
+    y := x;
+  while x > 0 do
+  begin
+    if y > z then 
+      z := y;
+    x := x - 1;
+  end;
+
+  write y;
+  write z;
+  
+end.

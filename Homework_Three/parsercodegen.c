@@ -469,6 +469,8 @@ int main(int argc, char *argv[]){
 
 
     printf("\n");
+    printf("Symbol Table:\n\n");
+
   
     printf("Kind | Name        | Value | Level | Address | Mark\n"); 
     for (int i = 0; i < symbolIndex; i++) {
@@ -574,11 +576,7 @@ void constDeclaration() {
             tokenIndex++;
             // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
-<<<<<<< HEAD
-                printf("Error: constant must be followed by =.\n");
-=======
                 printf("Error: constant must be assigned with =.\n");
->>>>>>> 9cad54799e6956df015cd465d65ef8b716a07f9d
                 exit(1);
             }
             printf("%d (token) line: 577\n", tokenType[tokenIndex]); 
@@ -589,7 +587,7 @@ void constDeclaration() {
                 printf("Error: constants must be assigned an integer value.\n");
                 exit(1);
             }
-            
+            //printf("%d (token) line: 588\n", identArr[identIndex-1]);
             // if num then we add (kind, name, L, and M) to the symbol table
             int number = atoi(identArr[identIndex]); // Convert string to integer
             identIndex++; 
@@ -665,12 +663,8 @@ void statement() {
         identArr++; 
         // not in symbolTable
         if (symIdx == -1) {
-<<<<<<< HEAD
-            printf("Error: 1 Undeclared identifier: %s\n", identArr[identIndex-1]);
-=======
 
             printf("1 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
->>>>>>> 9cad54799e6956df015cd465d65ef8b716a07f9d
             exit(1);
         }
         // not a variable
@@ -727,7 +721,7 @@ void statement() {
 
         tokenIndex++;
         statement();
-        code[jpcIdx].m = cx;
+        code[jpcIdx].m = cx * 3;
         return;
     }
     // if "while" 
@@ -746,10 +740,10 @@ void statement() {
 
         tokenIndex++;
         jpcIdx = cx;
-        emit(JPC, 0, jpcIdx);
+        emit(JPC, 0, jpcIdx * 3);
         statement();
-        emit(JMP, 0, loopIdx);
-        code[jpcIdx].m = cx;
+        emit(JMP, 0, loopIdx * 3);
+        code[jpcIdx].m = cx * 3;
         return;
     }
     // if "read"
