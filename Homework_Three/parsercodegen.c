@@ -203,7 +203,6 @@ int main(int argc, char *argv[]){
 
             // if scaned in keyword, ident, or num follwed by '\0'. 
             if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] == '\0' && tempArrCount != 0) {
-                printf("went over here\n");
                 caseCheck = 1; 
                 halt = 1; 
                 break; 
@@ -211,7 +210,6 @@ int main(int argc, char *argv[]){
 
             // if scanned in keyword, ident, or num follwed by specialChar. 
             else if (!isalnum(tempArr[tempArrCount]) && tempArr[tempArrCount] != '\0' && tempArrCount != 0) {
-                 printf("red\n");
                 caseCheck = 1; 
                 tempArr[tempArrCount] = '\0';
                 i--;
@@ -249,7 +247,6 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
-        printf("Contents of tempArr: %s\n", tempArr); 
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -405,26 +402,19 @@ int main(int argc, char *argv[]){
             free(tempArr); 
         }
         i++; 
-        printf("%d \n", tokenType[tokenCount-1]); 
     }
 
     parsecode: 
-    printf("\ncontents of tokenType array: \n");
-
-    for (int i = 0; i < tokenCount; i++) {
-        printf("%d ", tokenType[i]); 
-    }
-    printf("\n\n"); 
 
     // Call parser codegen function.
     program();
-
-    printf("\n");
+    printf("Assembly Code:\n\n");
+    
     printf("Line    OP    L    M\n");
     for (int i = 0; i < cx; i++) {
         int assemblyCodeNum = code[i].op;
-        char* assemblyInsName;
-        char* oprName;
+        char* assemblyInsName = "";
+        char* oprName = "";
         int oprNum = code[i].m;
         switch (assemblyCodeNum) {
             case 1:
@@ -474,6 +464,8 @@ int main(int argc, char *argv[]){
                                         symbolTable[i]->mark);
     }
 
+    printf("%s",identArr[identCount-2]);
+
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
@@ -504,7 +496,6 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int
 int symbolTableCheck(char *name) {
     // loop through symbol table to see if identifier is in array. 
     for(int i = 0; i < symbolIndex; i++) {
-        printf("Curr contents of symbolTable: %s\n", symbolTable[i]->name); 
         if (strcmp(symbolTable[i]->name, name) == 0)
             return i; 
     }
@@ -528,7 +519,6 @@ void program() {
     block();
     // error 1
     // if the program does not end with a period throw an error 
-        printf("%d (last token) line: 534\n", tokenType[tokenIndex]);
     if (tokenType[tokenIndex] != periodsym) {
         printf("Error: Period expected.\n");
         exit(1);
@@ -548,7 +538,6 @@ void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
         // checks structure of the const declaration 
         do {
-            printf("%d (token) line: 554\n", tokenType[tokenIndex]); 
             tokenIndex++;
             // identity check 
             if (tokenType[tokenIndex] != identsym) {
@@ -563,7 +552,6 @@ void constDeclaration() {
             // get the identifier from the identArray 
             char * identName = identArr[identIndex];
             identIndex++; 
-            printf("%d (token) line: 569\n", tokenType[tokenIndex]); 
 
             tokenIndex++;
             // "=" check 
@@ -571,7 +559,6 @@ void constDeclaration() {
                 printf("Error: constant must be assigned with =.\n");
                 exit(1);
             }
-            printf("%d (token) line: 577\n", tokenType[tokenIndex]); 
 
             tokenIndex++;
             // number check 
@@ -579,14 +566,11 @@ void constDeclaration() {
                 printf("Error: constants must be assigned an integer value.\n");
                 exit(1);
             }
-            //printf("%d (token) line: 588\n", identArr[identIndex-1]);
             // if num then we add (kind, name, L, and M) to the symbol table
             int number = atoi(identArr[identIndex]); // Convert string to integer
             identIndex++; 
             symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0, 1);
             symbolIndex++;
-            printf("%d (token) line: 590\n", tokenType[tokenIndex]); 
-
             tokenIndex++;
             // if "," then repeate for next declaration else we break then check for ";"
         } while (tokenType[tokenIndex] == commasym);
@@ -596,8 +580,6 @@ void constDeclaration() {
             printf("Error: constant and variable declarations must be followed by a semicolon.\n"); 
             exit(1);
         }
-            printf("%d (token) line: 601\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
     }
 }
@@ -608,8 +590,6 @@ int varDeclaration() {
     if (tokenType[tokenIndex] == varsym) {
         do {
             numVars++;
-            printf("%d (token) line: 613\n", tokenType[tokenIndex]); 
-
             tokenIndex++;
             // ident check
             if (tokenType[tokenIndex] != identsym) {
@@ -626,8 +606,6 @@ int varDeclaration() {
             symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars, 1);
             identIndex++; 
             symbolIndex++; 
-            printf("%d (token) line: 631\n", tokenType[tokenIndex]); 
-
             tokenIndex++;
 
             // if "," then continue scaning varDeclaration, else break and check for ";"
@@ -638,8 +616,6 @@ int varDeclaration() {
             printf("Error: Semicolon or comma missing.\n");
             exit(1);
         }
-            printf("%d (token) line: 643\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
     }
     // return the number of declared variables
@@ -652,10 +628,9 @@ void statement() {
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
         symIdx = symbolTableCheck(identArr[identIndex]);
-        identArr++; 
+        identIndex++; 
         // not in symbolTable
         if (symIdx == -1) {
-
             printf("1 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
@@ -664,15 +639,12 @@ void statement() {
             printf("Error: only variables can be altered.\n");
             exit(1);
         }
-            printf("%d (token) line: 668\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         // if not ":="
         if (tokenType[tokenIndex] != becomessym) {
             printf("Error: assignment statements must use :=.\n");
             exit(1);
         }
-            printf("%d (token) line: 676\n", tokenType[tokenIndex]); 
 
         tokenIndex++;
         expression();
@@ -682,35 +654,27 @@ void statement() {
     // if "begin" 
     if (tokenType[tokenIndex] == beginsym) {
         do { 
-            printf("%d (token) line: 686\n", tokenType[tokenIndex]); 
-
             tokenIndex++;
             statement();
         } while (tokenType[tokenIndex] == semicolonsym);
         // if not "end"
         if (tokenType[tokenIndex] != endsym) {
-            printf("Error: begin must be followed by end.\n");
+            printf("Error: begin must be followed by end\n");
             exit(1);
         }
-            printf("%d (token) line: 696\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         return;
     }
     // if "if"
     if (tokenType[tokenIndex] == ifsym) {
-            printf("%d (token) line: 703\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         condition();
         jpcIdx = cx;
         emit(JPC, 0,  0); // placeholder for M
         if (tokenType[tokenIndex] != thensym) {
-            printf("Error: then expected.\n");
+            printf("Error: if must be followed by then\n");
             exit(1);
         }
-            printf("%d (token) line: 713\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         statement();
         code[jpcIdx].m = cx * 3;
@@ -719,17 +683,13 @@ void statement() {
     // if "while" 
     if (tokenType[tokenIndex] == whilesym) {
         loopIdx = cx;
-            printf("%d (token) line 723\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         condition();
         // if not "do"
         if (tokenType[tokenIndex] != dosym) {
-            printf("Error: while must be follwed by do.\n");
+            printf("Error: while must be follwed by do\n");
             exit(1);
         }
-            printf("%d (token) line: 732\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         jpcIdx = cx;
         emit(JPC, 0, jpcIdx * 3);
@@ -740,25 +700,21 @@ void statement() {
     }
     // if "read"
     if (tokenType[tokenIndex] == readsym) {
-            printf("%d (token) line: 744\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         if (tokenType[tokenIndex] != identsym) {
-            printf("Error: Assignment to constant or procedure is not allowed.\n");
+            printf("Error: Assignment to constant or procedure is not allowed\n");
             exit(1);
         }
         // check to see if identifier is in array 
         symIdx = symbolTableCheck(identArr[identIndex]);
         if (symIdx == -1) {
-            printf("2 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind != 2) {
-            printf("Error: Assignment to constant or procedure is not allowed.\n");
+            printf("Error: Assignment to constant or procedure is not allowed\n");
             exit(1);
         }
-            printf("%d (token) line: 761\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         emit(SYS, 0, 2); //read
         emit(STO, 0, symbolTable[symIdx]->addr);
@@ -766,8 +722,6 @@ void statement() {
     }
     // if "write"
     if (tokenType[tokenIndex] == writesym) {
-            printf("%d (token) line: 770\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         expression();
         emit(SYS, 0, 1); //write
@@ -777,8 +731,6 @@ void statement() {
 
 void condition() {
     if (tokenType[tokenIndex] == oddsym) {
-            printf("%d (token) line: 781\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         expression();
         emit(OPR, 0, 11);
@@ -787,12 +739,10 @@ void condition() {
         if (tokenType[tokenIndex] != eqsym && tokenType[tokenIndex] != neqsym && 
         tokenType[tokenIndex] != lessym && tokenType[tokenIndex] != leqsym && 
         tokenType[tokenIndex] != gtrsym && tokenType[tokenIndex] != geqsym) {
-            printf("Error: condition must contain comparision operator.\n");
+            printf("Error: condition must contain comparision operator\n");
             exit(1);
         }
         int relOp = tokenType[tokenIndex];
-            printf("%d (token) line: 795\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         expression();
         switch (relOp) {
@@ -820,8 +770,6 @@ void condition() {
 
 void expression() {
     if (tokenType[tokenIndex] == minussym) {
-            printf("%d (token) line: 824\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         term();
         //emit(OPR, 0, 1); what is NEG in the pseudocode??????=======
@@ -830,14 +778,10 @@ void expression() {
             // tokenIndex++;
            // term();
             if (addOp == plussym) {
-            printf("%d (token) line: 834\n", tokenType[tokenIndex]); 
-
                 tokenIndex++;
                 term();
                 emit(OPR, 0, 1);
             } else {
-            printf("%d (token) line: 840\n", tokenType[tokenIndex]); 
-
                 tokenIndex++;
                 term();
                 emit(OPR, 0, 2);
@@ -845,8 +789,6 @@ void expression() {
         }
     } else {
         if (tokenType[tokenIndex] == plussym) {
-            printf("%d (token) line: 849\n", tokenType[tokenIndex]); 
-
             tokenIndex++;
         }
         term();
@@ -855,14 +797,10 @@ void expression() {
             // tokenIndex++;
             // term();
             if (addOp == plussym) {
-            printf("%d (token) line: 859\n", tokenType[tokenIndex]); 
-
                 tokenIndex++;
                 term();
                 emit(OPR, 0, 1);
             } else {
-            printf("%d (token) line: 865\n", tokenType[tokenIndex]); 
-
                 tokenIndex++;
                 term();
                 emit(OPR, 0, 2);
@@ -875,17 +813,11 @@ void term() {
     factor();
     while (tokenType[tokenIndex] == multsym || tokenType[tokenIndex] == slashsym) {
         int multOp = tokenType[tokenIndex];
-        // tokenIndex++;
-        // factor();
         if (multOp == multsym) {
-            printf("%d (token) line: 882\n", tokenType[tokenIndex]); 
-
             tokenIndex++;
             factor();
             emit(OPR, 0, 3);
         } else {
-            printf("%d (token) line: 888\n", tokenType[tokenIndex]); 
-
             tokenIndex++;
             factor();
             emit(OPR, 0, 4);
@@ -898,7 +830,7 @@ void factor() {
         int symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
         if (symIdx == -1) {
-            printf("3 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind == 1) {
@@ -909,28 +841,20 @@ void factor() {
             printf("Error: Expression must not contain a procedure identifier.\n");
             exit(1);
         }
-            printf("%d (token) line: 913\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == numbersym) {
         emit(LIT, 0, atoi(identArr[identIndex]));
-            printf("%d (token) line: 919\n", tokenType[tokenIndex]); 
-        // potentially may have to get rid of: identIndex++; 
         identIndex++; 
         tokenIndex++;
     }
     else if (tokenType[tokenIndex] == lparentsym) {
-            printf("%d (token) line: 924\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
         expression();
         if (tokenType[tokenIndex] != rparentsym) {
             printf("Error: right parenthesis must follow left parenthesis.\n");
             exit(1);
         }
-            printf("%d (token) line: 932\n", tokenType[tokenIndex]); 
-
         tokenIndex++;
     }
     else {
