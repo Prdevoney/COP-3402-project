@@ -533,7 +533,7 @@ void program() {
     // error 1
     // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
-        printf("Error: Period expected\n");
+        printf("Error: program must end with period\n");
         exit(1);
     }
     emit(SYS, 0, 3);
@@ -560,7 +560,7 @@ void constDeclaration() {
             }
             // has the identifier already been declared? 
             if(symbolTableCheck(identArr[identIndex]) != -1) {
-                printf("Error: This variable has already been declared\n");
+                printf("Error: symbol name has already been declared\n");
                 exit(1);
             }
             // get the identifier from the identArray 
@@ -650,12 +650,12 @@ void statement() {
         identIndex++; 
         // not in symbolTable
         if (symIdx == -1) {
-            printf("1 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
-            printf("Error: only variables can be altered\n");
+            printf("Error: only variable values may be altered\n");
             exit(1);
         }
         tokenIndex++;
