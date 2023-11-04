@@ -474,24 +474,26 @@ int main(int argc, char *argv[]){
                                         symbolTable[i]->mark);
     }
 
+    printf("-2\n"); 
+
     for (int i = 0; i < symbolIndex; i++) {
         free(symbolTable[i]);
         symbolTable[i] = NULL; 
     }
 
-    printf("-1"); 
+    printf("-1\n"); 
     for (int z = 0; z < identCount; z++) {
         printf("0"); 
         free(identArr[z]);
     }
-    printf("1"); 
+    printf("1\n"); 
 
     free(identArr);
-    printf("2"); 
+    printf("2\n"); 
     identArr = NULL; 
 
     free(tokenType);
-    printf("3"); 
+    printf("3\n"); 
 
     return 0;
 }
