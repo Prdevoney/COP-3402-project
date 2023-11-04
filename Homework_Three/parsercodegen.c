@@ -876,13 +876,13 @@ void factor() {
         expression();
         // if not ")"
         if (tokenType[tokenIndex] != rparentsym) {
-            printf("Error: right parenthesis must follow left parenthesis.\n");
+            printf("Error: right parenthesis must follow left parenthesis\n");
             exit(1);
         }
         tokenIndex++;
     }
     else {
-        printf("Error: arithmetic equations must contain operands, parentheses, and numbers, or symbols.\n");
+        printf("Error: arithmetic equations must contain operands, parentheses, and numbers, or symbols\n");
         exit(1);
     }
 }
