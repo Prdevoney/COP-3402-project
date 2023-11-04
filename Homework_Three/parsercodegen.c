@@ -164,6 +164,8 @@ int main(int argc, char *argv[]){
     int identSize = 100; 
     // Global Array 
     identArr = malloc(sizeof(char*) * identSize);
+    // printf("%d", identArr); 
+
     int identCount = 0;
     for (int k = 0; k < identSize; k++) {
         identArr[k] = malloc(sizeof(char) * 12); 
@@ -464,13 +466,16 @@ int main(int argc, char *argv[]){
                                         symbolTable[i]->mark);
     }
 
-    printf("%s",identArr[identCount-2]);
+    for (int i = 0; i < symbolIndex; i++) {
+        free(symbolTable[i]);
+        symbolTable[i] = NULL; 
+    }
 
-    for (int z = 0; z < identCount; z++) {
+    for (int z = 0; z < identSize; z++) {
         free(identArr[z]);
     }
 
-    free(identArr);
+    identArr = NULL; 
 
     free(tokenType);
 
