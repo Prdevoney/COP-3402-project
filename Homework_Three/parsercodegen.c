@@ -528,7 +528,7 @@ void program() {
     // error 1
     // if the program does not end with a period throw an error 
     if (tokenType[tokenIndex] != periodsym) {
-        printf("Error: Period expected.\n");
+        printf("Error: program must end with period\n");
         exit(1);
     }
     emit(SYS, 0, 3);
@@ -549,12 +549,12 @@ void constDeclaration() {
             tokenIndex++;
             // identity check 
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, and read must be followed by identifier.\n");
+                printf("Error: const, var, and read must be followed by identifier\n");
                 exit(1);
             }
             // has the identifier already been declared? 
             if(symbolTableCheck(identArr[identIndex]) != -1) {
-                printf("Error: This variable has already been declared.\n");
+                printf("Error: symbol name has already been declared\n");
                 exit(1);
             }
             // get the identifier from the identArray 
@@ -564,14 +564,14 @@ void constDeclaration() {
             tokenIndex++;
             // "=" check 
             if (tokenType[tokenIndex] != eqsym) {
-                printf("Error: constant must be assigned with =.\n");
+                printf("Error: constant must be assigned with =\n");
                 exit(1);
             }
 
             tokenIndex++;
             // number check 
             if (tokenType[tokenIndex] != numbersym) {
-                printf("Error: constants must be assigned an integer value.\n");
+                printf("Error: constants must be assigned an integer value\n");
                 exit(1);
             }
             // if num then we add (kind, name, L, and M) to the symbol table
@@ -585,7 +585,7 @@ void constDeclaration() {
 
         // check if const declaration is ended with a ";"
         if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: constant and variable declarations must be followed by a semicolon.\n"); 
+            printf("Error: constant and variable declarations must be followed by a semicolon\n"); 
             exit(1);
         }
         tokenIndex++;
@@ -639,18 +639,18 @@ void statement() {
         identIndex++; 
         // not in symbolTable
         if (symIdx == -1) {
-            printf("1 Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
-            printf("Error: only variables can be altered.\n");
+            printf("Error: only variable values may be altered\n");
             exit(1);
         }
         tokenIndex++;
         // if not ":="
         if (tokenType[tokenIndex] != becomessym) {
-            printf("Error: assignment statements must use :=.\n");
+            printf("Error: assignment statements must use :=\n");
             exit(1);
         }
 
@@ -846,7 +846,7 @@ void factor() {
         } else if (symbolTable[symIdx]->kind == 2) {
             emit(LOD, 0, symbolTable[symIdx]->addr);
         } else {
-            printf("Error: Expression must not contain a procedure identifier.\n");
+            printf("Error: Expression must not contain a procedure identifier\n");
             exit(1);
         }
         tokenIndex++;
@@ -860,13 +860,13 @@ void factor() {
         tokenIndex++;
         expression();
         if (tokenType[tokenIndex] != rparentsym) {
-            printf("Error: right parenthesis must follow left parenthesis.\n");
+            printf("Error: right parenthesis must follow left parenthesis\n");
             exit(1);
         }
         tokenIndex++;
     }
     else {
-        printf("Error: arithmetic equations must contain operands, parentheses, and numbers, or symbols.\n");
+        printf("Error: arithmetic equations must contain operands, parentheses, and numbers, or symbols\n");
         exit(1);
     }
 }

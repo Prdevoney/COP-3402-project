@@ -1,4 +1,4 @@
-/* while must be follwed by do */ 
+/* Error: while must be follwed by do */ 
 
 var counter;
 begin  counter := 0; 
