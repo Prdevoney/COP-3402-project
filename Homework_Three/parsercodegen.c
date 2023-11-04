@@ -474,6 +474,9 @@ int main(int argc, char *argv[]){
                                         symbolTable[i]->mark);
     }
 
+    for (int i = 0; i < symbolIndex; i++) {
+        free(symbolTable[i]);
+    }
 
     for (int z = 0; z < identCount; z++) {
         printf("0"); 
