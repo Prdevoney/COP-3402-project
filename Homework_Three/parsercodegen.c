@@ -164,7 +164,6 @@ int main(int argc, char *argv[]){
     int identSize = 100; 
     // Global Array 
     identArr = malloc(sizeof(char*) * identSize);
-    printf("%d", identArr); 
     int identCount = 0;
     for (int k = 0; k < identSize; k++) {
         identArr[k] = malloc(sizeof(char) * 12); 
@@ -489,7 +488,6 @@ int main(int argc, char *argv[]){
     }
 
     printf("\n1\n"); 
-    printf("%d", identArr); 
 
     free(identArr);
     printf("2\n"); 
