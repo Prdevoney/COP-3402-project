@@ -477,10 +477,13 @@ int main(int argc, char *argv[]){
     for (int z = 0; z < identCount; z++) {
         free(identArr[z]);
     }
+    printf("1"); 
 
     free(identArr);
+    printf("2"); 
 
     free(tokenType);
+    printf("3"); 
 
     return 0;
 }
