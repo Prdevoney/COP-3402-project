@@ -6,7 +6,7 @@ Compile and run the parsercodegen.c in Eustis:
 2. Open a command prompt to that directory
 3. To compile type: gcc parsercodegen.c
 4. Hit enter
-5. To run in Eustis type: ./a.out input1.txt
+5. To run in Eustis type: ./a.out errorin1.txt
 6. Hit Enter
 7. The output of the parsercodegen.c will be shown in the terminal for that input
 8. Repeat steps 5-6 with all different input files

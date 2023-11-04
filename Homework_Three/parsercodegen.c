@@ -790,39 +790,17 @@ void condition() {
 
 // expression ::=  term { ("+"|"-") term}..
 void expression() {
-    // if "-"
-    if (tokenType[tokenIndex] == minussym) {
-        tokenIndex++;
-        term();
-        while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
-            int addOp = tokenType[tokenIndex];
-            if (addOp == plussym) {
-                tokenIndex++;
-                term();
-                emit(OPR, 0, 1);
-            } else {
-                tokenIndex++;
-                term();
-                emit(OPR, 0, 2);
-            }
-        }
-    } else {
-        // if "+"
-        if (tokenType[tokenIndex] == plussym) {
+    term();
+    while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
+        int addOp = tokenType[tokenIndex];
+        if (addOp == plussym) {
             tokenIndex++;
-        }
-        term();
-        while (tokenType[tokenIndex] == plussym || tokenType[tokenIndex] == minussym) {
-            int addOp = tokenType[tokenIndex];
-            if (addOp == plussym) {
-                tokenIndex++;
-                term();
-                emit(OPR, 0, 1);
-            } else {
-                tokenIndex++;
-                term();
-                emit(OPR, 0, 2);
-            }
+            term();
+            emit(OPR, 0, 1);
+        } else {
+            tokenIndex++;
+            term();
+            emit(OPR, 0, 2);
         }
     }
 }
