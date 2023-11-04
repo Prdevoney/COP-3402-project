@@ -476,7 +476,9 @@ int main(int argc, char *argv[]){
 
     for (int i = 0; i < symbolIndex; i++) {
         free(symbolTable[i]);
+        symbolTable[i] = NULL; 
     }
+
     printf("-1"); 
     for (int z = 0; z < identCount; z++) {
         printf("0"); 
