@@ -33,6 +33,7 @@ typedef struct {
     int val;       // number (ASCII value)
     int level;     // L level
     int addr;      // M address
+    int mark;      // to indicate unavailable or deleted 
 } symbol;
 
 // Key for OP instructions generation.
@@ -64,7 +65,7 @@ instruction code[CODE_SIZE]; // code array
 int cx = 0;   // starting index.
 
 // function declarations for parsecodegen part 
-symbol *initSymbolTable (int kind, char *name, int val, int level, int addr);
+symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int mark);
 int symbolTableCheck(char *name);
 void emit(int op, int l, int m);
 void program();
@@ -459,14 +460,15 @@ int main(int argc, char *argv[]){
 
 
     printf("\n");
-  
+
     printf("Kind | Name        | Value | Level | Address | Mark\n"); 
     for (int i = 0; i < symbolIndex; i++) {
-        printf("%4d | %11s | %5d | %5d | %7d |    1\n", symbolTable[i]->kind, 
+        printf("%4d | %11s | %5d | %5d | %7d | %4d\n", symbolTable[i]->kind, 
                                         symbolTable[i]->name, 
                                         symbolTable[i]->val, 
                                         symbolTable[i]->level, 
-                                        symbolTable[i]->addr);
+                                        symbolTable[i]->addr,
+                                        symbolTable[i]->mark);
     }
 
     for (int z = 0; z < identCount; z++) {
@@ -484,13 +486,14 @@ int main(int argc, char *argv[]){
 // ------------- The parser codegen part of the compiler -------------
 
 // creates a struct for each symbol and then returns it to be stored in the symbolTable array 
-symbol *initSymbolTable (int kind, char *name, int val, int level, int addr) {
+symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int mark) {
     symbol *s = malloc(sizeof(symbol));
     s->kind = kind;
     strcpy(s->name, name);
     s->val = val;
     s->level = level;
     s->addr = addr;
+    s->mark = mark;
     return s;
 }
 
@@ -577,7 +580,7 @@ void constDeclaration() {
             // if num then we add (kind, name, L, and M) to the symbol table
             int number = atoi(identArr[identIndex]); // Convert string to integer
             identIndex++; 
-            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0);
+            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0, 1);
             symbolIndex++;
             printf("%d (token) line: 590\n", tokenType[tokenIndex]); 
 
@@ -617,7 +620,7 @@ int varDeclaration() {
             }
 
             // if valid identifier then initialize it in symbolTable 
-            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars);
+            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars, 1);
             identIndex++; 
             symbolIndex++; 
             printf("%d (token) line: 631\n", tokenType[tokenIndex]); 
