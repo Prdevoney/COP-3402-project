@@ -1,6 +1,6 @@
 /*
     Patrick DeVoney & Rossella Diorio.
-    Homework Assignment Four: Compiler.
+    Homework Assignment Two: Lexical Analyzer.
     Prof: Euripides Montage.
     COP 3402, Fall 2023.
 */
@@ -23,7 +23,7 @@ typedef enum {
     multsym,  slashsym, ifelsym_8, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
-    whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
+    whilesym, dosym, callsym_8, constsym, varsym, procsym_8, writesym,
     readsym , elsesym_8
 } token_type;
 
@@ -72,7 +72,6 @@ void program();
 void block ();
 void constDeclaration();
 int varDeclaration();
-void procedure(); 
 void statement();
 void condition();
 void expression();
@@ -83,14 +82,14 @@ void factor();
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"odd", "const", "var", "ifel_8", 
-                        "procedure", "begin", "end", "if", 
+                        "procedure_8", "begin", "end", "if", 
                         "then",  "else_8", "while", 
-                        "do", "call", "read", "write"};
+                        "do", "call_8", "read", "write"};
 
     // What the keywords correspond to. 
-    int wsym [] = {oddsym, constsym, varsym, ifelsym_8, procsym,
+    int wsym [] = {oddsym, constsym, varsym, ifelsym_8, procsym_8,
                     beginsym, endsym, ifsym, thensym, 
-                    elsesym_8, whilesym, dosym, callsym,
+                    elsesym_8, whilesym, dosym, callsym_8,
                     readsym, writesym};
 
     // Array for special characters. 
@@ -409,11 +408,7 @@ int main(int argc, char *argv[]){
     // Call parser codegen function.
     program();
 
-    FILE *outputFile = fopen("elf.txt", "w");
-
     // -----Print out the parser output-----.
-
-    printf("\nNo errors, program is syntactically correct\n\n");
     printf("Assembly Code:\n\n");
     
     printf("Line    OP    L    M\n");
@@ -453,11 +448,22 @@ int main(int argc, char *argv[]){
         }
 
         printf(" %2d    %s    %d   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
-        // print out to elf file
-        fprintf(outputFile, "%2d    %2d    %2d\n",code[i].op, code[i].l, code[i].m);        
+        
     }
-    
 
+
+    printf("\n");
+    printf("Symbol Table:\n\n");
+
+    printf("Kind | Name        | Value | Level | Address | Mark\n"); 
+    for (int i = 0; i < symbolIndex; i++) {
+        printf("%4d | %11s | %5d | %5d | %7d | %4d\n", symbolTable[i]->kind, 
+                                        symbolTable[i]->name, 
+                                        symbolTable[i]->val, 
+                                        symbolTable[i]->level, 
+                                        symbolTable[i]->addr,
+                                        symbolTable[i]->mark);
+    }
 
     // free memory
     for (int i = 0; i < symbolIndex; i++) {
@@ -534,13 +540,11 @@ void program() {
 void block () {
     constDeclaration();
     int numVars = varDeclaration();
-    procedure(); 
     emit(INC, 0, 3 + numVars);
     statement();
 }
 
 // constdeclaration ::= [ “const” ident "=" number {"," ident "=" number} ";"]
-
 void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
         // checks structure of the const declaration 
@@ -629,28 +633,6 @@ int varDeclaration() {
     return numVars;
 }
 
-void procedure () {
-     while (tokenType[tokenIndex] == procsym) {
-        tokenIndex++; 
-        if (tokenType[tokenIndex] != identsym) {
-            printf("Error: procedure error 1"); 
-            exit(1); 
-        }
-        tokenIndex++; 
-        if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: procedure error 2"); 
-            exit(2); 
-        }
-        tokenIndex++; 
-        block(); 
-        if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: procedure error 3"); 
-            exit(3); 
-        }
-        tokenIndex++; 
-    }
-}
-
 /* 
     statement ::= [ ident ":=" expression | "begin" statement {";" statement} "end" | 
     "if" condition "then" statement | "while" condition "do" statement | "read" ident | 
@@ -685,18 +667,6 @@ void statement() {
         emit(STO, 0, symbolTable[symIdx]->addr);
         return;
     }
-    //======================================= THIS IS NEW =========================
-    // if "call"
-    if (tokenType[tokenIndex] == callsym){
-        tokenIndex++;
-        if (tokenType[tokenIndex] != identsym) {
-            printf("Error: call must be followed by an identifier\n");
-            exit(1);
-        }
-        tokenIndex++;
-        return;
-    }
-    // ====================================== END NEW =============================
     // if "begin" 
     if (tokenType[tokenIndex] == beginsym) {
         do { 
@@ -891,3 +861,4 @@ void factor() {
         exit(1);
     }
 }
+

@@ -1,0 +1,6 @@
+/* Error: arithmetic equations must contain operands, 
+        parentheses, and numbers, or symbols */ 
+
+var x, y; 
+
+x := ; 
