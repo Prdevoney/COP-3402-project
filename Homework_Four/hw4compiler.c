@@ -1,6 +1,6 @@
 /*
     Patrick DeVoney & Rossella Diorio.
-    Homework Assignment Two: Lexical Analyzer.
+    Homework Assignment Four: Compiler.
     Prof: Euripides Montage.
     COP 3402, Fall 2023.
 */
@@ -23,7 +23,7 @@ typedef enum {
     multsym,  slashsym, ifelsym_8, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
-    whilesym, dosym, callsym_8, constsym, varsym, procsym_8, writesym,
+    whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
     readsym , elsesym_8
 } token_type;
 
@@ -82,14 +82,14 @@ void factor();
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"odd", "const", "var", "ifel_8", 
-                        "procedure_8", "begin", "end", "if", 
+                        "procedure", "begin", "end", "if", 
                         "then",  "else_8", "while", 
-                        "do", "call_8", "read", "write"};
+                        "do", "call", "read", "write"};
 
     // What the keywords correspond to. 
-    int wsym [] = {oddsym, constsym, varsym, ifelsym_8, procsym_8,
+    int wsym [] = {oddsym, constsym, varsym, ifelsym_8, procsym,
                     beginsym, endsym, ifsym, thensym, 
-                    elsesym_8, whilesym, dosym, callsym_8,
+                    elsesym_8, whilesym, dosym, callsym,
                     readsym, writesym};
 
     // Array for special characters. 
@@ -408,6 +408,8 @@ int main(int argc, char *argv[]){
     // Call parser codegen function.
     program();
 
+    FILE *outputFile = fopen("elf.txt", "w");
+
     // -----Print out the parser output-----.
     printf("Assembly Code:\n\n");
     
@@ -448,22 +450,14 @@ int main(int argc, char *argv[]){
         }
 
         printf(" %2d    %s    %d   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
-        
+        // print out to elf file
+        fprintf(outputFile, "%2d    %2d    %2d\n",code[i].op, code[i].l, code[i].m);        
     }
 
+    // write output to elf.txt file
 
-    printf("\n");
-    printf("Symbol Table:\n\n");
+    
 
-    printf("Kind | Name        | Value | Level | Address | Mark\n"); 
-    for (int i = 0; i < symbolIndex; i++) {
-        printf("%4d | %11s | %5d | %5d | %7d | %4d\n", symbolTable[i]->kind, 
-                                        symbolTable[i]->name, 
-                                        symbolTable[i]->val, 
-                                        symbolTable[i]->level, 
-                                        symbolTable[i]->addr,
-                                        symbolTable[i]->mark);
-    }
 
     // free memory
     for (int i = 0; i < symbolIndex; i++) {
@@ -667,6 +661,18 @@ void statement() {
         emit(STO, 0, symbolTable[symIdx]->addr);
         return;
     }
+    //======================================= THIS IS NEW =========================
+    // if "call"
+    if (tokenType[tokenIndex] == callsym){
+        tokenIndex++;
+        if (tokenType[tokenIndex] != identsym) {
+            printf("Error: call must be followed by an identifier\n");
+            exit(1);
+        }
+        tokenIndex++;
+        return;
+    }
+    // ====================================== END NEW =============================
     // if "begin" 
     if (tokenType[tokenIndex] == beginsym) {
         do { 
@@ -861,4 +867,3 @@ void factor() {
         exit(1);
     }
 }
-
