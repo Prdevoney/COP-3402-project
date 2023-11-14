@@ -69,7 +69,7 @@ int cx = 0;   // starting index.
 
 // function declarations for parsecodegen part 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int mark);
-int symbolTableCheck(char *name);
+int symbolTableCheck(char *name, int typeCheck);
 void emit(int op, int l, int m);
 void program();
 void block ();
@@ -499,14 +499,39 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int
 }
 
 // Determines if an identifier is initialized. If yes return index, else return -1 
-int symbolTableCheck(char *name) {
-    // loop through symbol table to see if identifier is in array. 
-    for(int i = 0; i < symbolIndex; i++) {
-        // if there is an identifier with the same name that is on the same level 
-        if (strcmp(symbolTable[i]->name, name) == 0 && symbolTable[i]->level == currLevel)
-            return i; 
+int symbolTableCheck(char *name, int typeCheck) {
+
+    // ================== DECLARATION CHECK ===============================
+    if (typeCheck == 0) {
+        // loop through symbol table to see if identifier is in array. 
+        // determines if the identifier can be declared again. 
+        // all we need to know is if it has the same name as something else and if it is on the same level 
+        for (int i = 0; i < symbolIndex; i++) {
+            if (strcmp(symbolTable[i]->name, name) == 0 && symbolTable[i]->level == currLevel) {
+                // not eligible to be declared
+                return i; 
+            }
+        }
+        // eligible to be declared
+        return -1;
     }
-    return -1;
+    // ********************************************************************
+
+    // ================== STATEMENT CHECK =================================
+    else {
+        // loop through symbol table to see if identifier is in array. 
+        // determines if an identifier can be used in statement. 
+        // all we need to know is if it has been declared before and if it is available. 
+        for (int i = 0; i < symbolIndex; i++) {
+            if (strcmp(symbolTable[i]->name, name) == 0 && symbolTable[i]->mark == 0) {
+                // eligible to be used in statement 
+                return i; 
+            }
+        }
+        // not eleigible to be used in statement. 
+        return -1; 
+    }
+    // ********************************************************************
 }
 
 // creates the assembly instructions and stores them in the code array
@@ -557,7 +582,7 @@ void constDeclaration() {
                 exit(1);
             }
             // has the identifier already been declared? 
-            if(symbolTableCheck(identArr[identIndex]) != -1) {
+            if(symbolTableCheck(identArr[identIndex], 0) != -1) {
                 printf("Error: symbol name has already been declared\n");
                 exit(1);
             }
@@ -609,7 +634,7 @@ int varDeclaration() {
                 exit(1);
             }
             // has the identifier already been declared? 
-            if (symbolTableCheck(identArr[identIndex]) != -1) {
+            if (symbolTableCheck(identArr[identIndex], 0) != -1) {
                 printf("Error: This variable has already been declared: %s\ntokenIndex: %d", identArr[identIndex], tokenIndex);
                 exit(1);
             }
@@ -673,7 +698,7 @@ void statement() {
     // if identifier 
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
-        symIdx = symbolTableCheck(identArr[identIndex]);
+        symIdx = symbolTableCheck(identArr[identIndex], 1);
         identIndex++; 
         // not in symbolTable
         if (symIdx == -1) {
@@ -682,6 +707,8 @@ void statement() {
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
+            printf("%d\n", tokenType[tokenIndex]);
+            printf("%s, %d, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
             printf("Error: only variable values may be altered\n");
             exit(1);
         }
@@ -766,7 +793,7 @@ void statement() {
             exit(1);
         }
         // check to see if identifier is in array 
-        symIdx = symbolTableCheck(identArr[identIndex]);
+        symIdx = symbolTableCheck(identArr[identIndex], 1);
         if (symIdx == -1) {
                 printf("Error2: Undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
             exit(1);
@@ -869,7 +896,7 @@ void term() {
 void factor() {
     // if identifier
     if (tokenType[tokenIndex] == identsym) {
-        int symIdx = symbolTableCheck(identArr[identIndex]);
+        int symIdx = symbolTableCheck(identArr[identIndex], 1);
         identIndex++; 
         if (symIdx == -1) {
             printf("Error3: Undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
