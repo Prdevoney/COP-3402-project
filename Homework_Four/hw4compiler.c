@@ -411,6 +411,8 @@ int main(int argc, char *argv[]){
     FILE *outputFile = fopen("elf.txt", "w");
 
     // -----Print out the parser output-----.
+
+    printf("\nNo errors, program is syntactically correct\n\n");
     printf("Assembly Code:\n\n");
     
     printf("Line    OP    L    M\n");
@@ -453,9 +455,6 @@ int main(int argc, char *argv[]){
         // print out to elf file
         fprintf(outputFile, "%2d    %2d    %2d\n",code[i].op, code[i].l, code[i].m);        
     }
-
-    // write output to elf.txt file
-
     
 
 
