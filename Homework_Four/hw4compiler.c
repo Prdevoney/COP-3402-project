@@ -72,6 +72,7 @@ void program();
 void block ();
 void constDeclaration();
 int varDeclaration();
+void procedure(); 
 void statement();
 void condition();
 void expression();
@@ -534,11 +535,13 @@ void program() {
 void block () {
     constDeclaration();
     int numVars = varDeclaration();
+    procedure(); 
     emit(INC, 0, 3 + numVars);
     statement();
 }
 
 // constdeclaration ::= [ “const” ident "=" number {"," ident "=" number} ";"]
+
 void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
         // checks structure of the const declaration 
@@ -625,6 +628,28 @@ int varDeclaration() {
     }
     // return the number of declared variables
     return numVars;
+}
+
+void procedure () {
+     while (tokenType[tokenIndex] == procsym) {
+        tokenIndex++; 
+        if (tokenType[tokenIndex] != identsym) {
+            printf("Error: procedure error 1"); 
+            exit(1); 
+        }
+        tokenIndex++; 
+        if (tokenType[tokenIndex] != semicolonsym) {
+            printf("Error: procedure error 2"); 
+            exit(2); 
+        }
+        tokenIndex++; 
+        block(); 
+        if (tokenType[tokenIndex] != semicolonsym) {
+            printf("Error: procedure error 3"); 
+            exit(3); 
+        }
+        tokenIndex++; 
+    }
 }
 
 /* 
