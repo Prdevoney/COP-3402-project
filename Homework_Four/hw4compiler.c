@@ -121,9 +121,10 @@ int main(int argc, char *argv[]){
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
         return 0;
     }
-    
+    printf("\nSource Code:\n"); 
     while ((ch = fgetc(file)) != EOF) {
         chcount++;
+        printf("%c", ch);
     }
 
     fclose(file);
