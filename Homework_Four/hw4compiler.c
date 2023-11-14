@@ -408,6 +408,8 @@ int main(int argc, char *argv[]){
     // Call parser codegen function.
     program();
 
+    FILE *outputFile = fopen("elf.txt", "w");
+
     // -----Print out the parser output-----.
     printf("Assembly Code:\n\n");
     
@@ -448,22 +450,14 @@ int main(int argc, char *argv[]){
         }
 
         printf(" %2d    %s    %d   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
-        
+        // print out to elf file
+        fprintf(outputFile, "%2d    %2d    %2d\n",code[i].op, code[i].l, code[i].m);        
     }
 
+    // write output to elf.txt file
 
-    printf("\n");
-    printf("Symbol Table:\n\n");
+    
 
-    printf("Kind | Name        | Value | Level | Address | Mark\n"); 
-    for (int i = 0; i < symbolIndex; i++) {
-        printf("%4d | %11s | %5d | %5d | %7d | %4d\n", symbolTable[i]->kind, 
-                                        symbolTable[i]->name, 
-                                        symbolTable[i]->val, 
-                                        symbolTable[i]->level, 
-                                        symbolTable[i]->addr,
-                                        symbolTable[i]->mark);
-    }
 
     // free memory
     for (int i = 0; i < symbolIndex; i++) {
