@@ -1,0 +1,6 @@
+/* Error: if must be followed by then */
+
+var x; 
+if odd x + 2  
+    x := x + x 
+.

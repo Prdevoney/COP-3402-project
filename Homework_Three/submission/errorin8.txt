@@ -1,0 +1,6 @@
+/* Error: only variable values may be altered */ 
+
+const x = 7; 
+var y, z; 
+    x := 2 + 2; 
+.

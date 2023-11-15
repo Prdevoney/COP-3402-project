@@ -1,6 +1,6 @@
 /*
     Patrick DeVoney & Rossella Diorio.
-    Homework Assignment Four: Compiler.
+    Homework Assignment Two: Lexical Analyzer.
     Prof: Euripides Montage.
     COP 3402, Fall 2023.
 */
@@ -23,7 +23,7 @@ typedef enum {
     multsym,  slashsym, ifelsym_8, eqsym, neqsym, lessym, leqsym,
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
-    whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
+    whilesym, dosym, callsym_8, constsym, varsym, procsym_8, writesym,
     readsym , elsesym_8
 } token_type;
 
@@ -61,41 +61,35 @@ int tokenIndex = 0;
 char **identArr; 
 int identIndex = 0; 
 
-// keep track of the current level
-int currLevel = 0; 
-
 instruction code[CODE_SIZE]; // code array
 int cx = 0;   // starting index.
-int lexLevel = 0; // current level.
 
 // function declarations for parsecodegen part 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int mark);
-int symbolTableCheck(char *name, int typeCheck);
+int symbolTableCheck(char *name);
 void emit(int op, int l, int m);
 void program();
 void block ();
 void constDeclaration();
 int varDeclaration();
-void procedure(); 
 void statement();
 void condition();
 void expression();
 void term();
 void factor();
-void procedure();
 
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
     // Reserved words (keywords). 
     char * resWords [] = {"odd", "const", "var", "ifel_8", 
-                        "procedure", "begin", "end", "if", 
+                        "procedure_8", "begin", "end", "if", 
                         "then",  "else_8", "while", 
-                        "do", "call", "read", "write"};
+                        "do", "call_8", "read", "write"};
 
     // What the keywords correspond to. 
-    int wsym [] = {oddsym, constsym, varsym, ifelsym_8, procsym,
+    int wsym [] = {oddsym, constsym, varsym, ifelsym_8, procsym_8,
                     beginsym, endsym, ifsym, thensym, 
-                    elsesym_8, whilesym, dosym, callsym,
+                    elsesym_8, whilesym, dosym, callsym_8,
                     readsym, writesym};
 
     // Array for special characters. 
@@ -126,10 +120,9 @@ int main(int argc, char *argv[]){
         printf("No input file recieved, please put: 'input.txt' after executable file! \n");
         return 0;
     }
-    printf("\nSource Code:\n"); 
+    
     while ((ch = fgetc(file)) != EOF) {
         chcount++;
-        printf("%c", ch);
     }
 
     fclose(file);
@@ -253,7 +246,6 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
-        printf("tempArr: %s\n", tempArr); 
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -304,7 +296,7 @@ int main(int argc, char *argv[]){
             else {
                 //=================== resWords Check ===================
                 int keyWordCheck = 0; 
-                for (int k = 0; k < norw+1; k++) {
+                for (int k = 0; k < norw; k++) {
                     if (strcmp(tempArr, resWords[k]) == 0) {
 
                         // dynamically resize tokenType array if necessary. 
@@ -408,7 +400,6 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
-        printf(" tokenType: %d, count: %d\n", tokenType[tokenCount-1], tokenCount-1); 
         i++; 
     }
 
@@ -417,11 +408,7 @@ int main(int argc, char *argv[]){
     // Call parser codegen function.
     program();
 
-    FILE *outputFile = fopen("elf.txt", "w");
-
     // -----Print out the parser output-----.
-
-    printf("\nNo errors, program is syntactically correct\n\n");
     printf("Assembly Code:\n\n");
     
     printf("Line    OP    L    M\n");
@@ -461,11 +448,22 @@ int main(int argc, char *argv[]){
         }
 
         printf(" %2d    %s    %d   %2d\n", i, assemblyInsName, code[i].l, code[i].m);
-        // print out to elf file
-        fprintf(outputFile, "%2d    %2d    %2d\n",code[i].op, code[i].l, code[i].m);        
+        
     }
-    
 
+
+    printf("\n");
+    printf("Symbol Table:\n\n");
+
+    printf("Kind | Name        | Value | Level | Address | Mark\n"); 
+    for (int i = 0; i < symbolIndex; i++) {
+        printf("%4d | %11s | %5d | %5d | %7d | %4d\n", symbolTable[i]->kind, 
+                                        symbolTable[i]->name, 
+                                        symbolTable[i]->val, 
+                                        symbolTable[i]->level, 
+                                        symbolTable[i]->addr,
+                                        symbolTable[i]->mark);
+    }
 
     // free memory
     for (int i = 0; i < symbolIndex; i++) {
@@ -503,39 +501,13 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int
 }
 
 // Determines if an identifier is initialized. If yes return index, else return -1 
-int symbolTableCheck(char *name, int typeCheck) {
-
-    // ================== DECLARATION CHECK ===============================
-    if (typeCheck == 0) {
-        // loop through symbol table to see if identifier is in array. 
-        // determines if the identifier can be declared again. 
-        // all we need to know is if it has the same name as something else and if it is on the same level 
-        for (int i = 0; i < symbolIndex; i++) {
-            if (strcmp(symbolTable[i]->name, name) == 0 && symbolTable[i]->level == currLevel) {
-                // not eligible to be declared
-                return i; 
-            }
-        }
-        // eligible to be declared
-        return -1;
+int symbolTableCheck(char *name) {
+    // loop through symbol table to see if identifier is in array. 
+    for(int i = 0; i < symbolIndex; i++) {
+        if (strcmp(symbolTable[i]->name, name) == 0)
+            return i; 
     }
-    // ********************************************************************
-
-    // ================== STATEMENT CHECK =================================
-    else {
-        // loop through symbol table to see if identifier is in array. 
-        // determines if an identifier can be used in statement. 
-        // all we need to know is if it has been declared before and if it is available. 
-        for (int i = 0; i < symbolIndex; i++) {
-            if (strcmp(symbolTable[i]->name, name) == 0 && symbolTable[i]->mark == 0) {
-                // eligible to be used in statement 
-                return i; 
-            }
-        }
-        // not eleigible to be used in statement. 
-        return -1; 
-    }
-    // ********************************************************************
+    return -1;
 }
 
 // creates the assembly instructions and stores them in the code array
@@ -568,7 +540,6 @@ void program() {
 void block () {
     constDeclaration();
     int numVars = varDeclaration();
-    procedure(); 
     emit(INC, 0, 3 + numVars);
     statement();
 }
@@ -585,7 +556,7 @@ void constDeclaration() {
                 exit(1);
             }
             // has the identifier already been declared? 
-            if(symbolTableCheck(identArr[identIndex], 0) != -1) {
+            if(symbolTableCheck(identArr[identIndex]) != -1) {
                 printf("Error: symbol name has already been declared\n");
                 exit(1);
             }
@@ -609,7 +580,7 @@ void constDeclaration() {
             // if num then we add (kind, name, L, and M) to the symbol table
             int number = atoi(identArr[identIndex]); // Convert string to integer
             identIndex++; 
-            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, currLevel, 0, 0);
+            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0, 1);
             symbolIndex++;
             tokenIndex++;
             // if "," then repeate for next declaration else we break then check for ";"
@@ -637,13 +608,13 @@ int varDeclaration() {
                 exit(1);
             }
             // has the identifier already been declared? 
-            if (symbolTableCheck(identArr[identIndex], 0) != -1) {
-                printf("Error: This variable has already been declared: %s\ntokenIndex: %d", identArr[identIndex], tokenIndex);
+            if (symbolTableCheck(identArr[identIndex]) != -1) {
+                printf("Error: This variable has already been declared\n");
                 exit(1);
             }
 
             // if valid identifier then initialize it in symbolTable 
-            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, currLevel, 2 + numVars, 0);
+            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars, 1);
             identIndex++; 
             symbolIndex++; 
             tokenIndex++;
@@ -662,35 +633,6 @@ int varDeclaration() {
     return numVars;
 }
 
-void procedure () {
-     while (tokenType[tokenIndex] == procsym) {
-        currLevel++; 
-        tokenIndex++; 
-        if (tokenType[tokenIndex] != identsym) {
-            printf("Error: procedure error 1"); 
-            exit(1); 
-        }
-        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, 0, 0);
-        // printf("%d, %s, %d, %d, %d, %d\n", symbolTable[symbolIndex]->kind, symbolTable[symbolIndex]->name, symbolTable[symbolIndex]->val, symbolTable[symbolIndex]->level, symbolTable[symbolIndex]->addr, symbolTable[symbolIndex]->mark);
-        symbolIndex++; 
-        tokenIndex++; 
-        identIndex++; 
-
-        if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: procedure error 2"); 
-            exit(2); 
-        }
-        tokenIndex++; 
-        block(); 
-        if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: procedure error 3"); 
-            exit(3); 
-        }
-        currLevel--; 
-        tokenIndex++; 
-    }
-}
-
 /* 
     statement ::= [ ident ":=" expression | "begin" statement {";" statement} "end" | 
     "if" condition "then" statement | "while" condition "do" statement | "read" ident | 
@@ -701,19 +643,15 @@ void statement() {
     // if identifier 
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
-        symIdx = symbolTableCheck(identArr[identIndex], 1);
-        printf("\nidentIndex: %d,\nidentArr: %s,\nsymIdx: %d,\ntokenIndex: %d\n", identIndex, identArr[identIndex], symIdx, tokenIndex); 
+        symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
         // not in symbolTable
-        printf("\nToken: %d   ", tokenType[tokenIndex-1]);
         if (symIdx == -1) {
-            printf("Error1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
-            printf("\nToken Type: %d,\n", tokenType[tokenIndex]);
-            printf("name: %s, \nlevel: %d, \nkind: %d, \ntokenIndex: %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
             printf("Error: only variable values may be altered\n");
             exit(1);
         }
@@ -729,20 +667,6 @@ void statement() {
         emit(STO, 0, symbolTable[symIdx]->addr);
         return;
     }
-    //======================================= THIS IS NEW =========================
-    // if "call"
-    if (tokenType[tokenIndex] == callsym){
-        tokenIndex++;
-        if (tokenType[tokenIndex] != identsym) {
-            printf("Error: call must be followed by an identifier\n");
-            exit(1);
-        }
-        currLevel--; 
-        identIndex++; 
-        tokenIndex++;
-        return;
-    }
-    // ====================================== END NEW =============================
     // if "begin" 
     if (tokenType[tokenIndex] == beginsym) {
         do { 
@@ -798,10 +722,9 @@ void statement() {
             exit(1);
         }
         // check to see if identifier is in array 
-        symIdx = symbolTableCheck(identArr[identIndex], 1);
-        identIndex++; 
+        symIdx = symbolTableCheck(identArr[identIndex]);
         if (symIdx == -1) {
-                printf("Error2: Undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         if (symbolTable[symIdx]->kind != 2) {
@@ -902,10 +825,10 @@ void term() {
 void factor() {
     // if identifier
     if (tokenType[tokenIndex] == identsym) {
-        int symIdx = symbolTableCheck(identArr[identIndex], 1);
+        int symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
         if (symIdx == -1) {
-            printf("Error3: Undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
         }
         // const or var
@@ -938,3 +861,4 @@ void factor() {
         exit(1);
     }
 }
+

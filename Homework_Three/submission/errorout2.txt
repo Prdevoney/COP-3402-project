@@ -1,0 +1,1 @@
+Error: const, var, and read must be followed by identifier
