@@ -302,7 +302,7 @@ int main(int argc, char *argv[]){
             else {
                 //=================== resWords Check ===================
                 int keyWordCheck = 0; 
-                for (int k = 0; k < norw; k++) {
+                for (int k = 0; k < norw+1; k++) {
                     if (strcmp(tempArr, resWords[k]) == 0) {
 
                         // dynamically resize tokenType array if necessary. 
