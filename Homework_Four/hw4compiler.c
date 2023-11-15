@@ -63,6 +63,7 @@ int identIndex = 0;
 
 instruction code[CODE_SIZE]; // code array
 int cx = 0;   // starting index.
+int lexLevel = 0; // current level.
 
 // function declarations for parsecodegen part 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int mark);
@@ -77,6 +78,7 @@ void condition();
 void expression();
 void term();
 void factor();
+void procedure();
 
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
@@ -496,9 +498,15 @@ symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int
 // Determines if an identifier is initialized. If yes return index, else return -1 
 int symbolTableCheck(char *name) {
     // loop through symbol table to see if identifier is in array. 
-    for(int i = 0; i < symbolIndex; i++) {
+    printf("name of thing: %s\n", name);
+    for (int i = 0; i < symbolIndex; i++) {
+
         if (strcmp(symbolTable[i]->name, name) == 0)
-            return i; 
+         {
+            if (symbolTable[i]->level == lexLevel || symbolTable[i]->level == 0 ) {
+                return i; 
+            }
+         } 
     }
     return -1;
 }
@@ -534,6 +542,7 @@ void block () {
     constDeclaration();
     int numVars = varDeclaration();
     emit(INC, 0, 3 + numVars);
+    procedure();
     statement();
 }
 
@@ -573,7 +582,7 @@ void constDeclaration() {
             // if num then we add (kind, name, L, and M) to the symbol table
             int number = atoi(identArr[identIndex]); // Convert string to integer
             identIndex++; 
-            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, 0, 0, 1);
+            symbolTable[symbolIndex] = initSymbolTable(1, identName, number, lexLevel, 0, 1);
             symbolIndex++;
             tokenIndex++;
             // if "," then repeate for next declaration else we break then check for ";"
@@ -601,13 +610,15 @@ int varDeclaration() {
                 exit(1);
             }
             // has the identifier already been declared? 
+            printf("tokenIndex: %d\n", tokenIndex);
             if (symbolTableCheck(identArr[identIndex]) != -1) {
-                printf("Error: This variable has already been declared\n");
+                printf("Error: This variable has already been declared:    %s \n", identArr[identIndex]);
                 exit(1);
             }
 
             // if valid identifier then initialize it in symbolTable 
-            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, 0, 2 + numVars, 1);
+            printf("lexlevel over here: %d", lexLevel);
+            symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, lexLevel, 2 + numVars, 1);
             identIndex++; 
             symbolIndex++; 
             tokenIndex++;
@@ -626,6 +637,38 @@ int varDeclaration() {
     return numVars;
 }
 
+void procedure() {
+    if (tokenType[tokenIndex] == procsym) {
+        do {
+            tokenIndex++;
+            if (tokenType[tokenIndex] != identsym) {
+                printf("Error: procedure must be followed by identifier\n");
+                exit(1);
+            }
+            tokenIndex++;
+            
+            if (tokenType[tokenIndex] != semicolonsym) {
+                printf("Error: procedure must be followed by semicolon\n");
+                exit(1);
+            }
+            tokenIndex++;
+            identIndex++;
+            // increase lex level before new block
+            lexLevel++;
+            block();
+            if (tokenType[tokenIndex] != semicolonsym) {
+                printf("Error: procedure must be followed by semicolon\n");
+                exit(1);
+            }
+            lexLevel--;
+
+            tokenIndex++;
+        } while (tokenType[tokenIndex] == procsym);
+        statement();
+    }
+    return;
+}
+
 /* 
     statement ::= [ ident ":=" expression | "begin" statement {";" statement} "end" | 
     "if" condition "then" statement | "while" condition "do" statement | "read" ident | 
@@ -639,6 +682,7 @@ void statement() {
         symIdx = symbolTableCheck(identArr[identIndex]);
         identIndex++; 
         // not in symbolTable
+        printf("\nToken: %d   ", tokenType[tokenIndex-1]);
         if (symIdx == -1) {
             printf("Error: Undeclared identifier: %s\n", identArr[identIndex-1]);
             exit(1);
