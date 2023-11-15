@@ -686,6 +686,22 @@ void procedure () {
             printf("Error: procedure error 3"); 
             exit(3); 
         }
+        /* 
+        go through the symbolTable when you leave a procedure. (go down a level) 
+        if a variable was declared in that procedure it will have the same level 
+        as that procedure; so, decrement curr level because you left the procedure 
+        then see what variables in the symbol table were declared in that procedure 
+        by checking their level and if it is greater than the currLevel, then set the 
+        mark to 1, because it is no longer available. 
+
+        We just need to find out where to actually put this logic; because, I don't
+        know where we exit the procedure. It looks like there are two locations 
+        that check for a semicolon in the procedure function. 
+        */
+        
+        // if (currLevel <= symbolTable[i]-> level)
+        //      symbolTable[i]->mark = 1; 
+
         currLevel--; 
         tokenIndex++; 
     }
