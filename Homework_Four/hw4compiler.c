@@ -251,6 +251,7 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
+        printf("tempArr: %s\n", tempArr); 
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -405,6 +406,7 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
+        printf(" tokenType: %d, count: %d\n", tokenType[tokenCount-1], tokenCount-1); 
         i++; 
     }
 
@@ -668,7 +670,7 @@ void procedure () {
             exit(1); 
         }
         symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, 0, 0);
-        printf("%d, %s, %d, %d, %d, %d\n", symbolTable[symbolIndex]->kind, symbolTable[symbolIndex]->name, symbolTable[symbolIndex]->val, symbolTable[symbolIndex]->level, symbolTable[symbolIndex]->addr, symbolTable[symbolIndex]->mark);
+        // printf("%d, %s, %d, %d, %d, %d\n", symbolTable[symbolIndex]->kind, symbolTable[symbolIndex]->name, symbolTable[symbolIndex]->val, symbolTable[symbolIndex]->level, symbolTable[symbolIndex]->addr, symbolTable[symbolIndex]->mark);
         symbolIndex++; 
         tokenIndex++; 
         identIndex++; 
@@ -699,6 +701,7 @@ void statement() {
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
         symIdx = symbolTableCheck(identArr[identIndex], 1);
+        printf("\nidentIndex: %d,\nidentArr: %s,\nsymIdx: %d,\ntokenIndex: %d\n", identIndex, identArr[identIndex], symIdx, tokenIndex); 
         identIndex++; 
         // not in symbolTable
         if (symIdx == -1) {
@@ -707,8 +710,8 @@ void statement() {
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
-            printf("%d\n", tokenType[tokenIndex]);
-            printf("%s, %d, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
+            printf("\nToken Type: %d,\n", tokenType[tokenIndex]);
+            printf("name: %s, \nlevel: %d, \nkind: %d, \ntokenIndex: %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
             printf("Error: only variable values may be altered\n");
             exit(1);
         }
@@ -733,7 +736,7 @@ void statement() {
             exit(1);
         }
         currLevel--; 
-
+        identIndex++; 
         tokenIndex++;
         return;
     }
@@ -794,6 +797,7 @@ void statement() {
         }
         // check to see if identifier is in array 
         symIdx = symbolTableCheck(identArr[identIndex], 1);
+        identIndex++; 
         if (symIdx == -1) {
                 printf("Error2: Undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
             exit(1);
