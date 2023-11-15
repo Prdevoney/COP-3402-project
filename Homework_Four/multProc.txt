@@ -3,16 +3,6 @@ procedure a;
   var x,y,u,v;
   procedure b;
     var y,z,v;
-    procedure c;
-      var y,z;
-      begin
-        z:=1;
-        x:=y+z+w
-      end;
-    begin
-      y:=x+u+w;
-      call c
-    end;
   begin
     z:=2;
     u:=z+w;
@@ -23,4 +13,14 @@ begin
   x:=v+w;
   write z;
   call a;
+end;
+procedure c;
+    var y,z;
+    begin
+    z:=1;
+    x:=y+z+w
+    end;
+begin
+    y:=x+u+w;
+    call c
 end.
