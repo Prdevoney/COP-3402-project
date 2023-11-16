@@ -755,6 +755,8 @@ void statement() {
         }
         identIndex++; 
         tokenIndex++;
+        emit(CAL, currLevel, 0); 
+
         return;
     }
     // ====================================== END NEW =============================
