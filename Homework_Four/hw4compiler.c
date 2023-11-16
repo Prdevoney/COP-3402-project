@@ -690,10 +690,10 @@ void procedure () {
 
         currLevel--; 
 
-        for (int i = 0; i < symbolIndex; i++) {
-            if (currLevel < symbolTable[i]-> level)
-                symbolTable[i]->mark = 1; 
-        }
+        // for (int i = 0; i < symbolIndex; i++) {
+        //     if (currLevel < symbolTable[i]-> level)
+        //         symbolTable[i]->mark = 1; 
+        // }
 
         /* 
         go through the symbolTable when you leave a procedure. (go down a level) 
