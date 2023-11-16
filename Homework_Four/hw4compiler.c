@@ -681,7 +681,7 @@ void procedure () {
             printf("Error: procedure error 1"); 
             exit(1); 
         }
-        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, 0, 0);
+        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel-1, 0, 0);
         // printf("%d, %s, %d, %d, %d, %d\n", symbolTable[symbolIndex]->kind, symbolTable[symbolIndex]->name, symbolTable[symbolIndex]->val, symbolTable[symbolIndex]->level, symbolTable[symbolIndex]->addr, symbolTable[symbolIndex]->mark);
         symbolIndex++; 
         tokenIndex++; 
@@ -697,27 +697,17 @@ void procedure () {
             printf("Error: procedure error 3"); 
             exit(1); 
         }
-<<<<<<< HEAD
 
-        // currLevel--; 
+        currLevel--; 
 
         for (int i = 0; i < symbolIndex; i++) {
             if (currLevel < symbolTable[i]->level) {
                 symbolTable[i]->mark = 1; 
-                printf("hello"); 
             }
         }
 
-        currLevel--; 
+        // currLevel--; 
 
-=======
-        
-
-        for (int j = 0; j < symbolIndex; j++) {
-            if (currLevel < symbolTable[j]-> level)
-              symbolTable[j]->mark = 1; 
-        }
->>>>>>> 058cddf189aadcd85ecc7d2b903f3fd7c924ab94
         /* 
         go through the symbolTable when you leave a procedure. (go down a level) 
         if a variable was declared in that procedure it will have the same level 
