@@ -10,4 +10,8 @@ procedure add;
    begin
    a := c + b;
    end;
+<<<<<<< HEAD
 .
+=======
+.
+>>>>>>> 058cddf189aadcd85ecc7d2b903f3fd7c924ab94

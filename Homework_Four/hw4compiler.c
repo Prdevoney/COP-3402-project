@@ -66,6 +66,7 @@ int currLevel = 0;
 
 instruction code[CODE_SIZE]; // code array
 int cx = 0;   // starting index.
+int lexLevel = 0; // current level.
 
 // function declarations for parsecodegen part 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int mark);
@@ -81,6 +82,7 @@ void condition();
 void expression();
 void term();
 void factor();
+void procedure();
 
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
@@ -463,7 +465,18 @@ int main(int argc, char *argv[]){
         fprintf(outputFile, "%2d    %2d    %2d\n",code[i].op, code[i].l, code[i].m);        
     }
     
+    printf("\n");
+    printf("Symbol Table:\n\n");
 
+    printf("Kind | Name        | Value | Level | Address | Mark\n"); 
+    for (int i = 0; i < symbolIndex; i++) {
+        printf("%4d | %11s | %5d | %5d | %7d | %4d\n", symbolTable[i]->kind, 
+                                        symbolTable[i]->name, 
+                                        symbolTable[i]->val, 
+                                        symbolTable[i]->level, 
+                                        symbolTable[i]->addr,
+                                        symbolTable[i]->mark);
+    }
 
     // free memory
     for (int i = 0; i < symbolIndex; i++) {
@@ -572,7 +585,6 @@ void block () {
 }
 
 // constdeclaration ::= [ “const” ident "=" number {"," ident "=" number} ";"]
-
 void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
         // checks structure of the const declaration 
@@ -677,16 +689,15 @@ void procedure () {
 
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: procedure error 2"); 
-            printf("--%d--\n", tokenIndex); 
             exit(1); 
         }
         tokenIndex++; 
         block(); 
         if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: procedure error 3 "); 
-            printf("--%d--\n", tokenIndex); 
+            printf("Error: procedure error 3"); 
             exit(1); 
         }
+<<<<<<< HEAD
 
         // currLevel--; 
 
@@ -699,6 +710,14 @@ void procedure () {
 
         currLevel--; 
 
+=======
+        
+
+        for (int j = 0; j < symbolIndex; j++) {
+            if (currLevel < symbolTable[j]-> level)
+              symbolTable[j]->mark = 1; 
+        }
+>>>>>>> 058cddf189aadcd85ecc7d2b903f3fd7c924ab94
         /* 
         go through the symbolTable when you leave a procedure. (go down a level) 
         if a variable was declared in that procedure it will have the same level 
@@ -733,6 +752,7 @@ void statement() {
         printf("\nidentIndex: %d,\nidentArr: %s,\nsymIdx: %d,\ntokenIndex: %d\n", identIndex, identArr[identIndex], symIdx, tokenIndex); 
         identIndex++; 
         // not in symbolTable
+        printf("\nToken: %d   ", tokenType[tokenIndex-1]);
         if (symIdx == -1) {
             printf("Error1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
             exit(1);
