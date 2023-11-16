@@ -688,12 +688,16 @@ void procedure () {
             exit(1); 
         }
 
-        currLevel--; 
+        // currLevel--; 
 
-        // for (int i = 0; i < symbolIndex; i++) {
-        //     if (currLevel < symbolTable[i]-> level)
-        //         symbolTable[i]->mark = 1; 
-        // }
+        for (int i = 0; i < symbolIndex; i++) {
+            if (currLevel < symbolTable[i]->level) {
+                symbolTable[i]->mark = 1; 
+                printf("hello"); 
+            }
+        }
+
+        currLevel--; 
 
         /* 
         go through the symbolTable when you leave a procedure. (go down a level) 
