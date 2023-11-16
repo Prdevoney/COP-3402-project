@@ -687,6 +687,14 @@ void procedure () {
             printf("--%d--\n", tokenIndex); 
             exit(1); 
         }
+
+        currLevel--; 
+
+        for (int i = 0; i < symbolIndex; i++) {
+            if (currLevel < symbolTable[i]-> level)
+                symbolTable[i]->mark = 1; 
+        }
+
         /* 
         go through the symbolTable when you leave a procedure. (go down a level) 
         if a variable was declared in that procedure it will have the same level 
@@ -703,7 +711,6 @@ void procedure () {
                 symbolTable[i]->mark = 1; 
         */
 
-        currLevel--; 
         tokenIndex++; 
     }
 }
