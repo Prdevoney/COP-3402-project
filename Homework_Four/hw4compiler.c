@@ -465,7 +465,18 @@ int main(int argc, char *argv[]){
         fprintf(outputFile, "%2d    %2d    %2d\n",code[i].op, code[i].l, code[i].m);        
     }
     
+    printf("\n");
+    printf("Symbol Table:\n\n");
 
+    printf("Kind | Name        | Value | Level | Address | Mark\n"); 
+    for (int i = 0; i < symbolIndex; i++) {
+        printf("%4d | %11s | %5d | %5d | %7d | %4d\n", symbolTable[i]->kind, 
+                                        symbolTable[i]->name, 
+                                        symbolTable[i]->val, 
+                                        symbolTable[i]->level, 
+                                        symbolTable[i]->addr,
+                                        symbolTable[i]->mark);
+    }
 
     // free memory
     for (int i = 0; i < symbolIndex; i++) {
@@ -686,9 +697,10 @@ void procedure () {
             printf("Error: procedure error 3"); 
             exit(1); 
         }
+        
 
         for (int j = 0; j < symbolIndex; j++) {
-            if (currLevel <= symbolTable[j]-> level)
+            if (currLevel < symbolTable[j]-> level)
               symbolTable[j]->mark = 1; 
         }
         /* 
