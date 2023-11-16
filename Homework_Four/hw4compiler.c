@@ -675,17 +675,17 @@ int varDeclaration() {
 
 void procedure () {
     while (tokenType[tokenIndex] == procsym) {
-        currLevel++; 
         tokenIndex++; 
         if (tokenType[tokenIndex] != identsym) {
             printf("Error: procedure error 1"); 
             exit(1); 
         }
-        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel-1, 0, 0);
+        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, 0, 0);
         // printf("%d, %s, %d, %d, %d, %d\n", symbolTable[symbolIndex]->kind, symbolTable[symbolIndex]->name, symbolTable[symbolIndex]->val, symbolTable[symbolIndex]->level, symbolTable[symbolIndex]->addr, symbolTable[symbolIndex]->mark);
         symbolIndex++; 
         tokenIndex++; 
         identIndex++; 
+        currLevel++; 
 
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: procedure error 2"); 
