@@ -698,10 +698,10 @@ void procedure () {
         We just need to find out where to actually put this logic; because, I don't
         know where we exit the procedure. It looks like there are two locations 
         that check for a semicolon in the procedure function. 
-        */
+        
             if (currLevel <= symbolTable[i]-> level)
                 symbolTable[i]->mark = 1; 
-        
+        */
 
         currLevel--; 
         tokenIndex++; 
