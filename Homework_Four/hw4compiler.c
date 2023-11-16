@@ -678,13 +678,18 @@ void procedure () {
 
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: procedure error 2"); 
-            exit(2); 
+            exit(1); 
         }
         tokenIndex++; 
         block(); 
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: procedure error 3"); 
-            exit(3); 
+            exit(1); 
+        }
+
+        for (int j = 0; j < symbolIndex; j++) {
+            if (currLevel <= symbolTable[j]-> level)
+              symbolTable[j]->mark = 1; 
         }
         /* 
         go through the symbolTable when you leave a procedure. (go down a level) 
@@ -753,9 +758,9 @@ void statement() {
             printf("Error: call must be followed by an identifier\n");
             exit(1);
         }
-        currLevel--; 
         identIndex++; 
         tokenIndex++;
+        emit(CAL, currLevel, 0);
         return;
     }
     // ====================================== END NEW =============================
