@@ -663,7 +663,7 @@ int varDeclaration() {
 }
 
 void procedure () {
-     while (tokenType[tokenIndex] == procsym) {
+    while (tokenType[tokenIndex] == procsym) {
         currLevel++; 
         tokenIndex++; 
         if (tokenType[tokenIndex] != identsym) {
@@ -702,10 +702,10 @@ void procedure () {
         We just need to find out where to actually put this logic; because, I don't
         know where we exit the procedure. It looks like there are two locations 
         that check for a semicolon in the procedure function. 
-        */
         
-        // if (currLevel <= symbolTable[i]-> level)
-        //      symbolTable[i]->mark = 1; 
+            if (currLevel <= symbolTable[i]-> level)
+                symbolTable[i]->mark = 1; 
+        */
 
         currLevel--; 
         tokenIndex++; 
@@ -747,7 +747,7 @@ void statement() {
 
         tokenIndex++;
         expression();
-        emit(STO, 0, symbolTable[symIdx]->addr);
+        emit(STO, currLevel, symbolTable[symIdx]->addr);
         return;
     }
     //======================================= THIS IS NEW =========================
@@ -758,9 +758,17 @@ void statement() {
             printf("Error: call must be followed by an identifier\n");
             exit(1);
         }
+        symIdx = symbolTableCheck(identArr[identIndex], 1);
+
         identIndex++; 
+
+        if (symIdx == -1) {
+            printf("Error1.1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            exit(1);
+        }
         tokenIndex++;
-        emit(CAL, currLevel, 0);
+        emit(CAL, currLevel, symbolTable[symIdx]->addr); 
+
         return;
     }
     // ====================================== END NEW =============================
@@ -831,7 +839,7 @@ void statement() {
         }
         tokenIndex++;
         emit(SYS, 0, 2); //read
-        emit(STO, 0, symbolTable[symIdx]->addr);
+        emit(STO, currLevel, symbolTable[symIdx]->addr);
         return;
     }
     // if "write"
@@ -933,7 +941,7 @@ void factor() {
         if (symbolTable[symIdx]->kind == 1) {
             emit(LIT, 0, symbolTable[symIdx]->val);
         } else if(symbolTable[symIdx]->kind == 2) {
-            emit(LOD, 0, symbolTable[symIdx]->addr);
+            emit(LOD, currLevel, symbolTable[symIdx]->addr);
         }
         tokenIndex++;
     }
