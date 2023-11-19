@@ -537,7 +537,7 @@ int symbolTableCheck(char *name, int typeCheck) {
         // loop through symbol table to see if identifier is in array. 
         // determines if an identifier can be used in statement. 
         // all we need to know is if it has been declared before and if it is available. 
-        for (int i = 0; i < symbolIndex; i++) {
+        for (int i = symbolIndex-1; i >= 0; i--) {
             if (strcmp(symbolTable[i]->name, name) == 0 && symbolTable[i]->mark == 0) {
                 // eligible to be used in statement 
                 return i; 
@@ -656,7 +656,7 @@ int varDeclaration() {
             }
 
             // if valid identifier then initialize it in symbolTable 
-            printf("Var Check: %s, %d\n", identArr[identIndex], currLevel); 
+            // printf("Var Check: %s, %d\n", identArr[identIndex], currLevel); 
             symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, currLevel, 2 + numVars, 0);
             identIndex++; 
             symbolIndex++; 
@@ -738,7 +738,7 @@ void procedure () {
     "write" ident ] 
  */
 void statement() {
-    int symIdx, jpcIdx, loopIdx;
+    int symIdx, jpcIdx, loopIdx, levelsDown;
     // if identifier 
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
@@ -769,9 +769,9 @@ void statement() {
         expression();
         // int i = symIdx; 
         // while (symbolTable[i]->name != identArr[identIndex-1])
-        int levelsDown = currLevel - symbolTable[symIdx]->level;
+        levelsDown = currLevel - symbolTable[symIdx]->level;
 
-        printf("#1 %s, %d, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, currLevel, levelsDown);
+        // printf("#1 %s, %d, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, currLevel, levelsDown);
         emit(STO, levelsDown, symbolTable[symIdx]->addr);
         return;
     }
@@ -866,7 +866,9 @@ void statement() {
         emit(SYS, 0, 2); //read
         printf("#2 %s, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->addr);
 
-        emit(STO, currLevel, symbolTable[symIdx]->addr);
+
+        levelsDown = currLevel - symbolTable[symIdx]->level; 
+        emit(STO, levelsDown, symbolTable[symIdx]->addr);
         return;
     }
     // if "write"
