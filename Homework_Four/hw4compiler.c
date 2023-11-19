@@ -253,7 +253,7 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
-        printf("tempArr: %s\n", tempArr); 
+        // printf("tempArr: %s\n", tempArr); 
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -355,11 +355,11 @@ int main(int argc, char *argv[]){
             // ======================= Special Character Check =======================
             if (tempArr[0] == '/' && inputArr[i+1] == '*') {
                 i += 2; 
-                while (inputArr[i] != '*' && inputArr[i+1] != '/') {
+                while (inputArr[i] != '*' || inputArr[i+1] != '/') {
                     i++; 
                 }
                 // change
-                i += 1; 
+                i += 2; 
             }
             else if (tempArr[0] == ':' && inputArr[i+1] == '=') {
 
@@ -408,7 +408,7 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
-        printf(" tokenType: %d, count: %d\n", tokenType[tokenCount-1], tokenCount-1); 
+        // printf(" tokenType: %d, count: %d\n", tokenType[tokenCount-1], tokenCount-1); 
         i++; 
     }
 
@@ -564,7 +564,6 @@ void emit(int op, int l, int m) {
 
 // program ::= block "."
 void program() {
-    emit(JMP, 0, 3);
     block();
     // error 1
     // if the program does not end with a period throw an error 
@@ -577,9 +576,12 @@ void program() {
 
 // block ::= const-declaration var-declaration statement
 void block () {
+    int jmpadd = cx; 
+    emit(JMP, 0, 0); 
     constDeclaration();
     int numVars = varDeclaration();
     procedure(); 
+    code[jmpadd].m = cx * 3; 
     emit(INC, 0, 3 + numVars);
     statement();
 }
@@ -654,6 +656,7 @@ int varDeclaration() {
             }
 
             // if valid identifier then initialize it in symbolTable 
+            printf("Var Check: %s, %d\n", identArr[identIndex], currLevel); 
             symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, currLevel, 2 + numVars, 0);
             identIndex++; 
             symbolIndex++; 
@@ -725,6 +728,7 @@ void procedure () {
         */
 
         tokenIndex++; 
+        emit(OPR, 0, 0); 
     }
 }
 
@@ -739,18 +743,18 @@ void statement() {
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
         symIdx = symbolTableCheck(identArr[identIndex], 1);
-        printf("\nidentIndex: %d,\nidentArr: %s,\nsymIdx: %d,\ntokenIndex: %d\n", identIndex, identArr[identIndex], symIdx, tokenIndex); 
+        // printf("\nidentIndex: %d,\nidentArr: %s,\nsymIdx: %d,\ntokenIndex: %d\n", identIndex, identArr[identIndex], symIdx, tokenIndex); 
         identIndex++; 
         // not in symbolTable
-        printf("\nToken: %d   ", tokenType[tokenIndex-1]);
+        // printf("\nToken: %d   ", tokenType[tokenIndex-1]);
         if (symIdx == -1) {
             printf("Error1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
             exit(1);
         }
         // not a variable
         if(symbolTable[symIdx]->kind != 2) {
-            printf("\nToken Type: %d,\n", tokenType[tokenIndex]);
-            printf("name: %s, \nlevel: %d, \nkind: %d, \ntokenIndex: %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
+            // printf("\nToken Type: %d,\n", tokenType[tokenIndex]);
+            // printf("name: %s, \nlevel: %d, \nkind: %d, \ntokenIndex: %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
             printf("Error: only variable values may be altered\n");
             exit(1);
         }
@@ -763,7 +767,12 @@ void statement() {
 
         tokenIndex++;
         expression();
-        emit(STO, currLevel, symbolTable[symIdx]->addr);
+        // int i = symIdx; 
+        // while (symbolTable[i]->name != identArr[identIndex-1])
+        int levelsDown = currLevel - symbolTable[symIdx]->level;
+
+        printf("#1 %s, %d, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, currLevel, levelsDown);
+        emit(STO, levelsDown, symbolTable[symIdx]->addr);
         return;
     }
     //======================================= THIS IS NEW =========================
@@ -855,6 +864,8 @@ void statement() {
         }
         tokenIndex++;
         emit(SYS, 0, 2); //read
+        printf("#2 %s, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->addr);
+
         emit(STO, currLevel, symbolTable[symIdx]->addr);
         return;
     }
