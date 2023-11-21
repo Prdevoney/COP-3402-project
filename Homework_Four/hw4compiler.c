@@ -795,9 +795,10 @@ void statement() {
 
         int calAdress = 0; 
         for (int i = 0; i < calIndex; i++) {
-            printf("\nCAL: \ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", i, calArr[i].procedureName, i, calArr[i].currCX); 
             if (strcmp(symbolTable[symIdx]->name, calArr[i].procedureName) == 0) {
+                printf("\nCAL: \ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", i, calArr[i].procedureName, i, calArr[i].currCX); 
                 calAdress = calArr[i].currCX; 
+                break; 
             }
         }
         printf("calAdress: %d\n", calAdress); 
@@ -984,8 +985,8 @@ void factor() {
         if (symbolTable[symIdx]->kind == 1) {
             emit(LIT, 0, symbolTable[symIdx]->val);
         } else if(symbolTable[symIdx]->kind == 2) {
-            
-            emit(LOD, symbolTable[symIdx]->level, symbolTable[symIdx]->addr);
+            int levelsDown = currLevel - symbolTable[symIdx]->level;
+            emit(LOD, levelsDown, symbolTable[symIdx]->addr);
         }
         tokenIndex++;
     }
