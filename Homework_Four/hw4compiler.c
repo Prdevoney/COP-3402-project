@@ -594,12 +594,14 @@ void block () {
     int numVars = varDeclaration();
     procedure(); 
     code[jmpadd].m = cx * 3; 
+
     calArr[procedureCount].currCX = cx; 
     procedureCount--; 
 
     emit(INC, 0, 3 + numVars);
     
     statement();
+    emit(OPR, 0, 0); 
 }
 
 // constdeclaration ::= [ “const” ident "=" number {"," ident "=" number} ";"]
@@ -734,7 +736,7 @@ void procedure () {
         }
 
         tokenIndex++; 
-        emit(OPR, 0, 0); 
+        // emit(OPR, 0, 0); 
     }
 }
 
