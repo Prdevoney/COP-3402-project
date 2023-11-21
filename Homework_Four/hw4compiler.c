@@ -54,7 +54,10 @@ typedef struct {
 } calStruct; 
 
 calStruct calArr[50]; 
-int calIndex = 0; 
+int calIndexProc = 0; 
+int calIndexBlock = 0; 
+
+int procedureCount = 0; 
 
 /* Initialization of global variables: */
 // symbol table array
@@ -322,6 +325,8 @@ int main(int argc, char *argv[]){
                         }
                         // put the token in the array. 
                         tokenType[tokenCount] = wsym[k];
+                        if (tokenType[tokenCount] == procsym)
+                            procedureCount++; 
                         tokenCount++;
                         keyWordCheck = 1; 
                         free(tempArr);
@@ -591,9 +596,12 @@ void block () {
     int numVars = varDeclaration();
     procedure(); 
     code[jmpadd].m = cx * 3; 
-    calArr[calIndex].currCX = cx; 
-    printf("\nblock():\ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", calIndex, calArr[calIndex].procedureName, calIndex, calArr[calIndex].currCX); 
-    calIndex++; 
+    // calArr[calIndexBlock].currCX = cx; 
+    // printf("\nblock():\ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", calIndexBlock, calArr[calIndexBlock].procedureName, calIndexBlock, calArr[calIndexBlock].currCX); 
+    // calIndexBlock++; 
+    calArr[procedureCount].currCX = cx; 
+    procedureCount--; 
+
     emit(INC, 0, 3 + numVars);
     
     statement();
@@ -697,11 +705,10 @@ void procedure () {
             exit(1); 
         }
 
-
-        strcpy(calArr[calIndex].procedureName, identArr[identIndex]); 
+        strcpy(calArr[calIndexProc].procedureName, identArr[identIndex]); 
+        calIndexProc++; 
         // calArr[calIndex].currCX = cx; 
         // calIndex++; 
-
 
         symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, cx, 0);
         symbolIndex++; 
@@ -713,6 +720,7 @@ void procedure () {
             printf("Error: procedure error 2"); 
             exit(1); 
         }
+
         tokenIndex++; 
         block(); 
         // calArr[calIndex].currCX = cx; 
@@ -794,10 +802,10 @@ void statement() {
         }
 
         int calAdress = 0; 
-        for (int i = 0; i < calIndex; i++) {
+        for (int i = 0; i < calIndexProc; i++) {
             if (strcmp(symbolTable[symIdx]->name, calArr[i].procedureName) == 0) {
                 printf("\nCAL: \ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", i, calArr[i].procedureName, i, calArr[i].currCX); 
-                calAdress = calArr[i].currCX; 
+                calAdress = calArr[i+1].currCX; 
                 break; 
             }
         }
