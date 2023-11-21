@@ -48,6 +48,15 @@ typedef struct {
     int m;  // M address
 } instruction;
 
+typedef struct {
+    int currCX; 
+    char procedureName[12]; 
+} calStruct; 
+
+calStruct calArr[50]; 
+int calIndexProc = 0; 
+int procedureCount = 0; 
+
 /* Initialization of global variables: */
 // symbol table array
 symbol *symbolTable[MAX_SYMBOL_TABLE_SIZE]; 
@@ -261,7 +270,7 @@ int main(int argc, char *argv[]){
         } while (halt == 0); 
        
         tempArr[tempArrCount+1] = '\0'; 
-        printf("tempArr: %s\n", tempArr); 
+        // printf("tempArr: %s\n", tempArr); 
         // =============== Find out what is in tempArr ===============
         if (caseCheck == 1) {
             //=================== Digit Check ===================
@@ -328,12 +337,8 @@ int main(int argc, char *argv[]){
                         // put the token in the array.
                         
                         tokenType[tokenCount] = wsym[k];
-                        printf("what in the token!?:: -> %d", tokenType[tokenCount]);
-
-
-                        printf("^^^^^^^^^^^ MID3 ^^^^^^^^^\n");
-                        printf("identArr[0]: %s\n", identArr[0]);
-                        printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                        if (tokenType[tokenCount] == procsym)
+                            procedureCount++; 
                         tokenCount++;
                         printf("^^^^^^^^^^^ MID4 ^^^^^^^^^\n");
                         printf("identArr[0]: %s\n", identArr[0]);
@@ -393,10 +398,7 @@ int main(int argc, char *argv[]){
             printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
             // ======================= Special Character Check =======================
             if (tempArr[0] == '/' && inputArr[i+1] == '*') {
-                printf("i now: %d \n", i);
-                i += 2;
-                printf("----here5---\n"); 
-                printf("i: %d\n", i);
+                i += 2; 
                 while (inputArr[i] != '*' || inputArr[i+1] != '/') {
                     i++; 
                 }
@@ -459,10 +461,7 @@ int main(int argc, char *argv[]){
             }
             free(tempArr); 
         }
-        printf(" tokenType: %d, count: %d\n", tokenType[tokenCount-1], tokenCount-1); 
-        printf("++++++++++++ Every iteration does the first address changed?++++++++\n");
-        printf("identArr[0]: %d\n", identArr);
-        printf("++++++++++++++++++\n");
+        // printf(" tokenType: %d, count: %d\n", tokenType[tokenCount-1], tokenCount-1); 
         i++; 
     }
 
@@ -648,7 +647,7 @@ void emit(int op, int l, int m) {
 
 // program ::= block "."
 void program() {
-    printf("----here11---\n");
+    printf("\n"); 
     block();
     // error 1
     // if the program does not end with a period throw an error 
@@ -662,24 +661,22 @@ void program() {
 
 // block ::= const-declaration var-declaration statement
 void block () {
-    
-    // should thi sbe the jmpADD = cx?
-    int jmpadd = cx;
-    printf("----here12.1---\n");
-    emit(JMP, 0, 0);
-   
+    int jmpadd = cx; 
+    emit(JMP, 0, 0); 
     constDeclaration();
     printf("----here12.5---\n");
     int numVars = varDeclaration();
     printf("----here13---\n");
     procedure(); 
-    
-    printf("cx: %d\n", cx);
-    code[jmpadd].m = cx * 3;
+    code[jmpadd].m = cx * 3; 
+
+    calArr[procedureCount].currCX = cx; 
+    procedureCount--; 
 
     emit(INC, 0, 3 + numVars);
+    
     statement();
-    emit(OPR,0 ,0);
+    emit(OPR, 0, 0); 
 }
 
 // constdeclaration ::= [ “const” ident "=" number {"," ident "=" number} ";"]
@@ -762,6 +759,7 @@ int varDeclaration() {
             }
 
             // if valid identifier then initialize it in symbolTable 
+            // printf("Var Check: %s, %d\n", identArr[identIndex], currLevel); 
             symbolTable[symbolIndex] = initSymbolTable(2, identArr[identIndex], 0, currLevel, 2 + numVars, 0);
             identIndex++; 
             symbolIndex++; 
@@ -789,9 +787,13 @@ void procedure () {
             printf("Error: Procedure must be followed by identifier"); 
             exit(1); 
         }
+
+        strcpy(calArr[calIndexProc].procedureName, identArr[identIndex]); 
+        calIndexProc++; 
+        // calArr[calIndex].currCX = cx; 
+        // calIndex++; 
+
         symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, cx, 0);
-        ///int tempIDX = symbolIndex;
-        // printf("%d, %s, %d, %d, %d, %d\n", symbolTable[symbolIndex]->kind, symbolTable[symbolIndex]->name, symbolTable[symbolIndex]->val, symbolTable[symbolIndex]->level, symbolTable[symbolIndex]->addr, symbolTable[symbolIndex]->mark);
         symbolIndex++; 
         tokenIndex++; 
         identIndex++; 
@@ -801,10 +803,11 @@ void procedure () {
             printf("Error: Incorrect symbol after procedure declaration\n "); 
             exit(1); 
         }
+
         tokenIndex++; 
         block(); 
-        //symbolTable[tempIDX]->addr = cx;
-        printf("tokenType[tokenIndex]:: %d\n", tokenType[tokenIndex-1]);
+        // calArr[calIndex].currCX = cx; 
+        // calIndex++; 
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: Semicolon expected to close procedure"); 
             exit(1); 
@@ -818,28 +821,8 @@ void procedure () {
             }
         }
 
-        //emit(OPR,0 ,0);
-
-        // currLevel--; 
-
-        /* 
-        go through the symbolTable when you leave a procedure. (go down a level) 
-        if a variable was declared in that procedure it will have the same level 
-        as that procedure; so, decrement curr level because you left the procedure 
-        then see what variables in the symbol table were declared in that procedure 
-        by checking their level and if it is greater than the currLevel, then set the 
-        mark to 1, because it is no longer available. 
-
-        We just need to find out where to actually put this logic; because, I don't
-        know where we exit the procedure. It looks like there are two locations 
-        that check for a semicolon in the procedure function. 
-        
-            if (currLevel <= symbolTable[i]-> level)
-                symbolTable[i]->mark = 1; 
-        */
-
         tokenIndex++; 
-
+        // emit(OPR, 0, 0); 
     }
 }
 
@@ -854,10 +837,10 @@ void statement() {
     if (tokenType[tokenIndex] == identsym) {
         // check to see if in symbolTable 
         symIdx = symbolTableCheck(identArr[identIndex], 1);
-        printf("\nidentIndex: %d,\nidentArr: %s,\nsymIdx: %d,\ntokenIndex: %d\n", identIndex, identArr[identIndex], symIdx, tokenIndex); 
+        // printf("\nidentIndex: %d,\nidentArr: %s,\nsymIdx: %d,\ntokenIndex: %d\n", identIndex, identArr[identIndex], symIdx, tokenIndex); 
         identIndex++; 
         // not in symbolTable
-        printf("\nToken: %d   ", tokenType[tokenIndex-1]);
+        // printf("\nToken: %d   ", tokenType[tokenIndex-1]);
         if (symIdx == -1) {
             printf("Error1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
             exit(1);
@@ -865,8 +848,6 @@ void statement() {
         // not a variable
         printf("symbolTable[symIdx]->kind = %d", symbolTable[symIdx]->kind);
         if(symbolTable[symIdx]->kind != 2) {
-            printf("\nToken Type: %d,\n", tokenType[tokenIndex]);
-            printf("name: %s, \nlevel: %d, \nkind: %d, \ntokenIndex: %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
             printf("Error: Assignment to constant or procedure is not allowed\n");
             exit(1);
         }
@@ -879,15 +860,8 @@ void statement() {
         printf("----here2---\n");
         tokenIndex++;
         expression();
-        // mayber here
-
-        /* search through the symtable index to see if 
-        the varibales exisit on earlier levels and make the level of STORE 
-        be the level of the lowest / earliest variable found of the variable
-        */ 
-       // symbolTable[symInx]->level
         levelsDown = currLevel - symbolTable[symIdx]->level;
-        //printf("%%%%%%%%%ovellolr here%%%%%%%%%%%%%% - index: %d\n", symAddrIdx);
+
         emit(STO, levelsDown, symbolTable[symIdx]->addr);
         return;
     }
@@ -901,17 +875,26 @@ void statement() {
         }
         symIdx = symbolTableCheck(identArr[identIndex], 1);
 
-        identIndex++; 
-
         if (symIdx == -1) {
-            printf("Error1.1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error1.1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex], tokenIndex);
             exit(1);
         }
+
+        int calAdress = 0; 
+        for (int i = 0; i < calIndexProc; i++) {
+            if (strcmp(symbolTable[symIdx]->name, calArr[i].procedureName) == 0) {
+                printf("\nCAL: \ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", i, calArr[i].procedureName, i, calArr[i].currCX); 
+                calAdress = calArr[i+1].currCX; 
+                break; 
+            }
+        }
+        printf("calAdress: %d\n", calAdress); 
+
+        identIndex++; 
         tokenIndex++;
-        // ====@@@@ currLevel should be level - symbolTable[symIdx]->level
-        
         levelsDown = currLevel - symbolTable[symIdx]->level;
-        emit(CAL, levelsDown, symbolTable[symIdx]->addr); 
+
+        emit(CAL, levelsDown, calAdress * 3); 
 
         return;
     }
@@ -983,7 +966,10 @@ void statement() {
         }
         tokenIndex++;
         emit(SYS, 0, 2); //read
-        levelsDown = currLevel - symbolTable[symIdx]->level;
+        printf("#2 %s, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->addr);
+
+
+        levelsDown = currLevel - symbolTable[symIdx]->level; 
         emit(STO, levelsDown, symbolTable[symIdx]->addr);
         return;
     }

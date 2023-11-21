@@ -1,0 +1,17 @@
+0 jmp 0 30
+ 1 jmp 0 6
+ 2 inc 0 5
+ 3 lit 0 13
+ 4 sto 0 3
+ 5 lit 0 1
+ 6 sto 1 3
+ 7 lit 0 7
+ 8 sto 0 4
+ 9 opr 0 0
+10 inc 0 5
+11 lit 0 3
+12 sto 0 3
+13 lit 0 9
+14 sto 0 4
+15 cal 0 2
+16 opr 0 0
