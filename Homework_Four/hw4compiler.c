@@ -48,6 +48,14 @@ typedef struct {
     int m;  // M address
 } instruction;
 
+typedef struct {
+    int currCX; 
+    char procedureName[12]; 
+} calStruct; 
+
+calStruct calArr[50]; 
+int calIndex = 0; 
+
 /* Initialization of global variables: */
 // symbol table array
 symbol *symbolTable[MAX_SYMBOL_TABLE_SIZE]; 
@@ -564,6 +572,7 @@ void emit(int op, int l, int m) {
 
 // program ::= block "."
 void program() {
+    printf("\n"); 
     block();
     // error 1
     // if the program does not end with a period throw an error 
@@ -582,7 +591,11 @@ void block () {
     int numVars = varDeclaration();
     procedure(); 
     code[jmpadd].m = cx * 3; 
+    calArr[calIndex].currCX = cx; 
+    printf("\nblock():\ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", calIndex, calArr[calIndex].procedureName, calIndex, calArr[calIndex].currCX); 
+    calIndex++; 
     emit(INC, 0, 3 + numVars);
+    
     statement();
 }
 
@@ -683,8 +696,14 @@ void procedure () {
             printf("Error: procedure error 1"); 
             exit(1); 
         }
-        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, 0, 0);
-        // printf("%d, %s, %d, %d, %d, %d\n", symbolTable[symbolIndex]->kind, symbolTable[symbolIndex]->name, symbolTable[symbolIndex]->val, symbolTable[symbolIndex]->level, symbolTable[symbolIndex]->addr, symbolTable[symbolIndex]->mark);
+
+
+        strcpy(calArr[calIndex].procedureName, identArr[identIndex]); 
+        // calArr[calIndex].currCX = cx; 
+        // calIndex++; 
+
+
+        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, cx, 0);
         symbolIndex++; 
         tokenIndex++; 
         identIndex++; 
@@ -696,6 +715,8 @@ void procedure () {
         }
         tokenIndex++; 
         block(); 
+        // calArr[calIndex].currCX = cx; 
+        // calIndex++; 
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: procedure error 3"); 
             exit(1); 
@@ -767,14 +788,25 @@ void statement() {
         }
         symIdx = symbolTableCheck(identArr[identIndex], 1);
 
-        identIndex++; 
-
         if (symIdx == -1) {
-            printf("Error1.1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error1.1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex], tokenIndex);
             exit(1);
         }
+
+        int calAdress = 0; 
+        for (int i = 0; i < calIndex; i++) {
+            printf("\nCAL: \ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", i, calArr[i].procedureName, i, calArr[i].currCX); 
+            if (strcmp(symbolTable[symIdx]->name, calArr[i].procedureName) == 0) {
+                calAdress = calArr[i].currCX; 
+            }
+        }
+        printf("calAdress: %d\n", calAdress); 
+
+        identIndex++; 
         tokenIndex++;
-        emit(CAL, currLevel, symbolTable[symIdx]->addr); 
+        levelsDown = currLevel - symbolTable[symIdx]->level;
+
+        emit(CAL, levelsDown, calAdress * 3); 
 
         return;
     }
@@ -952,7 +984,8 @@ void factor() {
         if (symbolTable[symIdx]->kind == 1) {
             emit(LIT, 0, symbolTable[symIdx]->val);
         } else if(symbolTable[symIdx]->kind == 2) {
-            emit(LOD, currLevel, symbolTable[symIdx]->addr);
+            
+            emit(LOD, symbolTable[symIdx]->level, symbolTable[symIdx]->addr);
         }
         tokenIndex++;
     }
