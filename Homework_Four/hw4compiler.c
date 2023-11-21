@@ -55,8 +55,6 @@ typedef struct {
 
 calStruct calArr[50]; 
 int calIndexProc = 0; 
-int calIndexBlock = 0; 
-
 int procedureCount = 0; 
 
 /* Initialization of global variables: */
@@ -596,9 +594,6 @@ void block () {
     int numVars = varDeclaration();
     procedure(); 
     code[jmpadd].m = cx * 3; 
-    // calArr[calIndexBlock].currCX = cx; 
-    // printf("\nblock():\ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", calIndexBlock, calArr[calIndexBlock].procedureName, calIndexBlock, calArr[calIndexBlock].currCX); 
-    // calIndexBlock++; 
     calArr[procedureCount].currCX = cx; 
     procedureCount--; 
 
