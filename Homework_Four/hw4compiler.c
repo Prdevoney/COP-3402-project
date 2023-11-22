@@ -56,6 +56,7 @@ typedef struct {
 calStruct calArr[50]; 
 int calIndexProc = 0; 
 int procedureCount = 0; 
+int jmpAddress = 0;
 
 /* Initialization of global variables: */
 // symbol table array
@@ -92,7 +93,6 @@ void condition();
 void expression();
 void term();
 void factor();
-void procedure();
 
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
@@ -192,7 +192,7 @@ int main(int argc, char *argv[]){
         char *tempArr = malloc(sizeof(char) * tempArrSize);
         int tempArrCount = 0; 
         
-        printf("i: %d, size: %d\n", i, sizeof(inputArr));
+        printf("i: %d, size: %ld\n", i, sizeof(inputArr));
         printf("----here7   ---\n");
         printf("^^^^^^^^^^^ T O P ^^^^^^^^^\n");
         printf("identArr[0]: %s\n", identArr[0]);
@@ -664,9 +664,7 @@ void block () {
     int jmpadd = cx; 
     emit(JMP, 0, 0); 
     constDeclaration();
-    printf("----here12.5---\n");
     int numVars = varDeclaration();
-    printf("----here13---\n");
     procedure(); 
     code[jmpadd].m = cx * 3; 
 
@@ -688,7 +686,7 @@ void constDeclaration() {
             tokenIndex++;
             // identity check 
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, and read must be followed by identifier\n");
+                printf("Error: const declaration must be followed by identifier\n");
                 exit(1);
             }
             // has the identifier already been declared? 
@@ -717,7 +715,7 @@ void constDeclaration() {
             printf("----here16---\n");
             // if num then we add (kind, name, L, and M) to the symbol table
            printf("identIndex: %d\n", identIndex-1);
-            printf("identArr: %i\n", identArr[identIndex-1]);
+            printf("identArr: %s\n", identArr[identIndex-1]);
             // print the index fo the idenarra
             
             int number = atoi(identArr[identIndex]); // Convert string to integer
@@ -749,7 +747,7 @@ int varDeclaration() {
             tokenIndex++;
             // ident check
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, and read must be followed by identifier\n");
+                printf("Error: var declaration must be followed by identifier\n");
                 exit(1);
             }
             // has the identifier already been declared? 
@@ -784,6 +782,7 @@ void procedure () {
     while (tokenType[tokenIndex] == procsym) {
         tokenIndex++; 
         if (tokenType[tokenIndex] != identsym) {
+            // Error 4
             printf("Error: Procedure must be followed by identifier"); 
             exit(1); 
         }
@@ -792,23 +791,26 @@ void procedure () {
         calIndexProc++; 
         // calArr[calIndex].currCX = cx; 
         // calIndex++; 
-
-        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, cx, 0);
+        jmpAddress++;
+        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, jmpAddress, 0);
         symbolIndex++; 
         tokenIndex++; 
         identIndex++; 
         currLevel++; 
 
         if (tokenType[tokenIndex] != semicolonsym) {
+            // Error 6
             printf("Error: Incorrect symbol after procedure declaration\n "); 
             exit(1); 
         }
 
         tokenIndex++; 
+        
         block(); 
         // calArr[calIndex].currCX = cx; 
         // calIndex++; 
         if (tokenType[tokenIndex] != semicolonsym) {
+            // Error 17
             printf("Error: Semicolon expected to close procedure"); 
             exit(1); 
         }
@@ -842,12 +844,13 @@ void statement() {
         // not in symbolTable
         // printf("\nToken: %d   ", tokenType[tokenIndex-1]);
         if (symIdx == -1) {
-            printf("Error1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
             exit(1);
         }
         // not a variable
-        printf("symbolTable[symIdx]->kind = %d", symbolTable[symIdx]->kind);
+        printf("symbolTable[symIdx]->kind = %s", symbolTable[symIdx]->name);
         if(symbolTable[symIdx]->kind != 2) {
+            // Error 12
             printf("Error: Assignment to constant or procedure is not allowed\n");
             exit(1);
         }
@@ -870,13 +873,20 @@ void statement() {
     if (tokenType[tokenIndex] == callsym){
         tokenIndex++;
         if (tokenType[tokenIndex] != identsym) {
+            // Error 14
             printf("Error: call must be followed by an identifier\n");
             exit(1);
         }
         symIdx = symbolTableCheck(identArr[identIndex], 1);
 
         if (symIdx == -1) {
-            printf("Error1.1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex], tokenIndex);
+            printf("Error: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex], tokenIndex);
+            exit(1);
+        }
+
+        if (symbolTable[symIdx]->kind != 3) {
+            // Error 15
+            printf("Error: call must be followed by a valid procedure name, not a const or var\n");
             exit(1);
         }
 
@@ -894,7 +904,7 @@ void statement() {
         tokenIndex++;
         levelsDown = currLevel - symbolTable[symIdx]->level;
 
-        emit(CAL, levelsDown, calAdress * 3); 
+        emit(CAL, levelsDown, symbolTable[symIdx]->addr * 3); 
 
         return;
     }
@@ -942,6 +952,7 @@ void statement() {
         jpcIdx = cx;
         emit(JPC, 0, jpcIdx * 3);
         statement();
+        
         emit(JMP, 0, loopIdx * 3);
         code[jpcIdx].m = cx * 3;
         return;
@@ -1066,7 +1077,12 @@ void factor() {
         int symIdx = symbolTableCheck(identArr[identIndex], 1);
         identIndex++; 
         if (symIdx == -1) {
-            printf("Error3: Undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error: undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            exit(1);
+        }
+        // error 21
+        if (symbolTable[symIdx]->kind == 3) {
+            printf("Error: expression must not contain a procedure identifier\n");
             exit(1);
         }
         // const or var
