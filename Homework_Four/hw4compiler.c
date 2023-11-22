@@ -672,7 +672,7 @@ void procedure () {
         tokenIndex++; 
         if (tokenType[tokenIndex] != identsym) {
             // Error 4
-            printf("Error: Procedure must be followed by identifier"); 
+            printf("Error: Procedure must be followed by identifier\n"); 
             exit(1); 
         }
         // check to see if identifier is in symbolTable
@@ -685,7 +685,7 @@ void procedure () {
 
         if (tokenType[tokenIndex] != semicolonsym) {
             // Error 6
-            printf("Error: Expected semicolon after procedure declaration\n "); 
+            printf("Error: Expected semicolon after procedure declaration\n"); 
             exit(1); 
         }
 
@@ -695,7 +695,7 @@ void procedure () {
        
         if (tokenType[tokenIndex] != semicolonsym) {
             // Error 17
-            printf("Error: Semicolon expected to close procedure"); 
+            printf("Error: Semicolon expected to close procedure\n"); 
             exit(1); 
         }
 
