@@ -1,3 +1,5 @@
+/* Error 17: semicolon exprected to end the procedure*/
+
 const k = 7;
 var x, y, w;
 procedure sum;

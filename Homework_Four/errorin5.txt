@@ -1,3 +1,5 @@
+/* Error 15: call of a constant or variable is meaningless needs to be a valid name*/
+
 procedure A;
     var y;
     procedure B;
