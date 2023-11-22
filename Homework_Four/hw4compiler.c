@@ -48,14 +48,15 @@ typedef struct {
     int m;  // M address
 } instruction;
 
-typedef struct {
-    int currCX; 
-    char procedureName[12]; 
-} calStruct; 
+// typedef struct {
+//     int currCX; 
+//     char procedureName[12]; 
+// } calStruct; 
 
-calStruct calArr[50]; 
-int calIndexProc = 0; 
-int procedureCount = 0; 
+// calStruct calArr[50]; 
+// int calIndexProc = 0; 
+// int procedureCount = 0; 
+int jmpAddress = 0;
 
 /* Initialization of global variables: */
 // symbol table array
@@ -80,6 +81,7 @@ int lexLevel = 0; // current level.
 // function declarations for parsecodegen part 
 symbol *initSymbolTable (int kind, char *name, int val, int level, int addr, int mark);
 int symbolTableCheck(char *name, int typeCheck);
+int symSearch (char *name, int thisLevel);
 void emit(int op, int l, int m);
 void program();
 void block ();
@@ -91,7 +93,6 @@ void condition();
 void expression();
 void term();
 void factor();
-void procedure();
 
 // ------------- The Lex part of the compiler ------------- 
 int main(int argc, char *argv[]){
@@ -190,7 +191,12 @@ int main(int argc, char *argv[]){
         int tempArrSize = 12; 
         char *tempArr = malloc(sizeof(char) * tempArrSize);
         int tempArrCount = 0; 
-
+        
+        // printf("i: %d, size: %ld\n", i, sizeof(inputArr));
+        // printf("----here7   ---\n");
+        // printf("^^^^^^^^^^^ T O P ^^^^^^^^^\n");
+        // printf("identArr[0]: %s\n", identArr[0]);
+        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
         // 1 for keyword, identifier, or num .
         // 2 for special character. 
         int caseCheck = 0; 
@@ -213,6 +219,7 @@ int main(int argc, char *argv[]){
                 }
                 tempArr[tempArrCount] = '\0';
                 i -= 1; 
+                // printf("----here8   ---\n");
                 break; 
             }
 
@@ -233,11 +240,12 @@ int main(int argc, char *argv[]){
 
             // first scan, whitespace, skip 
             else if (tempArr[tempArrCount] == '\0' && tempArrCount == 0) { 
-                
+                // printf("----here9   ---\n");
                 while (inputArr[i] == '\0') {
                     /* if the counter is at the end of the input this will
                      imediately take us to the parsecodegen section of the prog. */
                     if (i == chcount-1) {
+                        // printf("----here10   ---\n");
                         goto parsecode; // right before: program(); (line 416)
                     }
                     i++; 
@@ -289,6 +297,7 @@ int main(int argc, char *argv[]){
                 }
                 // print digit if meets requirements. 
                 if (digitCount == tempArrCount && digitCount <= 5) {
+                    // printf("======1====== ADDED to ident ====== ---> identArr: %s\n", identArr[identCount]);
                     
                     strcpy(identArr[identCount], tempArr);
 
@@ -305,6 +314,7 @@ int main(int argc, char *argv[]){
                 }
                 if (identCount == identSize-1) {
                     identSize *= 2;
+                    // printf("00000000000000000000000here 1.5--\n");
                     identArr = realloc(identArr, sizeof(char*) *identSize);
                     for (int k = identCount; k < identSize; k++)
                         identArr[k] = malloc(sizeof(char) * 12); 
@@ -315,23 +325,39 @@ int main(int argc, char *argv[]){
                 int keyWordCheck = 0; 
                 for (int k = 0; k < norw+1; k++) {
                     if (strcmp(tempArr, resWords[k]) == 0) {
-
+                        // printf("went here1\n");
                         // dynamically resize tokenType array if necessary. 
                         if (tokenCount == tokenTypeSize-1) {
                             tokenTypeSize *= 2; 
                             tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
                         }
-                        // put the token in the array. 
+                        // printf("^^^^^^^^^^^ MID ^^^^^^^^^\n");
+                        // printf("identArr[0]: %s\n", identArr[0]);
+                        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                        // put the token in the array.
+                        
                         tokenType[tokenCount] = wsym[k];
-                        if (tokenType[tokenCount] == procsym)
-                            procedureCount++; 
+                        // if (tokenType[tokenCount] == procsym)
+                        //     procedureCount++; 
                         tokenCount++;
+                        // printf("^^^^^^^^^^^ MID4 ^^^^^^^^^\n");
+                        // printf("identArr[0]: %s\n", identArr[0]);
+                        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                         keyWordCheck = 1; 
+                        // printf("^^^^^^^^^^^ MID5 ^^^^^^^^^\n");
+                        // printf("identArr[0]: %s\n", identArr[0]);
+                        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                         free(tempArr);
+                        // printf("^^^^^^^^^^^ MID2 ^^^^^^^^^\n");
+                        // printf("identArr[0]: %s\n", identArr[0]);
+                        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                     }
                 }
                 //=================== Identifier Check ===================
                 if (keyWordCheck == 0) {
+                    // printf("^^^^^^^^^^^ crazy ^^^^^^^^^\n");
+                    //     printf("identArr[0]: %s\n", identArr[0]);
+                    //     printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                     if (tempArrCount > 11){
                         printf("\tError: Identifier is too long!\n");
                         free(identArr);
@@ -340,7 +366,10 @@ int main(int argc, char *argv[]){
                     } else {
 
                         strcpy(identArr[identCount], tempArr); 
-
+                        // print out what is in the idenarra
+                        //printf("identArr: %s\n", identArr[identCount]);
+                        // printf("====2===== ADDED to ident ====== ---> identArr: %s\n", identArr[identCount]);
+                        // printf("identArr: %s\n", identArr[identCount]);
                         tokenType[tokenCount] = identsym;
                         tokenCount++;
                         
@@ -354,6 +383,7 @@ int main(int argc, char *argv[]){
                     }
                     if (identCount == identSize-1) {
                         identSize *= 2;
+                        // printf("00000000111000000000000000here 2.5--\n");
                         identArr = realloc(identArr, sizeof(char*) *identSize);
                         for (int k = identCount; k < identSize; k++)
                             identArr[k] = malloc(sizeof(char) * 12); 
@@ -363,12 +393,20 @@ int main(int argc, char *argv[]){
             }
         } 
         else {
+            // printf("^^^^^^^^^^^ crap ^^^^^^^^^\n");
+            // printf("identArr[0]: %s\n", identArr[0]);
+            // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
             // ======================= Special Character Check =======================
             if (tempArr[0] == '/' && inputArr[i+1] == '*') {
                 i += 2; 
                 while (inputArr[i] != '*' || inputArr[i+1] != '/') {
                     i++; 
                 }
+                // printf("i after: %d\n", i);
+                // printf("i+1 after: %d\n", i+1);
+                // // print what is in the input arra at that index
+                // printf("inputArr[i]: %c\n", inputArr[i]);
+                // printf("inputArr[i+3]: %c\n", inputArr[i+6]);
                 // change
                 i += 2; 
             }
@@ -406,13 +444,17 @@ int main(int argc, char *argv[]){
                     
                     tokenType[tokenCount] = ssym[tempArr[0]];
                     tokenCount++;
+                    // printf("----here6---\n");
                 } else {
-                    printf("Error: Invalid symbol!\n");
+                    printf("Error: Invalid symbol!: %c\n", tempArr[0]);
                     free(identArr);
                     free(tokenType);
                     exit(1); 
                 }
             }
+            // printf("^^^^^^^^^^^ BUTT ^^^^^^^^^\n");
+            // printf("identArr[0]: %s\n", identArr[0]);
+            // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
             if (tokenCount == tokenTypeSize-1) {
                 tokenTypeSize *= 2; 
                 tokenType = realloc(tokenType, sizeof(int) * tokenTypeSize);
@@ -423,10 +465,35 @@ int main(int argc, char *argv[]){
         i++; 
     }
 
-    parsecode: 
+    parsecode:
+
+    // printf("----Why is this bad---\n");
+    // print out the first value in the idenarra
+    // if(identArr[0] == NULL) {
+    //     printf("identArr[0] is NULL\n");
+    // } else {
+    //     printf("identArr[0] is not NULL\n");
+    // }
+    // //print out the address of the first index __valueless
+    // printf("identArr[0]: %s\n", identArr[0]);
+    // printf("identArr of the first one: %s\n", identArr[0]);
+    // print out all the valuesin the ident array
+    
+    // for (int z = 0; z < identCount; z++) {
+    //     if (z % 4 == 0) {
+    //         printf("\n");
+    //     }
+    //     if(identArr[z] != NULL) {
+    //         // printf("identArr[%d]: %s |", z, identArr[z]);
+    //     } else {
+    //         printf("identArr[%d] is NULL\n", z);
+    //     }
+    // }
+
 
     // Call parser codegen function.
     program();
+    // printf("----here4---\n");
 
     FILE *outputFile = fopen("elf.txt", "w");
 
@@ -442,6 +509,9 @@ int main(int argc, char *argv[]){
         char* oprName = "";
         int oprNum = code[i].m;
         switch (assemblyCodeNum) {
+            case 0:
+                assemblyInsName = "RTN";
+                break;
             case 1:
                 assemblyInsName = "LIT";
                 break;
@@ -562,6 +632,7 @@ int symbolTableCheck(char *name, int typeCheck) {
 
 // creates the assembly instructions and stores them in the code array
 void emit(int op, int l, int m) {
+    
     if (cx > CODE_SIZE) {
         printf("Error: Code too long!\n");
         exit(1);
@@ -571,6 +642,7 @@ void emit(int op, int l, int m) {
         code[cx].m = m;
         cx++;
     }
+   
 }
 
 // program ::= block "."
@@ -583,6 +655,7 @@ void program() {
         printf("Error: program must end with period\n");
         exit(1);
     }
+    // printf("----here12---\n");
     emit(SYS, 0, 3);
 }
 
@@ -595,8 +668,8 @@ void block () {
     procedure(); 
     code[jmpadd].m = cx * 3; 
 
-    calArr[procedureCount].currCX = cx; 
-    procedureCount--; 
+    // calArr[procedureCount].currCX = cx; 
+    // procedureCount--; 
 
     emit(INC, 0, 3 + numVars);
     
@@ -608,11 +681,12 @@ void block () {
 void constDeclaration() {
     if (tokenType[tokenIndex] == constsym) {
         // checks structure of the const declaration 
+        // printf("----here14---\n");
         do {
             tokenIndex++;
             // identity check 
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, and read must be followed by identifier\n");
+                printf("Error: const declaration must be followed by identifier\n");
                 exit(1);
             }
             // has the identifier already been declared? 
@@ -620,6 +694,7 @@ void constDeclaration() {
                 printf("Error: symbol name has already been declared\n");
                 exit(1);
             }
+            // printf("----here15---\n");
             // get the identifier from the identArray 
             char * identName = identArr[identIndex];
             identIndex++; 
@@ -637,20 +712,28 @@ void constDeclaration() {
                 printf("Error: constants must be assigned an integer value\n");
                 exit(1);
             }
+            // printf("----here16---\n");
             // if num then we add (kind, name, L, and M) to the symbol table
+        //    printf("identIndex: %d\n", identIndex-1);
+        //     printf("identArr: %s\n", identArr[identIndex-1]);
+            // print the index fo the idenarra
+            
             int number = atoi(identArr[identIndex]); // Convert string to integer
             identIndex++; 
+            // printf("----here16.5---\n");
             symbolTable[symbolIndex] = initSymbolTable(1, identName, number, currLevel, 0, 0);
+            // printf("----here16.6---\n");
             symbolIndex++;
             tokenIndex++;
             // if "," then repeate for next declaration else we break then check for ";"
         } while (tokenType[tokenIndex] == commasym);
-
+        // printf ("----here17---\n");
         // check if const declaration is ended with a ";"
         if (tokenType[tokenIndex] != semicolonsym) {
             printf("Error: constant and variable declarations must be followed by a semicolon\n"); 
             exit(1);
         }
+        // printf("----here18---\n");
         tokenIndex++;
     }
 }
@@ -664,7 +747,7 @@ int varDeclaration() {
             tokenIndex++;
             // ident check
             if (tokenType[tokenIndex] != identsym) {
-                printf("Error: const, var, and read must be followed by identifier\n");
+                printf("Error: var declaration must be followed by identifier\n");
                 exit(1);
             }
             // has the identifier already been declared? 
@@ -695,35 +778,40 @@ int varDeclaration() {
 }
 
 void procedure () {
+    // printf("----here1---\n");
     while (tokenType[tokenIndex] == procsym) {
         tokenIndex++; 
         if (tokenType[tokenIndex] != identsym) {
-            printf("Error: procedure error 1"); 
+            // Error 4
+            printf("Error: Procedure must be followed by identifier"); 
             exit(1); 
         }
 
-        strcpy(calArr[calIndexProc].procedureName, identArr[identIndex]); 
-        calIndexProc++; 
+        // strcpy(calArr[calIndexProc].procedureName, identArr[identIndex]); 
+        // calIndexProc++; 
         // calArr[calIndex].currCX = cx; 
         // calIndex++; 
-
-        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, cx, 0);
+        jmpAddress++;
+        symbolTable[symbolIndex] = initSymbolTable(3, identArr[identIndex], 0, currLevel, jmpAddress, 0);
         symbolIndex++; 
         tokenIndex++; 
         identIndex++; 
         currLevel++; 
 
         if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: procedure error 2"); 
+            // Error 6
+            printf("Error: Incorrect symbol after procedure declaration\n "); 
             exit(1); 
         }
 
         tokenIndex++; 
+        
         block(); 
         // calArr[calIndex].currCX = cx; 
         // calIndex++; 
         if (tokenType[tokenIndex] != semicolonsym) {
-            printf("Error: procedure error 3"); 
+            // Error 17
+            printf("Error: Semicolon expected to close procedure"); 
             exit(1); 
         }
 
@@ -756,14 +844,14 @@ void statement() {
         // not in symbolTable
         // printf("\nToken: %d   ", tokenType[tokenIndex-1]);
         if (symIdx == -1) {
-            printf("Error1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
             exit(1);
         }
         // not a variable
+        // printf("symbolTable[symIdx]->kind = %s", symbolTable[symIdx]->name);
         if(symbolTable[symIdx]->kind != 2) {
-            // printf("\nToken Type: %d,\n", tokenType[tokenIndex]);
-            // printf("name: %s, \nlevel: %d, \nkind: %d, \ntokenIndex: %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, symbolTable[symIdx]->kind, tokenIndex); 
-            printf("Error: only variable values may be altered\n");
+            // Error 12
+            printf("Error: Assignment to constant or procedure is not allowed\n");
             exit(1);
         }
         tokenIndex++;
@@ -772,14 +860,11 @@ void statement() {
             printf("Error: assignment statements must use :=\n");
             exit(1);
         }
-
+        // printf("----here2---\n");
         tokenIndex++;
         expression();
-        // int i = symIdx; 
-        // while (symbolTable[i]->name != identArr[identIndex-1])
         levelsDown = currLevel - symbolTable[symIdx]->level;
 
-        // printf("#1 %s, %d, %d, %d\n", symbolTable[symIdx]->name, symbolTable[symIdx]->level, currLevel, levelsDown);
         emit(STO, levelsDown, symbolTable[symIdx]->addr);
         return;
     }
@@ -788,31 +873,38 @@ void statement() {
     if (tokenType[tokenIndex] == callsym){
         tokenIndex++;
         if (tokenType[tokenIndex] != identsym) {
+            // Error 14
             printf("Error: call must be followed by an identifier\n");
             exit(1);
         }
         symIdx = symbolTableCheck(identArr[identIndex], 1);
 
         if (symIdx == -1) {
-            printf("Error1.1: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex], tokenIndex);
+            printf("Error: Undeclared identifier: %s\ntokenIndex: %d\n", identArr[identIndex], tokenIndex);
             exit(1);
         }
 
-        int calAdress = 0; 
-        for (int i = 0; i < calIndexProc; i++) {
-            if (strcmp(symbolTable[symIdx]->name, calArr[i].procedureName) == 0) {
-                printf("\nCAL: \ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", i, calArr[i].procedureName, i, calArr[i].currCX); 
-                calAdress = calArr[i+1].currCX; 
-                break; 
-            }
+        if (symbolTable[symIdx]->kind != 3) {
+            // Error 15
+            printf("Error: call must be followed by a valid procedure name, not a const or var\n");
+            exit(1);
         }
-        printf("calAdress: %d\n", calAdress); 
+
+        // int calAdress = 0; 
+        // for (int i = 0; i < calIndexProc; i++) {
+        //     if (strcmp(symbolTable[symIdx]->name, calArr[i].procedureName) == 0) {
+        //         // printf("\nCAL: \ncalArr[%d].procedureName: %s\ncalArr[%d].currCX: %d\n", i, calArr[i].procedureName, i, calArr[i].currCX); 
+        //         calAdress = calArr[i+1].currCX; 
+        //         break; 
+        //     }
+        // }
+        // printf("calAdress: %d\n", calAdress); 
 
         identIndex++; 
         tokenIndex++;
         levelsDown = currLevel - symbolTable[symIdx]->level;
 
-        emit(CAL, levelsDown, calAdress * 3); 
+        emit(CAL, levelsDown, symbolTable[symIdx]->addr * 3); 
 
         return;
     }
@@ -860,6 +952,7 @@ void statement() {
         jpcIdx = cx;
         emit(JPC, 0, jpcIdx * 3);
         statement();
+        
         emit(JMP, 0, loopIdx * 3);
         code[jpcIdx].m = cx * 3;
         return;
@@ -893,6 +986,7 @@ void statement() {
     }
     // if "write"
     if (tokenType[tokenIndex] == writesym) {
+        // printf("----here3---\n");
         tokenIndex++;
         expression();
         emit(SYS, 0, 1); //write
@@ -983,7 +1077,12 @@ void factor() {
         int symIdx = symbolTableCheck(identArr[identIndex], 1);
         identIndex++; 
         if (symIdx == -1) {
-            printf("Error3: Undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            printf("Error: undeclared identifier: %s\n tokenIndex: %d\n", identArr[identIndex-1], tokenIndex);
+            exit(1);
+        }
+        // error 21
+        if (symbolTable[symIdx]->kind == 3) {
+            printf("Error: expression must not contain a procedure identifier\n");
             exit(1);
         }
         // const or var
