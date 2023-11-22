@@ -1,0 +1,13 @@
+const k = 7;
+var x, y, w;
+procedure sum;
+   var x, p;
+   begin
+   x := p + w;
+   end
+procedure add;
+   var a, b, c;
+   begin
+   a := c + b;
+   end;
+.

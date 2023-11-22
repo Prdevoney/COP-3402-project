@@ -1,0 +1,22 @@
+const b = 3;
+var a, c;
+procedure e;
+    const d = 1;
+    var b;
+    begin
+        read a;
+        b := d;
+    end;
+procedure d; 
+    const a = 2;
+    var c;
+    begin
+        read c;
+        a := b;
+        call e;
+    end;
+begin
+    read a;
+    c := 13;
+    call d;
+end. 
