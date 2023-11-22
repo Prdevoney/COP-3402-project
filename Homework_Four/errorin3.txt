@@ -1,0 +1,21 @@
+/* Error 12: Assignment to constant or procedure is not allowed*/
+
+const m = 7, n = 85;  
+var  i,x,y,z,q,r;  
+procedure mult; 
+   var a, b;  
+  begin 
+     mult := b;  b := y; z := 0;   
+     while b > 0 do    
+     begin 
+        if x =1 then z := z+a;       
+           a := 2*a; 
+           b := b/2;     
+     end   
+  end;
+
+begin
+  x := m;
+  y := n;
+  call mult;
+end.

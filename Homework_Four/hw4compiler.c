@@ -340,17 +340,17 @@ int main(int argc, char *argv[]){
                         if (tokenType[tokenCount] == procsym)
                             procedureCount++; 
                         tokenCount++;
-                        printf("^^^^^^^^^^^ MID4 ^^^^^^^^^\n");
-                        printf("identArr[0]: %s\n", identArr[0]);
-                        printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                        // printf("^^^^^^^^^^^ MID4 ^^^^^^^^^\n");
+                        // printf("identArr[0]: %s\n", identArr[0]);
+                        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                         keyWordCheck = 1; 
-                        printf("^^^^^^^^^^^ MID5 ^^^^^^^^^\n");
-                        printf("identArr[0]: %s\n", identArr[0]);
-                        printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                        // printf("^^^^^^^^^^^ MID5 ^^^^^^^^^\n");
+                        // printf("identArr[0]: %s\n", identArr[0]);
+                        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                         free(tempArr);
-                        printf("^^^^^^^^^^^ MID2 ^^^^^^^^^\n");
-                        printf("identArr[0]: %s\n", identArr[0]);
-                        printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                        // printf("^^^^^^^^^^^ MID2 ^^^^^^^^^\n");
+                        // printf("identArr[0]: %s\n", identArr[0]);
+                        // printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                     }
                 }
                 //=================== Identifier Check ===================
